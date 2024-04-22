@@ -1,0 +1,11 @@
+package com.example.demo;
+
+public class CountDown extends Thread {
+	
+	public void run() {
+		for(long i=0;i<1_000_000L;i++) {
+			System.out.println("Count DOWN:"+i);
+		}
+	}
+
+}
