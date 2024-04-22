@@ -36,11 +36,25 @@ IF NOT EXISTS store_info CREATE TABLE store_info(
 )
 
 IF NOT EXISTS reservation_table CREATE TABLE reservation_table(
-    reservation_id INTEGER NOT NULL DEFAULT '1',
-    client_id INTEGER NOT NULL,
+    reservation_id VARCHAR(500) NOT NULL,
+    user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
     created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-    cancel_at DATETIME,
     completed_at DATETIME,
-    PRIMARY KEY (reservation_id)
+    PRIMARY KEY (reservation_id),
+    FOREIGN KEY reservation_table(user_id) REFERENCES user_info(user_id),
+    FOREIGN KEY reservation_table(store_id) REFERENCES store_info(store_id)
+)
+
+IF NOT EXISTS cancel_table CREATE TABLE cancel_table(
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    reservation_id VARCHAR(500) NOT NULL,
+    user_id INTEGER NOT NULL,
+    store_id INTEGER NOT NULL,
+    cancel_at DATETIME NOT NULL,
+    cancel_reason VARCHAR(1000) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY cancel_table(reservation_id) REFERENCES reservation_table(reservation_id),
+    FOREIGN KEY cancel_table(user_id) REFERENCES user_info(user_id),
+    FOREIGN KEY cancel_table(store_id) REFERENCES store_info(store_id)
 )
