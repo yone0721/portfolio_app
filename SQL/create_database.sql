@@ -1,11 +1,11 @@
-IF NOT EXISTS reservation_db CREATE DATABASE reservation_db;
+CREATE DATABASE IF NOT EXISTS reservation_db;
 
-IF NOT EXISTS gender_info CREATE TABLE gender_info(
-    gender_id INTEGER NOT NULL DEFAULT 1,
-    gender_name VARCHAR(10) NOT NULL UNIQUE,
-)
+CREATE TABLE IF NOT EXISTS gender_info (
+    gender_id INTEGER NOT NULL PRIMARY KEY,
+    gender_name VARCHAR(10) NOT NULL UNIQUE
+);
 
-IF NOT EXISTS user_info CREATE TABLE user_info(
+CREATE TABLE IF NOT EXISTS user_info (
     user_id INTEGER NOT NULL AUTO_INCREMENT,
     user_pass VARCHAR(500) NOT NULL,
     user_name VARCHAR(20) NOT NULL,
@@ -17,11 +17,11 @@ IF NOT EXISTS user_info CREATE TABLE user_info(
     mail VARCHAR(1000) NOT NULL,
     registered_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY user_info(user_gender) REFERENCES gender_info(id)
-)
+    PRIMARY KEY (user_id),
+    FOREIGN KEY (gender) REFERENCES gender_info(gender_id) ON DELETE CASCADE
+);
 
-IF NOT EXISTS store_info CREATE TABLE store_info(
+CREATE TABLE IF NOT EXISTS store_info (
     store_id INTEGER NOT NULL AUTO_INCREMENT,
     store_pass VARCHAR(500) NOT NULL,
     store_name VARCHAR(20) NOT NULL,
@@ -32,29 +32,29 @@ IF NOT EXISTS store_info CREATE TABLE store_info(
     mail VARCHAR(1000) NOT NULL,
     registered_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
-    PRIMARY KEY (id)
-)
+    PRIMARY KEY (store_id)
+);
 
-IF NOT EXISTS reservation_table CREATE TABLE reservation_table(
+CREATE TABLE IF NOT EXISTS reservation_table (
     reservation_id VARCHAR(500) NOT NULL,
     user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created_at DATETIME NOT NULL,
     completed_at DATETIME,
-    PRIMARY KEY (reservation_id),
-    FOREIGN KEY reservation_table(user_id) REFERENCES user_info(user_id),
-    FOREIGN KEY reservation_table(store_id) REFERENCES store_info(store_id)
-)
+    PRIMARY KEY (reservation_id,user_id,store_id),
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
+    FOREIGN KEY (store_id) REFERENCES store_info(store_id)
+);
 
-IF NOT EXISTS cancel_table CREATE TABLE cancel_table(
+CREATE TABLE IF NOT EXISTS cancel_table (
     id INTEGER NOT NULL AUTO_INCREMENT,
     reservation_id VARCHAR(500) NOT NULL,
     user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
-    cancel_at DATETIME NOT NULL,
-    cancel_reason VARCHAR(1000) NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY cancel_table(reservation_id) REFERENCES reservation_table(reservation_id),
-    FOREIGN KEY cancel_table(user_id) REFERENCES user_info(user_id),
-    FOREIGN KEY cancel_table(store_id) REFERENCES store_info(store_id)
-)
+    cancel_at DATETIME,
+    cancel_reason VARCHAR(1000),
+    PRIMARY KEY (id,reservation_id,user_id,store_id),
+    FOREIGN KEY (reservation_id) REFERENCES reservation_table(reservation_id),
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
+    FOREIGN KEY (store_id) REFERENCES store_info(store_id)
+);
