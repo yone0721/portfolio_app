@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS reservation_table (
     created_at DATETIME NOT NULL,
     completed_at DATETIME,
     PRIMARY KEY (reservation_id,user_id,store_id),
-    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
-    FOREIGN KEY (store_id) REFERENCES store_info(store_id)
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (store_id) REFERENCES store_info(store_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cancel_table (
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS cancel_table (
     cancel_at DATETIME,
     cancel_reason VARCHAR(1000),
     PRIMARY KEY (id,reservation_id,user_id,store_id),
-    FOREIGN KEY (reservation_id) REFERENCES reservation_table(reservation_id),
-    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
-    FOREIGN KEY (store_id) REFERENCES store_info(store_id)
+    FOREIGN KEY (reservation_id) REFERENCES reservation_table(reservation_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (store_id) REFERENCES store_info(store_id) ON DELETE CASCADE
 );
