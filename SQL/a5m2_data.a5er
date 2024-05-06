@@ -1,0 +1,290 @@
+﻿# A5:ER FORMAT:18
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.19.1 Copyright © 1997 - 2024 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=予約システム_ER図
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",7,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=7
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=10
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+RDBMSTypeName=Oracle Database
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=店舗が運営するサービスの種類
+LName=STORE_SERVICES_TABLE
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=2300
+Top=300
+Field="service_relation_id","店舗とサービスの管理ID","@INT","NOT NULL",0,"","",$FFFFFFFF,"NOT NULL AUTO_INCREMENT"
+Field="store_id","店舗ID","@INT","NOT NULL",,"","",$FFFFFFFF,""
+Field="service_type_id","サービスの種類ID","@INT","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504151801
+Position="Main",2300,300,942,150
+ZOrder=15
+
+[Relation]
+Entity1=店舗情報
+Entity2=店舗が運営するサービスの種類
+RelationType1=4
+RelationType2=4
+Fields1=店舗ID
+Fields2=店舗ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1700,5662,1138,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240504135604
+LineMode=0
+Bar1=170
+Bar2=566
+Bar3=114
+TermPos1=R
+TermPos2=R
+ZOrder=16
+
+[Relation]
+Entity1=店舗が運営するサービスの種類
+Entity2=サービスの種類
+RelationType1=4
+RelationType2=4
+Fields1=店舗とサービスの管理ID
+Fields2=サービスの種類ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,3257,3586,3339,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240504140322
+LineMode=0
+Bar1=326
+Bar2=359
+Bar3=334
+TermPos1=R
+TermPos2=R
+ZOrder=17
+
+[Entity]
+PName=予約テーブル
+LName=RESERVATION_TB
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=50
+Top=950
+Field="user_id","顧客ID","@VARCHAR","NOT NULL",0,"NULL","NULLの場合はゲスト",$FFFFFFFF,""
+Field="store_id","店舗ID","@INT","NOT NULL",1,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="reservation_number","予約番号","@VARCHAR","NOT NULL",,"","半角英字一文字 + 半角数字　英字はサービスの種類の頭文字で表示する（例：飲食の場合はFOODの「F」等）",$FFFFFFFF,"NOT NULL"
+Field="reservation_date_at","予約日","@DATE","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="created_at","予約登録日","@DATE","NOT NULL",,"","",$FFFFFFFF,"CURRENT_TIMESTAMP"
+Field="is_canceled","キャンセル","@VARCHAR","NOT NULL",,"N","キャンセルが入るとYになる",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504151359
+Position="MAIN",50,950,1029,370
+ZOrder=5
+
+[Relation]
+Entity1=顧客情報
+Entity2=予約テーブル
+RelationType1=4
+RelationType2=3
+Fields1=メールアドレス（ID）
+Fields2=顧客ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,954,8791,954,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240504091227
+LineMode=0
+Bar1=95
+Bar2=879
+Bar3=95
+TermPos1=R
+TermPos2=R
+ZOrder=8
+
+[Relation]
+Entity1=店舗情報
+Entity2=予約テーブル
+RelationType1=4
+RelationType2=3
+Fields1=店舗ID
+Fields2=店舗ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1209,6152,1264,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240504091237
+LineMode=0
+Bar1=121
+Bar2=615
+Bar3=126
+TermPos1=R
+TermPos2=R
+ZOrder=9
+
+[Entity]
+PName=サービスプラン
+LName=SERVICE_PLAN
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1300
+Top=1000
+Field="service_plan_id","サービスプランID","@INT","NOT NULL",0,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="store_id","店舗ID","@INT","NOT NULL",1,"","",$FFFFFFFF,"AUTO_INCREMENT"
+Field="plan_name","プラン名","@VARCHAR","NOT NULL",,"通常プラン","プランの名前",$FFFFFFFF,"NOT NULL"
+Field="describe","説明文","@VARCHAR","NOT NULL",,"","プランの内容を説明する文章",$FFFFFFFF,"NOT NULL"
+Field="budget_guide","予算目安","@INT","NOT NULL",,"0","",$FFFFFFFF,"NOT NULL"
+Field="created_at","登録日","@DATETIME","NOT NULL",,"","",$FFFFFFFF,"CURRENT_TIMESTAMP"
+Field="update_at","最終更新日","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
+Field="started_at","開始日","@DATE",,,"","プランの開始日（通常プランの場合は未入力でも可）",$FFFFFFFF,""
+Field="finished_at","終了日","@DATE",,,"","プランの終了日（通常プランの場合は未入力でも可）",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504151939
+Position="MAIN",1300,1000,756,461
+ZOrder=11
+
+[Relation]
+Entity1=店舗情報
+Entity2=サービスプラン
+RelationType1=2
+RelationType2=4
+Fields1=店舗ID
+Fields2=店舗ID
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4277,7622,4730,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240504151716
+LineMode=0
+Bar1=428
+Bar2=762
+Bar3=473
+TermPos1=R
+TermPos2=R
+ZOrder=14
+
+[Entity]
+PName=顧客情報
+LName=USER_INFO_TB
+Comment=予約時の顧客情報を格納するテーブル
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=50
+Top=100
+Field="user_id","顧客ID","@VARCHAR","NOT NULL",0,"","顧客情報を管理するための番号",$FFFFFFFF,"NOT NULL"
+Field="mail","メールアドレス（ID）","@VARCHAR","NOT NULL",,"","メールアドレス。ログインIDと併用可。",$FFFFFFFF,"NOT NULL"
+Field="user_name","氏名","@VARCHAR","NOT NULL",,"","顧客の氏名",$FFFFFFFF,"NOT NULL"
+Field="user_name_furigana","氏名（ふりがな）","@VARCHAR","NOT NULL",,"","カタカナで氏名の振り仮名を入力",$FFFFFFFF,"NOT NULL"
+Field="phone_number","電話番号","@VARCHAR","NOT NULL",,"","ハイフンなしで半角数字",$FFFFFFFF,"NOT NULL"
+Field="user_password","パスワード","@VARCHAR","NOT NULL",,"","半角英数字4文字以上16文字以下",$FFFFFFFF,"NOT NULL"
+Field="post_code","郵便番号","@INT","NOT NULL",,"","ハイフンなしで半角数字",$FFFFFFFF,"NOT NULL"
+Field="city","住所（都道府県）","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="municipalities","市区町村","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="street_address","市区町村以降の住所","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="building","マンション・アパート名と部屋番号","@VARCHAR",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504104348
+Position="MAIN",50,100,1029,565
+ZOrder=1
+
+[Entity]
+PName=店舗情報
+LName=STORE_INFO_TB
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1300
+Top=100
+Field="store_id","店舗ID","@INT","NOT NULL",0,"","店舗情報を管理するための番号",$FFFFFFFF,"AUTO_INCREMENT"
+Field="store_name","店舗名","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="post_code","店舗郵便番号","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="city","店舗住所（都道府県）","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="municipalities","市区町村","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="street_address","市区町村以降の住所","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="building","建物名と部屋番号","@VARCHAR",,,"","",$FFFFFFFF,""
+Field="mail","店舗メールアドレス","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="phone","店舗電話番号","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="store_password","パスワード","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="opened_on","開店時間","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="closed_on","閉店時間","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+Field="created_at","登録日","@DATETIME","NOT NULL",,"","店舗情報の登録日",$FFFFFFFF,"NOT NULL CURRENT_TIMESTAMP"
+Field="update_at","更新日","@DATETIME","NOT NULL",,"","店舗情報の更新日",$FFFFFFFF,"NOT NULL"
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504151253
+Position="MAIN",1300,100,836,643
+ZOrder=2
+
+[Entity]
+PName=サービスの種類
+LName=STORE_SERVICE_TYPE
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2300
+Top=1050
+Field="service_type_id","サービスの種類ID","@INT","NOT NULL",0,"","",$FFFFFFFF,"NOT NULL AUTO_INCREMENT"
+Field="service_type_name","サービスの種類名","@VARCHAR","NOT NULL",,"","",$FFFFFFFF,"NOT NULL"
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20240504140331
+Position="MAIN",2300,1050,919,142
+ZOrder=3
