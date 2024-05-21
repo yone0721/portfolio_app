@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jbdc.Driver 
+    url: jdbc:mysql://lolcahost:3306
+    username: admin
+    password: pass1234
