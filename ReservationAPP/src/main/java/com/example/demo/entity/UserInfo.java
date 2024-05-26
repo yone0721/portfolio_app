@@ -45,36 +45,36 @@ public class UserInfo {
 	private final LocalDateTime createdAt;
 	
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
-	private LocalDateTime updateAt;
+	private LocalDateTime updatedAt;
 
 	public UserInfo(@NotNull int userId, 
 			@NotNull String mail,
 			@NotNull String userName, 
 			@NotNull String userNameFurigana,
 			@NotNull String phone, 
-			@NotNull String user_password, 
+			@NotNull String userPassword, 
 			@NotNull String postCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String userAddress,
 			String building, 
 			@NotNull LocalDateTime createdAt,
-			LocalDateTime updateAt) {
+			LocalDateTime updatedAt) {
 		this.userId = userId;
 		this.mail = mail;
 		this.userName = userName;
 		this.userNameFurigana = userNameFurigana;
 		this.phone = phone;
-		this.userPassword = user_password;
+		this.userPassword = userPassword;
 		this.postCode = postCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.userAddress = userAddress;
 		this.createdAt = createdAt;
-		this.updateAt = updateAt;
+		this.updatedAt = updatedAt;
 		
 		this.building = building != null ? building : null ;
-		this.updateAt = updateAt != null ? updateAt : null ;
+		this.updatedAt = updatedAt;
 		
 	}	
 	
@@ -93,7 +93,7 @@ public class UserInfo {
 	}
 
 	public void setUpdateAt(LocalDateTime updateAt) {
-		this.updateAt = updateAt;
+		this.updatedAt = updateAt;
 	}
 
 	public int getUserId() {
@@ -143,8 +143,7 @@ public class UserInfo {
 	}
 
 	public LocalDateTime getUpdateAt() {
-		return updateAt;
+		return updatedAt;
 	}
-
 	
 }

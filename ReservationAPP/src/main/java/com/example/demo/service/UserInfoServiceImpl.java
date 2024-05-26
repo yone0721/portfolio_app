@@ -40,7 +40,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public void register(UserInfo userInfo) {
 		
-		
 	}
 
 	@Override
@@ -54,4 +53,5 @@ public class UserInfoServiceImpl implements UserInfoService {
 		// TODO 自動生成されたメソッド・スタブ
 		
 	}	
+	
 }

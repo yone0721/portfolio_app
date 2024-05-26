@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface Dao<T> {
 	List<T> findAll();
 	Optional<T> findById(int id);
-	void insert(T entity);
-	void update(T entity);
-	void delete(T entity);
+	int insert(T entity);
+	int update(T entity);
+	int delete(T entity);
 }

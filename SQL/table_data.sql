@@ -4,11 +4,10 @@ INSERT INTO store_service_type (service_type_id,service_type_name) VALUES (3,"�
 INSERT INTO store_service_type (service_type_id,service_type_name) VALUES (4,"その他");
 
 
-/* 
+/*
     テストデータ　店舗情報
 */
 INSERT INTO store_info_tb (
-    store_id,
     store_name,
     post_code,
     city,
@@ -18,11 +17,10 @@ INSERT INTO store_info_tb (
     mail,
     phone,
     store_password,
-    opened_on,
-    closed_on,
+    is_opened,
+    is_closed,
     created_at
 ) VALUES (
-    'B0001',
     '美容院その1',
     '000-0001',
     '東京都',
@@ -38,7 +36,6 @@ INSERT INTO store_info_tb (
 );
 
 INSERT INTO store_info_tb (
-    store_id,
     store_name,
     post_code,
     city,
@@ -47,11 +44,10 @@ INSERT INTO store_info_tb (
     mail,
     phone,
     store_password,
-    opened_on,
-    closed_on,
+    is_opened,
+    is_closed,
     created_at
 ) VALUES (
-    'F0001',
     '飲食店その1',
     '000-0011',
     '東京都',
@@ -66,7 +62,6 @@ INSERT INTO store_info_tb (
 );
 
 INSERT INTO store_info_tb (
-    store_id,
     store_name,
     post_code,
     city,
@@ -76,11 +71,10 @@ INSERT INTO store_info_tb (
     mail,
     phone,
     store_password,
-    opened_on,
-    closed_on,
+    is_opened,
+    is_closed,
     created_at
 ) VALUES (
-    'O0001',
     '万屋',
     '110-0101',
     '東京都',
@@ -100,50 +94,57 @@ INSERT INTO store_info_tb (
 */
 INSERT INTO service_plan(
     store_id,
+    service_type_id,
     plan_name,
     service_describe
 ) VALUES (
-    'B0001',
+    1,
+    2,
     'カット　1,000円',
     'カットのみのお手軽プラン！'
 );
 
 INSERT INTO service_plan(
     store_id,
+    service_type_id,
     plan_name,
-    service_describe,
+    service_describe
 ) VALUES (
-    'B0001',
-    'カット＋カラー 5,000円',
+    1,
+    2,
+    'カット・カラー 5,000円',
     'カット後に金髪に仕上げます。'
 );
 
 INSERT INTO service_plan(
     store_id,
+    service_type_id,
     plan_name,
     service_describe
 ) VALUES (
-    'F0001',
+    2,
+    1,
     '食べ放題 2,980円',
     '2時間メニュー食べ放題 サラダバー・ドリンクバー付き'
 );
 
 INSERT INTO service_plan(
     store_id,
+    service_type_id,
     plan_name,
     service_describe
 ) VALUES (
-    'O0001',
+    3,
+    4,
     'なんでも相談 0円',
     '厄介ごと受け付けます。'
 );
 
-/* 
+/*
     テスト用データ　顧客情報
 */
 
 INSERT INTO user_info_tb(
-    user_id,
     mail,
     user_name,
     user_name_furigana,
@@ -153,9 +154,9 @@ INSERT INTO user_info_tb(
     city,
     municipalities,
     user_address,
-    building
+    building,
+    updated_at
 ) VALUES (
-    'user0001',
     'user@email.com',
     '山田太郎',
     'ヤマダタロウ',
@@ -165,6 +166,90 @@ INSERT INTO user_info_tb(
     '東京都',
     '中野区',
     '東中野のような場所555',
-    'スカイハイツ2222'
+    'スカイハイツ2222',
+    now()
 );
 
+INSERT INTO user_info_tb(
+    mail,
+    user_name,
+    user_name_furigana,
+    phone,
+    user_password,
+    post_code,
+    city,
+    municipalities,
+    user_address,
+    updated_at
+) VALUES (
+    'user2@email.com',
+    '田中太郎',
+    'タナカタロウ',
+    '08011111111',
+    'pass1111',
+    '111-2222',
+    '東京都',
+    '八王子市',
+    '八王子',
+    now()
+);
+
+/*
+    テスト用データ
+*/
+INSERT INTO reservation_table (
+    user_id,
+    store_id,
+    service_plan_id,
+    reservation_date_at
+) VALUES (
+    1,3,4,'2024/05/30 12:00:00'
+);
+
+
+/*
+    予約テーブルの情報取得
+
+*/
+SELECT
+    reservation.reservation_id,
+    user.user_id,
+    user.user_name,
+    store.store_id,
+    store.store_name,
+    plan.plan_name,
+    reservation.reservation_date_at
+FROM user_info_tb AS user
+INNER JOIN reservation_table AS reservation
+        ON user.user_id = reservation.user_id
+INNER JOIN store_info_tb AS store
+        ON store.store_id = reservation.store_id
+INNER JOIN service_plan AS plan
+        ON plan.service_plan_id = reservation.service_plan_id
+WHERE reservation.is_canceled = "N";
+
+/*
+    店舗情報取得
+*/
+SELECT
+    store.store_id,
+    store.store_name,
+    store.post_code,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    store.is_opened,
+    store.is_closed,
+    store.created_at,
+    store.updated_at,
+    store_type.service_type_name,
+    plan.plan_name
+FROM store_info_tb AS store
+INNER JOIN service_plan AS plan
+    ON store.store_id = plan.store_id
+INNER JOIN store_service_type AS store_type
+    ON plan.service_type_id = store_type.service_type_id
+WHERE store.store_id\G

@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+
+.container{
+	background-color: rgb(255, 255, 128);
+	margin-top:50px;
+	padding: 10px;
+	margin:0 auto;
+	text-align: center;
+	width:500px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+p>input{
+	padding: 10px 30px;
+}
+
+.tab-item{
+	background-color: rgb(255, 255, 255);
+	border-bottom: 3px solid rgb(0, 255, 255);
+	margin:0 5px;
+	padding:0px 5px;
+	line-height: 50px;
+	float:left;
+	width: 48%;
+	height: 50px;
+	border-top: 3px solid;
+	font-size: 16px;
+	display: block;
+	text-align: center;
+	transition: all 0.2s ease;
+}
+
+.tab-item:hover{
+	opacity: 0.75;
+}
+
+input[name="tab-item"]{
+	display: none;
+}
+.tab-content{
+	padding:10px 50px 50px 50px;
+	display:none;
+	clear:both;
+	overflow: hidden;
+}
+
+#user-login:checked ~ #user-tab,
+#store-login:checked ~ #store-tab{
+	display: block;
+}
+
+.container input:checked + .tab-item{
+	background-color: rgb(0, 255, 255);
+	color:black;
+}

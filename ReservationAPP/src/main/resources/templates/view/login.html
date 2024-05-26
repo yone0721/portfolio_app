@@ -1,10 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 	<head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
+		<link rel="stylesheet" th:href="@{../css/login.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../css/header.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../css/bootstrap.min.css}" href="#" type="text/css">
+		<meta charset="UTF-8">
+		<title>ログインページ</title>
 	</head>
 	<body>
-		
+		<header th:replace="~{/view/header::header}"></header>
+		<div class="container">
+			<input type="radio" name="tab-item" id="user-login" checked>
+			<label class="tab-item" for="user-login">お店を探す人はこちら</label>
+			<input type="radio" name="tab-item" id="store-login">
+			<label class="tab-item" for="store-login">お店を登録する人はこちら</label>
+			
+			<div class="tab-content" id="user-tab">
+				<form method="post" th:action="@{/login}">
+					<p><label for="login">メールアドレス</label></p>
+					<p><input type="email" placeholder="user@example.com"></p>
+					<p></p>
+					
+					<p><label for="login">パスワード</label></p>
+					<p><input type="password"></p>
+					<p></p>
+					
+					<input type="hidden" value="user-login"></input>
+					<input type="submit" class="btn btn-primary" value="ログイン"></input>
+				</form>
+				<form method="post" th:action="@{/reservation/register}">
+					<input type="hidden" name="position" value="user">
+					<input type="submit" class="btn btn-none" value="新規登録はこちらから"></input>
+				</form>
+			</div>
+			<div class="tab-content" id="store-tab">
+					<form method="post" th:action="@{/login}">
+					<p><label for="login">メールアドレス</label></p>
+					<p><input type="email" placeholder="store@example.com"></p>
+					<p></p>
+					
+					<p><label for="login">パスワード</label></p>
+					<p><input type="password"></p>
+					<p></p>
+					
+					<input type="hidden" value="store-login"></input>
+					<input type="submit" class="btn btn-primary" value="ログイン"></input>
+				</form>
+				<form method="post" th:action="@{/reservation/register}">
+					<input type="hidden" name="position" value="store">
+					<input type="submit" class="btn btn-none" value="新規登録はこちらから"></input>
+				</form>
+			</div>
+		</div>
 	</body>
 </html>

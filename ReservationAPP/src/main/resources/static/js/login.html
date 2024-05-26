@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+	<head>
+		<link rel="stylesheet" th:href="@{css/login.css}" href="#" type="text/css">
+		<meta charset="UTF-8">
+		<title>ログインページ</title>
+	</head>
+	<body>
+		<div class="container">
+			<input type="radio" name="tab-item" id="user-login" checked>
+			<label class="tab-item" for="user-login">お店を探す人はこちら</label>
+			<input type="radio" name="tab-item" id="store-login">
+			<label class="tab-item" for="store-login">お店を登録する人はこちら</label>
+			
+			<div class="tab-content" id="user-tab">
+				<form method="post" th:action="@{/login}">
+					<p><label for="login">メールアドレス</label></p>
+					<p><input type="email" placeholder="mail@example.com"></p>
+					<p></p>
+					
+					<p><label for="login">パスワード</label></p>
+					<p><input type="password"></p>
+					
+					<input type="hidden" value="user-login"></input>
+					<input type="submit" value="ログイン"></input>
+					
+				</form>
+			</div>
+			<div class="tab-content" id="store-tab">
+				
+			</div>
+		</div>
+	</body>
+</html>

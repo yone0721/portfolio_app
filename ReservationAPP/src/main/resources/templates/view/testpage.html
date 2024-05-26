@@ -2,6 +2,7 @@
 <html xmlns="http://www.thymeleaf.org">
 	<head>
 	<meta charset="UTF-8">
+	<link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 		<title th:text="${title}">Insert title here</title>
 	</head>
 	<body>
@@ -26,7 +27,7 @@
 			<tbody th:each="userInfo:${userInfoList}">
 				<tr>
 					<td th:text="${userInfo.userId}">ID</td>
-					<td th:text="${userInfo.usePassword}">パスワード</td>
+					<td th:text="${userInfo.userPassword}">パスワード</td>
 					<td th:text="${userInfo.userName}">名前</td>
 					<td th:text="${userInfo.userNameFurigana}">ふりがな</td>
 					<td th:text="${userInfo.mail}">メール</td>
@@ -35,9 +36,9 @@
 					<td th:text="${userInfo.city}">都道府県</td>
 					<td th:text="${userInfo.municipalities}">県庁所在地</td>
 					<td th:text="${userInfo.userAddress}">それ以降の住所</td>
-					<td th:text="${userInfo.building} ? ${userInfo.building} : ' '"></td>
-					<td th:text="${userInfoList.userId}">登録日</td>
-					<td th:text="${userInfo.updateAt} ? ${userInfo.updateAt} : ' '">最終更新日</td>					
+					<td th:text="${userInfo.building} ? ${userInfo.building} : '　'"></td>
+					<td th:text="${userInfo.createdAt}">登録日</td>
+	
 				</tr>
 			</tbody>
 		</table>

@@ -27,7 +27,6 @@ public class ReservationController {
 	public String test(Model model) {
 		List<UserInfo> userInfoList = userInfoService.getAll();
 		
-		
 		model.addAttribute("userInfoList",userInfoList);
 		model.addAttribute("title","テスト用ページ");
 		
