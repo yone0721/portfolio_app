@@ -1,53 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 	<head>
-		<link rel="stylesheet" th:href="@{../css/login.css}" href="#" type="text/css">
-		<link rel="stylesheet" th:href="@{../css/header.css}" href="#" type="text/css">
-		<link rel="stylesheet" th:href="@{../css/bootstrap.min.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/login.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
 		<meta charset="UTF-8">
 		<title>ログインページ</title>
 	</head>
 	<body>
 		<header th:replace="~{/view/header::header}"></header>
-		<div class="container">
-			<input type="radio" name="tab-item" id="user-login" checked>
+		<div class="container" th:Object="${loginForm}">
+			<input type="radio" name="tab-item" id="user-login" th:checked="${userchecked}"></input>
 			<label class="tab-item" for="user-login">お店を探す人はこちら</label>
-			<input type="radio" name="tab-item" id="store-login">
+			<input type="radio" name="tab-item" id="store-login" th:checked="${storechecked}"></input>
 			<label class="tab-item" for="store-login">お店を登録する人はこちら</label>
 			
 			<div class="tab-content" id="user-tab">
-				<form method="post" th:action="@{/login}">
-					<p><label for="login">メールアドレス</label></p>
-					<p><input type="email" placeholder="user@example.com"></p>
-					<p></p>
+				<form method="post" th:action="@{/reservation/user-login/authonicate}">
+					<p><label for="user-mail">メールアドレス</label></p>
+					<p><input type="mail" id="user-mail" name="mail" th:value="*{mail}" placeholder="user@example.com"></input></p>
 					
-					<p><label for="login">パスワード</label></p>
-					<p><input type="password"></p>
-					<p></p>
+					<p><label for="user-password">パスワード</label></p>
+					<p><input type="password" id="user-password" name="password"></input></p>
+					<p th:text="${loginError}"></p>
 					
 					<input type="hidden" value="user-login"></input>
 					<input type="submit" class="btn btn-primary" value="ログイン"></input>
 				</form>
-				<form method="post" th:action="@{/reservation/register}">
-					<input type="hidden" name="position" value="user">
+				<form method="post" th:action="@{/reservation/user-register/register}">
+					<input type="hidden" name="position" value="user"></input>
 					<input type="submit" class="btn btn-none" value="新規登録はこちらから"></input>
 				</form>
 			</div>
+			
 			<div class="tab-content" id="store-tab">
-					<form method="post" th:action="@{/login}">
-					<p><label for="login">メールアドレス</label></p>
-					<p><input type="email" placeholder="store@example.com"></p>
-					<p></p>
+					<form method="post" th:action="@{/reservation/store-login/authonicate}">
+					<p><label for="store-mail">メールアドレス</label></p>
+					<p><input type="mail" id="store-mail" name="mail" th:value="*{mail}" placeholder="store@example.com"></input></p>
 					
-					<p><label for="login">パスワード</label></p>
-					<p><input type="password"></p>
-					<p></p>
+					<p><label for="store-password">パスワード</label></p>
+					<p><input type="password" id="store-password" name="password"></input></p>
+					<p th:text="${loginError}"></p>
 					
 					<input type="hidden" value="store-login"></input>
 					<input type="submit" class="btn btn-primary" value="ログイン"></input>
 				</form>
-				<form method="post" th:action="@{/reservation/register}">
-					<input type="hidden" name="position" value="store">
+				<form method="post" th:action="@{/reservation/store-register/register}">
+					<input type="hidden" name="position" value="store"></input>
 					<input type="submit" class="btn btn-none" value="新規登録はこちらから"></input>
 				</form>
 			</div>

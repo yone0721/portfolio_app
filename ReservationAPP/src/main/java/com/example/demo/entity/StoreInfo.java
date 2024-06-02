@@ -50,11 +50,49 @@ public class StoreInfo {
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public StoreInfo(@NotNull int storeId, @NotNull String storeName, @NotNull String postCode, @NotNull String city,
-			@NotNull String municipalities, @NotNull String streetAddress, String building, @NotNull String mail,
-			@NotNull String phone, @NotNull String storePassword, @NotNull String isOpened, @NotNull String isClosed,
-			@NotNull LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super();
+//	DB挿入・更新用コンストラクタ
+	public StoreInfo(
+			@NotNull String storeName, 
+			@NotNull String postCode, 
+			@NotNull String city,
+			@NotNull String municipalities, 
+			@NotNull String streetAddress, 
+			String building, 
+			@NotNull String mail,
+			@NotNull String phone,
+			@NotNull String storePassword,
+			@NotNull String isOpened,
+			@NotNull String isClosed,
+			LocalDateTime updatedAt) {
+		this.storeName = storeName;
+		this.postCode = postCode;
+		this.city = city;
+		this.municipalities = municipalities;
+		this.streetAddress = streetAddress;
+		this.building = building;
+		this.mail = mail;
+		this.phone = phone;
+		this.storePassword = storePassword;
+		this.isOpened = isOpened;
+		this.isClosed = isClosed;
+		this.updatedAt = updatedAt;
+	}
+	
+//	DBデータ取得用コンストラクタ
+	public StoreInfo(
+			@NotNull int storeId, @NotNull
+			String storeName, @NotNull
+			String postCode,
+			@NotNull String city,
+			@NotNull String municipalities,
+			@NotNull String streetAddress, String building,
+			@NotNull String mail,
+			@NotNull String phone,
+			@NotNull String storePassword,
+			@NotNull String isOpened,
+			@NotNull String isClosed,
+			@NotNull LocalDateTime createdAt,
+			LocalDateTime updatedAt) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.postCode = postCode;

@@ -1,140 +1,380 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 <head>
-	<link th:href="@{../css/bootstrap.min.css}" href="#" rel="stylesheet" type="text/css">
-	<link th:href="@{../css/header.css}" href="#" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/confirm.css}" href="#" type="text/css">
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>新規会員登録</title>
 </head>
 <body>
 	<heder th:replace="~{/view/header::header}"></heder>
-	<h1>新規会員登録ページ</h1>
-	<div th:if="${position == 'user'}">
-		<form method="post" th:action="@{/reservation/user-confirm}">
-			<table th:object="${userInfoForm}">				
-				<tr>
-					<th>項目</td>
-					<th>入力欄</td>
-				</tr>
-				<tr>
-					<td><label for="userName">お名前：</label></td>
-					<td>
-						<input type="text" id="userName" name="userName" th:value="*{userName}" placeholder="山田 太郎"><br>
-						<div class="danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="userNameFurigana">ふりがな：</label></td>
-					<td>
-						<input type="text" id="userNameFurigana" name="userNameFurigana" th:value="*{userNameFurigana}" placeholder="やまだ たろう"><br>
-						<div class="danger" th:if="${#fields.hasErrors('userNameFurigana')}" th:errors="*{userNameFurigana}"></div>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="mail">メールアドレス：</label></td>
-					<td>
-						<input type="mail" id="mail" name="mail" th:value="*{mail}" placeholder="user@example.com"><br>
-						<div class="danger" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></div>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="postCode">郵便番号：</label></td>
-					<td>
-						<input type="tel" id="postCode" name="postCode" maxlength="7" th:value="*{postCode}">
-						<div class="danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}"></div>	
-					</td>
-				</tr>
-				<tr>
-					<td><label for="city">都道府県：</label></td>
-					<td>
-						<select name="city" id="city">  
-							<option th:value="*{city}" th:text="都道府県をお選びください。"></option>   
-							    <option th:value="*{city}" value="北海道">北海道</option>  
-							    <option th:value="*{city}" value="青森県">青森県</option>  
-							    <option th:value="*{city}" value="秋田県">秋田県</option>  
-							    <option th:value="*{city}" value="岩手県">岩手県</option>  
-							    <option th:value="*{city}" value="山形県">山形県</option>  
-							    <option th:value="*{city}" value="宮城県">宮城県</option>  
-							    <option th:value="*{city}" value="福島県">福島県</option>  
-							</optgroup>  
-							<optgroup label="甲信越・北陸">  
-							    <option th:value="*{city}" value="山梨県">山梨県</option>  
-							    <option th:value="*{city}" value="長野県">長野県</option>  
-							    <option th:value="*{city}" value="新潟県">新潟県</option>  
-							    <option th:value="*{city}" value="富山県">富山県</option>  
-							    <option th:value="*{city}" value="石川県">石川県</option>  
-							    <option th:value="*{city}" value="福井県">福井県</option>  
-							</optgroup>  
-							<optgroup label="関東">  
-							    <option th:value="*{city}" value="茨城県">茨城県</option>  
-							    <option th:value="*{city}" value="栃木県">栃木県</option>  
-							    <option th:value="*{city}" value="群馬県">群馬県</option>  
-							    <option th:value="*{city}" value="埼玉県">埼玉県</option>  
-							    <option th:value="*{city}" value="千葉県">千葉県</option>  
-							    <option th:value="*{city}" value="東京都">東京都</option>  
-							    <option th:value="*{city}" value="神奈川県">神奈川県</option>  
-							</optgroup>  
-							<optgroup label="東海">  
-							    <option th:value="*{city}" value="愛知県">愛知県</option>  
-							    <option th:value="*{city}" value="静岡県">静岡県</option>  
-							    <option th:value="*{city}" value="岐阜県">岐阜県</option>  
-							    <option th:value="*{city}" value="三重県">三重県</option>  
-							</optgroup>  
-							<optgroup label="関西">  
-							    <option th:value="*{city}" value="大阪府">大阪府</option>  
-							    <option th:value="*{city}" value="兵庫県">兵庫県</option>  
-							    <option th:value="*{city}" value="京都府">京都府</option>  
-							    <option th:value="*{city}" value="滋賀県">滋賀県</option>  
-							    <option th:value="*{city}" value="奈良県">奈良県</option>  
-							    <option th:value="*{city}" value="和歌山県">和歌山県</option>  
-							</optgroup>  
-							<optgroup label="中国">  
-							    <option th:value="*{city}" value="岡山県">岡山県</option>  
-							    <option th:value="*{city}" value="広島県">広島県</option>  
-							    <option th:value="*{city}" value="鳥取県">鳥取県</option>  
-							    <option th:value="*{city}" value="島根県">島根県</option>  
-							    <option th:value="*{city}" value="山口県">山口県</option>  
-							</optgroup>  
-							<optgroup label="四国">  
-							    <option th:value="*{city}" value="徳島県">徳島県</option>  
-							    <option th:value="*{city}" value="香川県">香川県</option>  
-							    <option th:value="*{city}" value="愛媛県">愛媛県</option>  
-							    <option th:value="*{city}" value="高知県">高知県</option>  
-							</optgroup>  
-							<optgroup label="九州・沖縄">  
-							    <option th:value="*{city}" value="福岡県">福岡県</option>  
-							    <option th:value="*{city}" value="佐賀県">佐賀県</option>  
-							    <option th:value="*{city}" value="長崎県">長崎県</option>  
-							    <option th:value="*{city}" value="熊本県">熊本県</option>  
-							    <option th:value="*{city}" value="大分県">大分県</option>  
-							    <option th:value="*{city}" value="宮崎県">宮崎県</option>  
-							    <option th:value="*{city}" value="鹿児島県">鹿児島県</option>  
-							    <option th:value="*{city}" value="沖縄県">沖縄県</option>  
-							</optgroup>  
-						</select>  
-						<div class="danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
-					</td>
-				<tr>
-					<td><label for="municipalities">市区町村：</label></td>
-					<td>
-						<input type="text" id="municipalities" name="municipalities" placeholder="新宿区" th:value="*{municipalities}"><br>
-						<div class="danger" th:if="${#fields.hasErrors('municipalities')}" th:errors="*{municipalities}"></div>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="streetAddress">市区町村以降の住所：</label></td>
-					<td>
-						<input type="text" id="streetAddress" name="streetAddress" placeholder="西新宿2-8-1"><br>
-						<div class="danger" th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></div>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="building">建物名：</label></td>
-					<td><input type="text" id="building" name="building" placeholder="都庁3F" th:value="*{building}"></td>
-				</tr>
-			</table>
-			<input type="submit" value="確認">
-		</form>
-	</div>
+	<div class="container">
+		<h1>新規会員登録ページ</h1>
+		<!--	ユーザー用登録ページ-->
+		<div th:if="${position == 'user'}">
+			<h2 class="text-danger" th:text="${caution}")></h2>
+			
+			<form method="post" th:action="@{/reservation/user-register/user-confirm}">
+				<table th:object="${userInfoForm}">				
+					<tr>
+						<th>項目</td>
+						<th>入力欄</th>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="userName">お名前：</label>
+						</td>
+						<td>
+							<input type="text" id="userName" name="userName" th:value="*{userName}" size="30" placeholder="例:山田 太郎"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="userNameFurigana">ふりがな：</label>
+						</td>
+						<td>
+							<input type="text" id="userNameFurigana" name="userNameFurigana" th:value="*{userNameFurigana}" size="30" placeholder="例:やまだ たろう"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('userNameFurigana')}" th:errors="*{userNameFurigana}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="mail">メールアドレス：</label>
+						</td>
+						<td>
+							<input type="mail" id="mail" name="mail" th:value="*{mail}" size="30" placeholder="例:user@example.com"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="userPassword">パスワード：</label>
+						</td>
+						<td>
+							<input type="password" id="userPassword" name="userPassword" size="30"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="phone">連絡先：</label>
+						</td>
+						<td>
+							<input type="tel" id="phone" name="phone" th:value="*{phone}" maxlength="11" size="30" placeholder="例:090-1234-5678 → 09012345678"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="postCode">郵便番号：</label>
+						</td>
+						<td>
+							<input type="tel" id="postCode" name="postCode" maxlength="7" size="30" th:value="*{postCode}" placeholder="例:163-8001 → 1638001">
+							<div class="text-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}"></div>	
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="city">都道府県：</label>
+						</td>
+						<td>
+							<select name="city" id="city" th:value="*{city}">  
+								<option th:value="*{city}" th:text="都道府県をお選びください。"></option>   
+								<optgroup label="北海道・東北">  
+								    <option value="北海道">北海道</option>  
+								    <option value="青森県">青森県</option>  
+								    <option value="秋田県">秋田県</option>  
+								    <option value="岩手県">岩手県</option>  
+								    <option value="山形県">山形県</option>  
+								    <option value="宮城県">宮城県</option>  
+								    <option value="福島県">福島県</option>  
+								</optgroup>  
+								<optgroup label="甲信越・北陸">  
+								    <option value="山梨県">山梨県</option>  
+								    <option value="長野県">長野県</option>  
+								    <option value="新潟県">新潟県</option>  
+								    <option value="富山県">富山県</option>  
+								    <option value="石川県">石川県</option>  
+								    <option value="福井県">福井県</option>  
+								</optgroup>  
+								<optgroup label="関東">  
+								    <option value="茨城県">茨城県</option>  
+								    <option value="栃木県">栃木県</option>  
+								    <option value="群馬県">群馬県</option>  
+								    <option value="埼玉県">埼玉県</option>  
+								    <option value="千葉県">千葉県</option>  
+								    <option value="東京都">東京都</option>  
+								    <option value="神奈川県">神奈川県</option>  
+								</optgroup>  
+								<optgroup label="東海">  
+								    <option value="愛知県">愛知県</option>  
+								    <option value="静岡県">静岡県</option>  
+								    <option value="岐阜県">岐阜県</option>  
+								    <option value="三重県">三重県</option>  
+								</optgroup>  
+								<optgroup label="関西">  
+								    <option value="大阪府">大阪府</option>  
+								    <option value="兵庫県">兵庫県</option>  
+								    <option value="京都府">京都府</option>  
+								    <option value="滋賀県">滋賀県</option>  
+								    <option value="奈良県">奈良県</option>  
+								    <option value="和歌山県">和歌山県</option>  
+								</optgroup>  
+								<optgroup label="中国">  
+								    <option value="岡山県">岡山県</option>  
+								    <option value="広島県">広島県</option>  
+								    <option value="鳥取県">鳥取県</option>  
+								    <option value="島根県">島根県</option>  
+								    <option value="山口県">山口県</option>  
+								</optgroup>  
+								<optgroup label="四国">  
+								    <option value="徳島県">徳島県</option>  
+								    <option value="香川県">香川県</option>  
+								    <option value="愛媛県">愛媛県</option>  
+								    <option value="高知県">高知県</option>  
+								</optgroup>  
+								<optgroup label="九州・沖縄">  
+								    <option value="福岡県">福岡県</option>  
+								    <option value="佐賀県">佐賀県</option>  
+								    <option value="長崎県">長崎県</option>  
+								    <option value="熊本県">熊本県</option>  
+								    <option value="大分県">大分県</option>  
+								    <option value="宮崎県">宮崎県</option>  
+								    <option value="鹿児島県">鹿児島県</option>  
+								    <option value="沖縄県">沖縄県</option>  
+								</optgroup>  
+							</select>  
+							<div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="municipalities">市区町村：</label>
+						</td>
+						<td>
+							<input type="text" id="municipalities" name="municipalities" size="30" placeholder="例:新宿区" th:value="*{municipalities}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('municipalities')}" th:errors="*{municipalities}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="streetAddress">市区町村以降の住所：</label>
+						</td>
+						<td>
+							<input type="text" id="streetAddress" name="streetAddress" size="30" placeholder="例:西新宿2-8-1" th:value="*{streetAddress}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="building">　建物名：</label></td>
+						<td>
+							<input type="text" id="building" name="building" size="30" placeholder="例:都庁3F" th:value="*{building}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('building')}" th:errors="*{building}"></div>
+						</td>
+					</tr>
+				</table>
+				<input class="btn btn-primary" type="submit" value="確認">
+			</form>
+		</div>
+		
+	<!--	店舗用登録ページ-->
+		<div th:if="${position == 'store'}">
+			<h2 th:text="${caution}")></h2>
+			<form method="post" th:action="@{/reservation/store-register/store-confirm}">
+				<table th:object="${storeInfoForm}">				
+					<tr>
+						<th>項目</td>
+						<th>入力欄</th>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="storeName">企業・店舗名：</label>
+						</td>
+						<td>
+							<input type="text" id="storeName" name="storeName" th:value="*{storeName}" size="30" placeholder="例:万屋銀ちゃん"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('storeName')}" th:errors="*{storeName}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="mail">メールアドレス：</label>
+						</td>
+						<td>
+							<input type="mail" id="mail" name="mail" th:value="*{mail}" size="30" placeholder="例:store@example.com"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="storePassword">パスワード：</label>
+						</td>
+						<td>
+							<input type="password" id="storePassword" name="storePassword" size="30"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('storePassword')}" th:errors="*{storePassword}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="phone">連絡先：</label>
+						</td>
+						<td>
+							<input type="tel" id="phone" name="phone" th:value="*{phone}" maxlength="11" size="30" placeholder="例:090-1234-5678 → 09012345678"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="postCode">郵便番号：</label>
+						</td>
+						<td>
+							<input type="tel" id="postCode" name="postCode" maxlength="7" size="30" th:value="*{postCode}" placeholder="例:163-8001 → 1638001">
+							<div class="text-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}"></div>	
+						</td>
+					</tr>
+						<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="city">都道府県：</label>
+						</td>
+						<td>
+							<select name="city" id="city" th:value="*{city}">  
+								<option th:value="*{city}" th:text="都道府県をお選びください。"></option>   
+								<optgroup label="北海道・東北">  
+								    <option value="北海道">北海道</option>  
+								    <option value="青森県">青森県</option>  
+								    <option value="秋田県">秋田県</option>  
+								    <option value="岩手県">岩手県</option>  
+								    <option value="山形県">山形県</option>  
+								    <option value="宮城県">宮城県</option>  
+								    <option value="福島県">福島県</option>  
+								</optgroup>  
+								<optgroup label="甲信越・北陸">  
+								    <option value="山梨県">山梨県</option>  
+								    <option value="長野県">長野県</option>  
+								    <option value="新潟県">新潟県</option>  
+								    <option value="富山県">富山県</option>  
+								    <option value="石川県">石川県</option>  
+								    <option value="福井県">福井県</option>  
+								</optgroup>  
+								<optgroup label="関東">  
+								    <option value="茨城県">茨城県</option>  
+								    <option value="栃木県">栃木県</option>  
+								    <option value="群馬県">群馬県</option>  
+								    <option value="埼玉県">埼玉県</option>  
+								    <option value="千葉県">千葉県</option>  
+								    <option value="東京都">東京都</option>  
+								    <option value="神奈川県">神奈川県</option>  
+								</optgroup>  
+								<optgroup label="東海">  
+								    <option value="愛知県">愛知県</option>  
+								    <option value="静岡県">静岡県</option>  
+								    <option value="岐阜県">岐阜県</option>  
+								    <option value="三重県">三重県</option>  
+								</optgroup>  
+								<optgroup label="関西">  
+								    <option value="大阪府">大阪府</option>  
+								    <option value="兵庫県">兵庫県</option>  
+								    <option value="京都府">京都府</option>  
+								    <option value="滋賀県">滋賀県</option>  
+								    <option value="奈良県">奈良県</option>  
+								    <option value="和歌山県">和歌山県</option>  
+								</optgroup>  
+								<optgroup label="中国">  
+								    <option value="岡山県">岡山県</option>  
+								    <option value="広島県">広島県</option>  
+								    <option value="鳥取県">鳥取県</option>  
+								    <option value="島根県">島根県</option>  
+								    <option value="山口県">山口県</option>  
+								</optgroup>  
+								<optgroup label="四国">  
+								    <option value="徳島県">徳島県</option>  
+								    <option value="香川県">香川県</option>  
+								    <option value="愛媛県">愛媛県</option>  
+								    <option value="高知県">高知県</option>  
+								</optgroup>  
+								<optgroup label="九州・沖縄">  
+								    <option value="福岡県">福岡県</option>  
+								    <option value="佐賀県">佐賀県</option>  
+								    <option value="長崎県">長崎県</option>  
+								    <option value="熊本県">熊本県</option>  
+								    <option value="大分県">大分県</option>  
+								    <option value="宮崎県">宮崎県</option>  
+								    <option value="鹿児島県">鹿児島県</option>  
+								    <option value="沖縄県">沖縄県</option>  
+								</optgroup>  
+							</select>  
+							<div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="municipalities">市区町村：</label>
+						<td>
+							<input type="text" id="municipalities" name="municipalities" size="30" placeholder="例:新宿区" th:value="*{municipalities}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('municipalities')}" th:errors="*{municipalities}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="streetAddress">市区町村以降の住所：</label>
+						</td>
+						<td>
+							<input type="text" id="streetAddress" name="streetAddress" size="30" placeholder="例:西新宿2-8-1" th:value="*{streetAddress}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="building">　建物名：</label>
+						</td>
+						<td>
+							<input type="text" id="building" name="building" size="30" placeholder="例:都庁3F" th:value="*{building}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('building')}" th:errors="*{building}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="isOpened">開店時間：</label>
+						</td>
+						<td>
+							<input type="time" id="isOpened" name="isOpened" size="30" placeholder="例:10:00" th:value="*{isOpened}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('isOpened')}" th:errors="*{isOpened}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<font color="red">* </font>
+							<label for="isClosed">閉店時間：</label>
+						</td>
+						<td>
+							<input type="time" id="isClosed" name="isClosed" size="30" placeholder="例:19:00" th:value="*{isClosed}"><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('isClosed')}" th:errors="*{isClosed}"></div>
+						</td>
+					</tr>
+
+				</table>
+				<input class="btn btn-primary" type="submit" value="確認">
+			</form>
+		</div>
+	</div>	
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserInfoForm {
@@ -10,10 +11,6 @@ public class UserInfoForm {
 		
 	}
 	
-	@NotEmpty(message="メールアドレスが未入力です。")
-	@Email(message="入力されたメールアドレスの形式は不正です。")
-	private String mail;
-	
 	@NotEmpty(message="お名前が未入力です。")
 	@Size(min=1,max=30,message="お名前は30字以内でご入力ください。")
 	private String userName;
@@ -21,13 +18,18 @@ public class UserInfoForm {
 	@NotEmpty(message="お名前の振り仮名が未入力です。")
 	@Size(min=1,max=30,message="お名前の振り仮名は30字以内でご入力ください。")
 	private String userNameFurigana;
-	
-	@NotEmpty(message="電話番号が未入力です。")
-	private String phone;
+
+	@NotEmpty(message="メールアドレスが未入力です。")
+	@Email(message="入力されたメールアドレスの形式は不正です。")
+	private String mail;
 	
 	@NotEmpty(message="パスワードが未入力です。")
-	@Size(min=8,max=32,message="パスワードは8字以上、32字以内でご入力ください。")
+	@Pattern(regexp="^[a-zA-Z0-9]{8,32}+$",message="パスワードは8字以上32字以内、半角英数字でご入力ください。")
 	private String userPassword;
+	
+	@Pattern(regexp="[0-9]{10,11}",message="電話番号は半角数字で入力してください。")
+	@NotEmpty(message="電話番号が未入力です。")
+	private String phone;
 	
 	@NotEmpty(message="郵便番号が未入力です。")
 	private String postCode;

@@ -8,8 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class UserInfo {
 
-	@NotNull
-	private final int userId;
+	private int userId;
 	
 	@NotNull
 	private String mail;
@@ -40,14 +39,14 @@ public class UserInfo {
 	
 	private String building;
 	
-	@NotNull
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
-	private final LocalDateTime createdAt;
+	private LocalDateTime createdAt;
 	
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public UserInfo(@NotNull int userId, 
+//	DB更新・挿入用コンストラクタ
+	public UserInfo(
 			@NotNull String mail,
 			@NotNull String userName, 
 			@NotNull String userNameFurigana,
@@ -58,7 +57,6 @@ public class UserInfo {
 			@NotNull String municipalities,
 			@NotNull String userAddress,
 			String building, 
-			@NotNull LocalDateTime createdAt,
 			LocalDateTime updatedAt) {
 		this.userId = userId;
 		this.mail = mail;
@@ -70,31 +68,39 @@ public class UserInfo {
 		this.city = city;
 		this.municipalities = municipalities;
 		this.userAddress = userAddress;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-		
 		this.building = building != null ? building : null ;
-		this.updatedAt = updatedAt;
-		
+		this.updatedAt = updatedAt;	
 	}	
 	
-	public void updateUserInfo(UserInfo userInfo) {
-		this.mail = userInfo.getMail();
-		this.userName = userInfo.getUserName();
-		this.userNameFurigana = userInfo.getUserNameFurigana();
-		this.phone = userInfo.phone;
-		this.userPassword = userInfo.getUserPassword();
-		this.postCode = userInfo.getPostCode();
-		
-		if(userInfo.getBuilding() != null) {
-			this.building = userInfo.getBuilding();
-		}
-		
-	}
-
-	public void setUpdateAt(LocalDateTime updateAt) {
-		this.updatedAt = updateAt;
-	}
+//	DBデータ取得用コンストラクタ
+	public UserInfo(
+			@NotNull int userId,
+			@NotNull String mail,
+			@NotNull String userName, 
+			@NotNull String userNameFurigana,
+			@NotNull String phone, 
+			@NotNull String userPassword, 
+			@NotNull String postCode,
+			@NotNull String city,
+			@NotNull String municipalities,
+			@NotNull String userAddress,
+			String building, 
+			LocalDateTime createdAt,
+			LocalDateTime updatedAt) {
+		this.userId = userId;
+		this.mail = mail;
+		this.userName = userName;
+		this.userNameFurigana = userNameFurigana;
+		this.phone = phone;
+		this.userPassword = userPassword;
+		this.postCode = postCode;
+		this.city = city;
+		this.municipalities = municipalities;
+		this.userAddress = userAddress;
+		this.building = building != null ? building : null ;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;	
+	}	
 
 	public int getUserId() {
 		return userId;

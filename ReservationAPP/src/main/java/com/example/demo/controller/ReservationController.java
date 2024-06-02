@@ -21,8 +21,7 @@ public class ReservationController {
 	public ReservationController(UserInfoService userInfoService) {
 		this.userInfoService = userInfoService;
 	}
-	
-	
+
 	@GetMapping("/test")
 	public String test(Model model) {
 		List<UserInfo> userInfoList = userInfoService.getAll();

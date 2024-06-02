@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS store_info_tb (
     municipalities VARCHAR(100) NOT NULL,
     street_address VARCHAR(200) NOT NULL,
     building VARCHAR(200),
-    mail VARCHAR(500) NOT NULL,
-    phone VARCHAR(50) NOT NULL,
+    mail VARCHAR(500) NOT NULL UNIQUE,
+    phone VARCHAR(50) NOT NULL UNIQUE,
     store_password VARCHAR(50) NOT NULL,
     is_opened VARCHAR(30) NOT NULL DEFAULT "10:00",
     is_closed VARCHAR(30) NOT NULL DEFAULT "21:00",
@@ -91,10 +91,10 @@ CREATE TABLE IF NOT EXISTS service_plan(
 */
 CREATE TABLE IF NOT EXISTS user_info_tb (
     user_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    mail VARCHAR(1000) NOT NULL,
+    mail VARCHAR(500) NOT NULL UNIQUE,
     user_name VARCHAR(20) NOT NULL,
     user_name_furigana VARCHAR(40) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
+    phone VARCHAR(15) NOT NULL UNIQUE,
     user_password VARCHAR(500) NOT NULL,
     post_code VARCHAR(10) NOT NULL,
     city VARCHAR(10),
@@ -118,12 +118,14 @@ CREATE TABLE IF NOT EXISTS reservation_table (
     reservation_id INTEGER AUTO_INCREMENT NOT NULL,
     user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
+    service_type_id INTEGER NOT NULL,
     service_plan_id INTEGER NOT NULL,
-    reservation_date_at DATETIME NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    at_reservation_date DATETIME NOT NULL,
+    at_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_canceled VARCHAR(10) NOT NULL DEFAULT "N",
     PRIMARY KEY (reservation_id,user_id,store_id),
     FOREIGN KEY (`user_id`) REFERENCES user_info_tb(user_id) ON DELETE CASCADE,
     FOREIGN KEY (`store_id`) REFERENCES store_info_tb(store_id) ON DELETE CASCADE,
-    FOREIGN KEY (`service_type_id`) REFERENCES store_service_type (service_type_id) ON DELETE CASCADE
+    FOREIGN KEY (`service_type_id`) REFERENCES store_service_type (service_type_id) ON DELETE CASCADE,
+    FOREIGN KEY (`service_plan_id`) REFERENCES service_plan (service_plan_id) ON DELETE CASCADE
 );

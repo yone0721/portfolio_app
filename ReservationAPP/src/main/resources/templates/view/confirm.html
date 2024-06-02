@@ -1,10 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+		<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
+		<link rel="stylesheet" th:href="@{../../css/confirm.css}" href="#" type="text/css">
+	
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
 <body>
-	<h1>入力確認画面</h1>
+	<header th:replace="~{/view/header::header}"></header>
+	<div class="container">
+		<h1>入力確認</h1>
+		
+<!--		ユーザー情報確認画面-->
+		<div th:if="${position == 'user'}" th:object="${userInfoForm}">
+			<table>
+				<tr>
+					<th>項目</td>
+					<th>入力欄</th>
+				</tr>
+				<tr>
+					<td><label for="userName">お名前：</label></td>
+					<td><p th:text="*{userName}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="userNameFurigana">ふりがな：</label></td>
+					<td><p th:text="*{userNameFurigana}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="mail">メールアドレス：</label></td>
+					<td><p th:text="*{mail}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="phone">連絡先：</label></td>
+					<td><p th:text="*{phone}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="postCode">郵便番号：</label></td>
+					<td><p th:text="*{postCode}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="city">都道府県：</label></td>
+					<td><p th:text="*{city}"></p></td>
+				<tr>
+					<td><label for="municipalities">市区町村：</label></td>
+					<td><p th:text="*{municipalities}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="streetAddress">市区町村以降の住所：</label></td>
+					<td><p th:text="*{streetAddress}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="building">建物名：</label></td>
+					<td><p th:text="*{building}"></p></td>
+				</tr>
+			</table>
+			<div class="form-container">
+				<form method="post" th:action="@{/reservation/user-register/user-complete}">
+					<input type="hidden" name="userName" th:value="*{userName}">
+					<input type="hidden" name="userNameFurigana" th:value="*{userNameFurigana}">
+					<input type="hidden" name="mail" th:value="*{mail}">
+					<input type="hidden" name="userPassword" th:value="*{userPassword}">
+					<input type="hidden" name="phone" th:value="*{phone}">
+					<input type="hidden" name="postCode" th:value="*{postCode}">
+					<input type="hidden" name="city" th:value="*{city}">
+					<input type="hidden" name="municipalities" th:value="*{municipalities}">
+					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
+					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="position" value="user">
+					<input class="btn btn-primary" type="submit" value="登録">
+				</form>
+				<form method="post" th:action="@{/reservation/user-register/register}">
+					<input type="hidden" name="userName" th:value="*{userName}">
+					<input type="hidden" name="userNameFurigana" th:value="*{userNameFurigana}">
+					<input type="hidden" name="mail" th:value="*{mail}">
+					<input type="hidden" name="userPassword" th:value="*{userPassword}">
+					<input type="hidden" name="phone" th:value="*{phone}">
+					<input type="hidden" name="postCode" th:value="*{postCode}">
+					<input type="hidden" name="city" th:value="*{city}">
+					<input type="hidden" name="municipalities" th:value="*{municipalities}">
+					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
+					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="position" value="user">
+					<input class="btn btn-primary" type="submit" value="戻る">
+				</form>
+			</div>
+			
+		</div>
+<!--		店舗情報確認画面-->
+		<div th:if="${position == 'store'}" th:object="${storeInfoForm}">
+			<table>
+				<tr>
+					<th>項目</td>
+					<th>入力欄</th>
+				</tr>
+				<tr>
+					<td><label for="storeName">お名前：</label></td>
+					<td><p th:text="*{storeName}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="mail">メールアドレス：</label></td>
+					<td><p th:text="*{mail}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="phone">連絡先：</label></td>
+					<td><p th:text="*{phone}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="postCode">郵便番号：</label></td>
+					<td><p th:text="*{postCode}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="city">都道府県：</label></td>
+					<td><p th:text="*{city}"></p></td>
+				<tr>
+					<td><label for="municipalities">市区町村：</label></td>
+					<td><p th:text="*{municipalities}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="streetAddress">市区町村以降の住所：</label></td>
+					<td><p th:text="*{streetAddress}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="building">建物名：</label></td>
+					<td><p th:text="*{building}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="isOpened">開店時間：</label></td>
+					<td><p th:text="*{isOpened}"></p></td>
+				</tr>
+				<tr>
+					<td><label for="isClosed">閉店時間：</label></td>
+					<td><p th:text="*{isClosed}"></p></td>
+				</tr>
+			</table>
+			<div class="form-container">
+				<form method="post" th:action="@{/reservation/store-register/store-complete}">
+					<input type="hidden" name="storeName" th:value="*{storeName}">
+					<input type="hidden" name="mail" th:value="*{mail}">
+					<input type="hidden" name="storePassword" th:value="*{storePassword}">
+					<input type="hidden" name="phone" th:value="*{phone}">
+					<input type="hidden" name="postCode" th:value="*{postCode}">
+					<input type="hidden" name="city" th:value="*{city}">
+					<input type="hidden" name="municipalities" th:value="*{municipalities}">
+					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
+					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="isOpened" th:value="*{isOpened}">
+					<input type="hidden" name="isClosed" th:value="*{isClosed}">
+					<input type="hidden" name="position" value="store">
+					<input class="btn btn-primary" type="submit" value="登録">
+				</form>
+				<form method="post" th:action="@{/reservation/store-register/register}">
+					<input type="hidden" name="storeName" th:value="*{storeName}">
+					<input type="hidden" name="mail" th:value="*{mail}">
+					<input type="hidden" name="storePassword" th:value="*{storePassword}">
+					<input type="hidden" name="phone" th:value="*{phone}">
+					<input type="hidden" name="postCode" th:value="*{postCode}">
+					<input type="hidden" name="city" th:value="*{city}">
+					<input type="hidden" name="municipalities" th:value="*{municipalities}">
+					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
+					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="isOpened" th:value="*{isOpened}">
+					<input type="hidden" name="isClosed" th:value="*{isClosed}">
+					<input type="hidden" name="position" value="store">
+					<input class="btn btn-primary" type="submit" value="戻る">
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

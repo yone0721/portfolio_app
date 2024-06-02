@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+td,th {
+	margin:10px; 
+	padding:25px 50px 25px 20px;
+	border: 1px solid;
+}
+th {
+	background-color: rgb(192, 192, 192);
+}
+
+input[type = submit]{
+	padding: 5px 20px;
+	margin: 15px;
+}
+
+.form-container{
+	display:flex;
+}
+
+h {
+	display: flex;
+}

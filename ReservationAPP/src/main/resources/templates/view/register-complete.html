@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.thymeleaf.org" >
 <head>
+	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{../../css/header.css}" type="text/css">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-
+	<header th:replace="~{/view/header::header}"></header>
+	<h1 text="${complete}"></h1>
+	<a th:href="@{/reservation/pages/login-top}">ログイン画面に戻る</a>
 </body>
 </html>
