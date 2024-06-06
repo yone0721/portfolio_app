@@ -11,7 +11,9 @@
 	<heder th:replace="~{/view/header::header}"></heder>
 	<div class="container">
 		<h1>新規会員登録ページ</h1>
+		
 		<!--	ユーザー用登録ページ-->
+		
 		<div th:if="${position == 'user'}">
 			<h2 class="text-danger" th:text="${caution}")></h2>
 			
@@ -189,6 +191,7 @@
 		</div>
 		
 	<!--	店舗用登録ページ-->
+	
 		<div th:if="${position == 'store'}">
 			<h2 th:text="${caution}")></h2>
 			<form method="post" th:action="@{/reservation/store-register/store-confirm}">
@@ -203,7 +206,7 @@
 							<label for="storeName">企業・店舗名：</label>
 						</td>
 						<td>
-							<input type="text" id="storeName" name="storeName" th:value="*{storeName}" size="30" placeholder="例:万屋銀ちゃん"><br>
+							<input type="text" id="storeName" name="storeName" th:value="*{storeName}" size="30" placeholder="例:ポッポちゃん"><br>
 							<div class="text-danger" th:if="${#fields.hasErrors('storeName')}" th:errors="*{storeName}"></div>
 						</td>
 					</tr>
@@ -348,6 +351,16 @@
 						<td>
 							<input type="text" id="building" name="building" size="30" placeholder="例:都庁3F" th:value="*{building}"><br>
 							<div class="text-danger" th:if="${#fields.hasErrors('building')}" th:errors="*{building}"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="storeReservationLimit">　予約上限数：</label>
+						</td>
+						<td>
+							<input type="number" id="storeReservationLimit" name="storeReservationLimit" size="30" placeholder="例:5" th:value="*{storeReservationLimit}"><br>
+							<div>※利用数に上限がない場合は、0を入力してください。</div><br>
+							<div class="text-danger" th:if="${#fields.hasErrors('storeReservationLimit')}" th:errors="*{storeReservationLimit}"></div>
 						</td>
 					</tr>
 					<tr>

@@ -122,6 +122,50 @@ public class UserInfoDaoImpl implements UserInfoDao {
 			throw new UserInfoNotFoundException("ユーザー情報が存在しないか、データ取得に失敗しました。");
 		}
 	}
+	
+	@Override
+	public Optional<UserInfo> findByMail(String mail) {
+		String sql ="""
+				SELECT
+					user_id,
+					mail,
+					user_name,
+					user_name_furigana,
+					phone,
+					user_password,
+					post_code,
+					city,
+					municipalities,
+					user_address,
+					building,
+					created_at,
+					updated_at
+				FROM user_info_tb WHERE mail = ?""";
+		Map<String,Object> result = jdbcTemplate.queryForMap(sql,mail);
+		
+		try {
+			UserInfo userInfo = new UserInfo(
+					(int)result.get("user_id"),
+					(String)result.get("mail"),
+					(String)result.get("user_name"),
+					(String)result.get("user_name_furigana"),
+					(String)result.get("phone"),
+					(String)result.get("user_password"),
+					(String)result.get("post_code"),
+					(String)result.get("city"),
+					(String)result.get("municipalities"),
+					(String)result.get("user_address"),
+					(String)result.get("building"),
+					((LocalDateTime)result.get("created_at")),
+					((LocalDateTime)result.get("updated_at"))		
+					);
+			
+			Optional<UserInfo> userInfoOpt = Optional.ofNullable(userInfo);
+			return userInfoOpt;
+		}catch(EmptyResultDataAccessException e) {
+			throw new UserInfoNotFoundException("ユーザー情報が存在しないか、データ取得に失敗しました。");
+		}
+	}
 
 	@Override
 	public int insert(UserInfo userInfo) {

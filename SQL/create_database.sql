@@ -8,10 +8,10 @@ USE reservation_db;
     ・service_type_id       サービスの種類を管理する識別番号
     ・service_type_name     サービス種類の名称
 */
-CREATE TABLE IF NOT EXISTS store_service_type (
-    service_type_id INTEGER NOT NULL PRIMARY KEY,
-    service_type_name VARCHAR(20) NOT NULL UNIQUE
-);
+-- CREATE TABLE IF NOT EXISTS store_service_type (
+--     service_type_id INTEGER NOT NULL PRIMARY KEY,
+--     service_type_name VARCHAR(20) NOT NULL UNIQUE
+-- );
 
 /*
     店舗情報のテーブル
@@ -59,19 +59,19 @@ CREATE TABLE IF NOT EXISTS store_info_tb (
     ・started_at            プランの開始日
     ・finished_at           プランの終了日（期間限定などの場合にのみ設定）
 */
-CREATE TABLE IF NOT EXISTS service_plan(
-    service_plan_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    store_id INTEGER NOT NULL,
-    service_type_id INTEGER NOT NULL,
-    plan_name VARCHAR(100) NOT NULL,
-    service_describe VARCHAR(1000) NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME,
-    started_at DATE,
-    finished_at DATE,
-    FOREIGN KEY (`store_id`) REFERENCES store_info_tb (store_id) ON DELETE CASCADE,
-    FOREIGN KEY (`service_type_id`) REFERENCES store_service_type (service_type_id) ON DELETE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS service_plan(
+--     service_plan_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     store_id INTEGER NOT NULL,
+--     service_type_id INTEGER NOT NULL,
+--     plan_name VARCHAR(100) NOT NULL,
+--     service_describe VARCHAR(1000) NOT NULL,
+--     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     updated_at DATETIME,
+--     started_at DATE,
+--     finished_at DATE,
+--     FOREIGN KEY (`store_id`) REFERENCES store_info_tb (store_id) ON DELETE CASCADE,
+--     FOREIGN KEY (`service_type_id`) REFERENCES store_service_type (service_type_id) ON DELETE CASCADE
+-- );
 
 /*
     顧客情報のテーブル
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS reservation_table (
     reservation_id INTEGER AUTO_INCREMENT NOT NULL,
     user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
-    service_type_id INTEGER NOT NULL,
-    service_plan_id INTEGER NOT NULL,
+    -- service_type_id INTEGER NOT NULL,
+    -- service_plan_id INTEGER NOT NULL,
     at_reservation_date DATETIME NOT NULL,
     at_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_canceled VARCHAR(10) NOT NULL DEFAULT "N",

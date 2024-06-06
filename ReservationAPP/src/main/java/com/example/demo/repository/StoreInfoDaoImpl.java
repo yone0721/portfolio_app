@@ -41,6 +41,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					mail,
 					phone,
 					store_password,
+					store_reservation_limit,
 					is_opened,
 					is_closed,
 					created_at,
@@ -62,6 +63,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 						(String)getStoreInfo.get("mail"),
 						(String)getStoreInfo.get("phone"),
 						(String)getStoreInfo.get("store_password"),
+						String.valueOf((int)getStoreInfo.get("store_reservation_limit")),
 						(String)getStoreInfo.get("isOpened"),
 						(String)getStoreInfo.get("isClosed"),
 						(LocalDateTime)getStoreInfo.get("created_at"),					
@@ -90,6 +92,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					mail,
 					phone,
 					store_password,
+					store_reservation_limit,
 					is_opened,
 					is_closed,
 					created_at,
@@ -109,6 +112,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					(String)getStoreInfo.get("mail"),
 					(String)getStoreInfo.get("phone"),
 					(String)getStoreInfo.get("store_password"),
+					String.valueOf((int)getStoreInfo.get("store_reservation_limit")),
 					(String)getStoreInfo.get("isOpened"),
 					(String)getStoreInfo.get("isClosed"),
 					(LocalDateTime)getStoreInfo.get("created_at"),					
@@ -134,27 +138,66 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					mail,
 					phone,
 					store_password,
+					store_reservation_limit,
+					is_opened,
+					is_closed,
+					created_at,
+					updated_at
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""";
+		try {
+				return jdbcTemplate.update(sql,
+							storeInfo.getStoreName(),
+							storeInfo.getPostCode(),
+							storeInfo.getCity(),
+							storeInfo.getMunicipalities(),
+							storeInfo.getStreetAddress(),
+							storeInfo.getBuilding(),
+							storeInfo.getMail(),
+							storeInfo.getPhone(),
+							storeInfo.getStorePassword(),
+							storeInfo.getStoreReservationLimit(),
+							storeInfo.getIsOpened(),
+							storeInfo.getIsClosed(),
+							LocalDateTime.now(),
+							LocalDateTime.now()
+						);
+		}catch(EmptyResultDataAccessException e) {
+			throw new FailedInsertSQLException("店舗情報の登録に失敗しました。");
+		}
+	}
+	@Override
+	public int insertStoreReservationLimitIsNull(StoreInfo storeInfo) {
+		String sql = """
+				INSERT INTO store_info_tb(
+					store_name,
+					post_code,
+					city,
+					municipalities,
+					street_address,
+					building,
+					mail,
+					phone,
+					store_password,
 					is_opened,
 					is_closed,
 					created_at,
 					updated_at
 				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""";
 		try {
-
 			return jdbcTemplate.update(sql,
-						storeInfo.getStoreName(),
-						storeInfo.getPostCode(),
-						storeInfo.getCity(),
-						storeInfo.getMunicipalities(),
-						storeInfo.getStreetAddress(),
-						storeInfo.getBuilding(),
-						storeInfo.getMail(),
-						storeInfo.getPhone(),
-						storeInfo.getStorePassword(),
-						storeInfo.getIsOpened(),
-						storeInfo.getIsClosed(),
-						LocalDateTime.now(),
-						LocalDateTime.now()
+					storeInfo.getStoreName(),
+					storeInfo.getPostCode(),
+					storeInfo.getCity(),
+					storeInfo.getMunicipalities(),
+					storeInfo.getStreetAddress(),
+					storeInfo.getBuilding(),
+					storeInfo.getMail(),
+					storeInfo.getPhone(),
+					storeInfo.getStorePassword(),
+					storeInfo.getIsOpened(),
+					storeInfo.getIsClosed(),
+					LocalDateTime.now(),
+					LocalDateTime.now()
 					);
 		}catch(EmptyResultDataAccessException e) {
 			throw new FailedInsertSQLException("店舗情報の登録に失敗しました。");
@@ -174,6 +217,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					building = ?,
 					mail = ?,
 					phone = ?,
+					store_reservation_limit = ?,
 					is_opened = ?,
 					is_closed = ?,
 					updated_at = ?
@@ -188,6 +232,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 					storeInfo.getBuilding(),
 					storeInfo.getMail(),
 					storeInfo.getPhone(),
+					storeInfo.getStoreReservationLimit(),
 					storeInfo.getIsOpened(),
 					storeInfo.getIsClosed(),
 					LocalDateTime.now(),
@@ -209,7 +254,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 
 	@Override
 	public int delete(StoreInfo storeInfo) {
-		String sql = "DELETE FROM store_info_tb WHERE store_id = ?";
+		String sql = "UPDATE store_info_tb SET is_deleted = true WHERE store_id = ?";
 		
 		try {
 			return jdbcTemplate.update(sql,storeInfo.getStoreId());
@@ -218,5 +263,53 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		}
 	}
 
+	@Override
+	public Optional findByMail(String mail) {
+		String sql = """
+				SELECT 					
+					store_id,
+					store_name,
+					post_code,
+					city,
+					municipalities,
+					street_address,
+					building,
+					mail,
+					phone,
+					store_password,
+					store_reservation_limit,
+					is_opened,
+					is_closed,
+					created_at,
+					updated_at
+				FROM store_info_tb WHERE mail = ?""";
+		
+		try {
+			Map<String,Object> getStoreInfo = jdbcTemplate.queryForMap(sql,mail);
+			
+			StoreInfo storeInfo = new StoreInfo(
+					(int)getStoreInfo.get("store_id"),
+					(String)getStoreInfo.get("store_name"),
+					(String)getStoreInfo.get("post_code"),
+					(String)getStoreInfo.get("city"),
+					(String)getStoreInfo.get("municipalities"),
+					(String)getStoreInfo.get("street_address"),
+					(String)getStoreInfo.get("building"),
+					(String)getStoreInfo.get("mail"),
+					(String)getStoreInfo.get("phone"),
+					(String)getStoreInfo.get("store_password"),
+					String.valueOf((int)getStoreInfo.get("store_reservation_limit")),
+					(String)getStoreInfo.get("isOpened"),
+					(String)getStoreInfo.get("isClosed"),
+					(LocalDateTime)getStoreInfo.get("created_at"),					
+					(LocalDateTime)getStoreInfo.get("updated_at")			
+				);
+			return Optional.ofNullable(storeInfo);
+			
+		}catch(EmptyResultDataAccessException e) {
+			
+			return null;
+		}
+	}
 
 }

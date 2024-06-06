@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -39,6 +40,10 @@ public class StoreInfoForm {
 	@NotEmpty(message="パスワードが未入力です。")
 	@Pattern(regexp="^[a-zA-Z0-9]{8,32}+$",message="パスワードは8字以上32字以内、半角英数字でご入力ください。")
 	private String storePassword;
+	
+	@Nullable
+	@Pattern(regexp="^[0-9]{1,3}",message="半角数字で入力してください。")
+	private String storeReservationLimit;
 	
 	@NotEmpty(message="開店時間が未入力です。")
 	@Pattern(regexp="[0-9]{2}:[0-9]{2}",message="形式に誤りがあります。")
@@ -133,5 +138,13 @@ public class StoreInfoForm {
 
 	public String getIsClosed() {
 		return isClosed;
+	}
+
+	public String getStoreReservationLimit() {
+		return storeReservationLimit;
+	}
+
+	public void setStoreReservationLimit(String storeReservationLimit) {
+		this.storeReservationLimit = storeReservationLimit;
 	}
 }

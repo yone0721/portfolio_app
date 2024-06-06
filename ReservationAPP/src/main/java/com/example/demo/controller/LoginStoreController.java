@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,34 +29,21 @@ public class LoginStoreController {
 			@RequestParam("mail") String mail,
 			@RequestParam("password") String password,
 			Model model,RedirectAttributes redirect) {
-			
-			LoginForm loginForm = new LoginForm(mail,password);
 
-			List<StoreInfo> storeInfoList = storeInfoService.getAllStore();
-			int storeId;
-			try {
-				storeId = authonicateStore(loginForm.getMail(),loginForm.getPassword());
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				storeId = 0;
-			}
+			StoreInfo storeInfo = storeInfoService.checkLoginForm(mail);
 			
 			System.out.println("---------------");
-			System.out.println("storeId:" + storeId);
+			System.out.println("storeId:" + storeInfo.getStoreId());
 			
-			if(storeId > 0) {
-				StoreInfo storeInfo = storeInfoService.getStoreById(storeId);
-				
-				if(!(storeInfo == null)) {
-					redirect.addFlashAttribute("storeInfo",storeInfo);
-					return "redirect:/reservation/store-login/login-complete";
-				}
-			}	
-			
-			model.addAttribute("loginError","メールアドレスまたはパスワードに誤りがあります。");
-			model.addAttribute("storechecked","checked");
-			model.addAttribute("loginForm",loginForm);
-			return "view/login";
+			if(storeInfo == null) {
+				LoginForm loginForm = new LoginForm(mail,password);
+				model.addAttribute("loginError","メールアドレスまたはパスワードに誤りがあります。");
+				model.addAttribute("storechecked","checked");
+				model.addAttribute("loginForm",loginForm);
+				return "view/login";
+			}
+			redirect.addFlashAttribute("storeInfo",storeInfo);
+			return "redirect:/reservation/store-login/login-complete";
 	}
 	
 	@GetMapping("/login-complete")
@@ -70,25 +56,24 @@ public class LoginStoreController {
 	}
 	
 	
-	public int authonicateStore(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
-		List<StoreInfo> storeList = storeInfoService.getAllStore();
+	public StoreInfo authonicateStore(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
+		StoreInfo checkAccount = storeInfoService.checkLoginForm(inputMail);
 		
 		String hashPass = this.storeInfoService.hashPass(inputPassword);
 		
 		System.out.println("入力したメール：" + inputMail);
 		System.out.println("入力したパスワード：" + hashPass);
 		
-		for(StoreInfo store:storeList) {
-			System.out.println("-------------------------");
-			System.out.println("DBのメール：" + store.getMail());
-			System.out.println("DBのパスワード：" + store.getStorePassword());
+		System.out.println("-------------------------");
+		System.out.println("DBのメール：" + checkAccount.getMail());
+		System.out.println("DBのパスワード：" + checkAccount.getStorePassword());
 			
-			if(inputMail.trim().equals(store.getMail().trim()) && hashPass.trim().equals(store.getStorePassword().trim())) {
-				System.out.println("認証成功");
-				return store.getStoreId();
-			}	
+		if(inputMail.trim().equals(checkAccount.getMail().trim()) 
+					&& hashPass.trim().equals(checkAccount.getStorePassword().trim())) {
+			System.out.println("認証成功");
+			return checkAccount;
 		}
-		return 0;
+		return null;
 	}
 
 	

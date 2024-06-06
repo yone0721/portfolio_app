@@ -15,6 +15,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedDeleteSQLException;
 import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.exception.FailedUpdateSQLException;
+import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.repository.UserInfoDao;
 
 @Service
@@ -99,6 +100,16 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}
 		
 		return null;
-		
+	}
+	
+	@Override
+	public UserInfo checkLoginForm(String mail) {
+		try {
+			Optional<UserInfo> getStoreInfoOpt = dao.findByMail(mail);
+			
+			return getStoreInfoOpt.isPresent() ? getStoreInfoOpt.get():null ;
+		}catch(StoreInfoNotFoundException e) {
+			throw new StoreInfoNotFoundException("該当するメールアドレスが見つかりません。");
+		}
 	}
 }

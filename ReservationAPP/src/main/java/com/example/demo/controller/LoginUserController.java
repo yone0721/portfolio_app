@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,49 +29,40 @@ public class LoginUserController {
 			@RequestParam("mail") String mail,
 			@RequestParam("password") String password,
 			Model model,RedirectAttributes redirect) {
-		
-			LoginForm loginForm = new LoginForm(mail,password);
-
-			List<UserInfo> userInfoList = userInfoService.getAll();
-			int userId;
+			
 			
 			try {
-				userId = authonicateuser(loginForm.getMail(),loginForm.getPassword());
+				UserInfo userInfo = authonicateuser(mail,password);
+				
+				if(!(userInfo == null)) {
+					System.out.println("ユーザーメール："+ userInfo.getMail());
+					redirect.addFlashAttribute("userInfo",userInfo);
+					return "redirect:/reservation/user-pages/user-login-complete";
+				}
 			} catch (NoSuchAlgorithmException e) {
+				
 				e.printStackTrace();
-				userId = 0;
 			}
 			
-			if(userId > 0) {
-				UserInfo userInfo = userInfoService.getById(userId);
-				if(!(userInfo ==null)) {
-					redirect.addFlashAttribute("userInfo",userInfo);
-					return "redirect:/reservation/user-login/login-complete";
-				}
-			}
+			LoginForm loginForm = new LoginForm(mail,password);
 			model.addAttribute("loginError","メールアドレスまたはパスワードに誤りがあります。");
 			model.addAttribute("userchecked","checked");
 			model.addAttribute("loginForm",loginForm);
 			return "view/login";
 	}
 	
-	public int authonicateuser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
-		List<UserInfo> userList = userInfoService.getAll();
+	public UserInfo authonicateuser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
+		UserInfo userInfo = userInfoService.checkLoginForm(inputMail);
 		
 		String hashPass = this.userInfoService.hashPass(inputPassword);
 		
-		System.out.println("入力したメール：" + inputMail);
-		System.out.println("入力したパスワード：" + hashPass);
-		for(UserInfo user:userList) {
-			System.out.println("-------------------------");
-			System.out.println("DBのメール：" + user.getMail());
-			System.out.println("DBのパスワード：" + user.getUserPassword());
 			
-			if(inputMail.trim().equals(user.getMail().trim()) && hashPass.trim().equals(user.getUserPassword().trim())) {
-				return user.getUserId();
-			}	
+		if(inputMail.trim().equals(userInfo.getMail().trim()) &&
+				hashPass.trim().equals(userInfo.getUserPassword().trim())) {
+			return userInfo;
+		
 		}
-		return 0;	
+		return null;	
 	}
 	
 	@GetMapping("/login-complete")

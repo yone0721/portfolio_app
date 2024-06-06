@@ -12,4 +12,5 @@ public interface UserInfoService {
 	void save(UserInfo userInfo);
 	void delete(UserInfo userInfo)throws NoSuchAlgorithmException ;
 	String hashPass(String password) ;
+	UserInfo checkLoginForm(String mail);
 }

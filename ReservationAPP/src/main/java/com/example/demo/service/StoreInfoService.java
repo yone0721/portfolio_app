@@ -12,5 +12,6 @@ public interface StoreInfoService {
 	void save(StoreInfo storeInfo);
 	void savePassword(StoreInfo storeInfo);
 	void delete(StoreInfo storeInfo);
+	StoreInfo checkLoginForm(String mail);
 	String hashPass(String password) throws NoSuchAlgorithmException;
 }

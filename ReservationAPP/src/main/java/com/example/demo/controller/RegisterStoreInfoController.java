@@ -76,6 +76,7 @@ public class RegisterStoreInfoController {
 			BindingResult result,Model model,RedirectAttributes redirect) {
 		System.out.println("Password：" + storeInfoForm.getStorePassword());
 		String hashStorePassword;
+		
 		try {
 			hashStorePassword = storeInfoService.hashPass(storeInfoForm.getStorePassword());
 		} catch (NoSuchAlgorithmException e) {
@@ -87,21 +88,22 @@ public class RegisterStoreInfoController {
 			return "view/register";
 		}
 		
-		StoreInfo storeInfo = new StoreInfo(
-				storeInfoForm.getStoreName(),
-				storeInfoForm.getPostCode(),
-				storeInfoForm.getCity(),
-				storeInfoForm.getMunicipalities(),
-				storeInfoForm.getStreetAddress(),
-				storeInfoForm.getBuilding(),
-				storeInfoForm.getMail(),
-				storeInfoForm.getPhone(),
-				hashStorePassword,
-				storeInfoForm.getIsOpened(),
-				storeInfoForm.getIsClosed(),
-				LocalDateTime.now()
-				);
-		
+			StoreInfo storeInfo = new StoreInfo(
+					storeInfoForm.getStoreName(),
+					storeInfoForm.getPostCode(),
+					storeInfoForm.getCity(),
+					storeInfoForm.getMunicipalities(),
+					storeInfoForm.getStreetAddress(),
+					storeInfoForm.getBuilding(),
+					storeInfoForm.getMail(),
+					storeInfoForm.getPhone(),
+					hashStorePassword,
+					storeInfoForm.getStoreReservationLimit(),
+					storeInfoForm.getIsOpened(),
+					storeInfoForm.getIsClosed(),
+					LocalDateTime.now()
+					);
+
 		try {
 			storeInfoService.register(storeInfo);	
 			redirect.addFlashAttribute("complete","登録が完了しました。");

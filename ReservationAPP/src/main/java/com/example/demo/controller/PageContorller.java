@@ -15,8 +15,8 @@ public class PageContorller {
 	@GetMapping("/login-top")
 	public String loginTop(LoginForm loginForm,Model model) {
 		
-		model.addAttribute("userchecked","checked");
 		model.addAttribute("loginForm",loginForm);
+		model.addAttribute("userchecked","checked");
 		return "view/login";
 	}
 	

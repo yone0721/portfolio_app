@@ -127,6 +127,10 @@
 					<td><p th:text="*{building}"></p></td>
 				</tr>
 				<tr>
+					<td><label for="storeReservationLimit">予約上限数：</label></td>
+					<td><p th:text="*{storeReservationLimit}"></p></td>
+				</tr>
+				<tr>
 					<td><label for="isOpened">開店時間：</label></td>
 					<td><p th:text="*{isOpened}"></p></td>
 				</tr>
@@ -146,6 +150,7 @@
 					<input type="hidden" name="municipalities" th:value="*{municipalities}">
 					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
 					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="storeReservationLimit" th:value="*{storeReservationLimit}">
 					<input type="hidden" name="isOpened" th:value="*{isOpened}">
 					<input type="hidden" name="isClosed" th:value="*{isClosed}">
 					<input type="hidden" name="position" value="store">
@@ -161,6 +166,7 @@
 					<input type="hidden" name="municipalities" th:value="*{municipalities}">
 					<input type="hidden" name="streetAddress" th:value="*{streetAddress}">
 					<input type="hidden" name="building" th:value="*{building}">
+					<input type="hidden" name="storeReservationLimit" th:value="*{storeReservationLimit}">
 					<input type="hidden" name="isOpened" th:value="*{isOpened}">
 					<input type="hidden" name="isClosed" th:value="*{isClosed}">
 					<input type="hidden" name="position" value="store">

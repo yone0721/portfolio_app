@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
 
 public class StoreInfo {
 	
@@ -37,6 +39,9 @@ public class StoreInfo {
 	@NotNull
 	private String storePassword;
 	
+	@Nullable
+	private String storeReservationLimit;
+	
 	@NotNull
 	private String isOpened;
 	
@@ -61,6 +66,7 @@ public class StoreInfo {
 			@NotNull String mail,
 			@NotNull String phone,
 			@NotNull String storePassword,
+			@Nullable String storeReservationLimit,
 			@NotNull String isOpened,
 			@NotNull String isClosed,
 			LocalDateTime updatedAt) {
@@ -73,12 +79,13 @@ public class StoreInfo {
 		this.mail = mail;
 		this.phone = phone;
 		this.storePassword = storePassword;
+		this.storeReservationLimit = storeReservationLimit;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
 		this.updatedAt = updatedAt;
 	}
 	
-//	DBデータ取得用コンストラクタ
+//	StoreInfoServicceDao用　データ取得コンストラクタ
 	public StoreInfo(
 			@NotNull int storeId, @NotNull
 			String storeName, @NotNull
@@ -89,6 +96,7 @@ public class StoreInfo {
 			@NotNull String mail,
 			@NotNull String phone,
 			@NotNull String storePassword,
+			@Nullable String storeReservationLimit,
 			@NotNull String isOpened,
 			@NotNull String isClosed,
 			@NotNull LocalDateTime createdAt,
@@ -103,10 +111,38 @@ public class StoreInfo {
 		this.mail = mail;
 		this.phone = phone;
 		this.storePassword = storePassword;
+		this.storeReservationLimit = storeReservationLimit;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+
+	//	ResrvationDao用　店舗一覧データ取得コンストラクタ
+	public StoreInfo(
+			@NotNull int storeId, @NotNull
+			String storeName, @NotNull
+			String postCode,
+			@NotNull String city,
+			@NotNull String municipalities,
+			@NotNull String streetAddress, String building,
+			@NotNull String mail,
+			@NotNull String phone,
+			@Nullable String storeReservationLimit,
+			@NotNull String isOpened,
+			@NotNull String isClosed) {
+		this.storeId = storeId;
+		this.storeName = storeName;
+		this.postCode = postCode;
+		this.city = city;
+		this.municipalities = municipalities;
+		this.streetAddress = streetAddress;
+		this.building = building;
+		this.mail = mail;
+		this.phone = phone;
+		this.storeReservationLimit = storeReservationLimit;
+		this.isOpened = isOpened;
+		this.isClosed = isClosed;
 	}
 
 	public int getStoreId() {
@@ -117,6 +153,10 @@ public class StoreInfo {
 		return storeName;
 	}
 	
+	public String getStoreReservationLimit() {
+		return storeReservationLimit;
+	}
+
 	public String getPostCode() {
 		return postCode;
 	}
@@ -164,6 +204,4 @@ public class StoreInfo {
 	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
-	
-	
 }

@@ -51,7 +51,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	@Override
 	public void register(StoreInfo storeInfo) {
 		try {
-			dao.insert(storeInfo);
+			if((Integer.parseInt(storeInfo.getStoreReservationLimit()) > 0)) {
+				dao.insert(storeInfo);
+			}else {
+				dao.insertStoreReservationLimitIsNull(storeInfo);
+			}
 		}catch(FailedInsertSQLException e) {
 			e.getStackTrace();
 			throw new FailedInsertSQLException("店舗情報の登録に失敗しました。");
@@ -60,7 +64,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 
 	@Override
 	public void save(StoreInfo storeInfo) {
-		try {
+		try {			
 			dao.update(storeInfo);
 		}catch(FailedInsertSQLException e) {
 			e.getStackTrace();
@@ -99,6 +103,16 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			throw new NoSuchAlgorithmException("パスワードのハッシュ化に失敗しました。");
+		}
+	}
+	@Override
+	public StoreInfo checkLoginForm(String mail) {
+		try {
+			Optional<StoreInfo> getStoreInfoOpt = dao.findByMail(mail);
+			
+			return getStoreInfoOpt.isPresent() ? getStoreInfoOpt.get():null ;
+		}catch(StoreInfoNotFoundException e) {
+			throw new StoreInfoNotFoundException("該当するメールアドレスが見つかりません。");
 		}
 	}
 }
