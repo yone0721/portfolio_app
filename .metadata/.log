@@ -9903,3 +9903,6 @@ java.lang.NullPointerException: Cannot invoke "java.util.LinkedHashMap.remove(Ob
 	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1260)
 	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:492)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.core.resources 2 10035 2024-06-07 15:31:49.604
+!MESSAGE ワークスペースは、このセッションで変更が保存されずに終了します。

@@ -41,7 +41,8 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 						(String)storeMap.get("city"),
 						(String)storeMap.get("municipalities"),
 						(String)storeMap.get("street_address"),
-						(String)storeMap.get("building"),
+						(String)storeMap.get("building") != null ?
+								(String)storeMap.get("building"):"" ,
 						(String)storeMap.get("mail"),
 						(String)storeMap.get("phone"),
 						String.valueOf(storeMap.get("store_reservation_Limit")),
