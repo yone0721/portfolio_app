@@ -20,6 +20,11 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		this.dao = dao;
 	}
 	
+	/*
+	 * StoreView	定休日を含めて、一覧で表示する店舗情報を格納するエンティティ
+	 * return 		StoreViewのリストを戻す
+	 */
+	
 	@Override
 	public List<StoreView> getStoresList() {
 		
@@ -47,6 +52,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 				
 				storesViewList.add(storeView);
 			}
+			
 			return storesViewList;
 			
 		}catch(FailedToGetStoresViewException e) {

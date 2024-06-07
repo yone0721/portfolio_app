@@ -9,12 +9,18 @@
 	</head>
 	<body>
 		<header th:replace="~{/view/header::header}"></header>
+		
+<!--		loginFormは入力メールアドレスとパスワードを格納するオブジェクト-->
+<!--		メールアドレスだけ格納された値を表示する。-->
+<!--		ログインに失敗した場合は、th:checkedで選択状態を保持-->
+
 		<div class="container" th:Object="${loginForm}">
 			<input type="radio" name="tab-item" id="user-login" th:checked="${userchecked}"></input>
 			<label class="tab-item" for="user-login">お店を探す人はこちら</label>
 			<input type="radio" name="tab-item" id="store-login" th:checked="${storechecked}"></input>
 			<label class="tab-item" for="store-login">お店を登録する人はこちら</label>
-			
+
+			<!--お店を探す人はこちらタブを選択すると表示される-->
 			<div class="tab-content" id="user-tab">
 				<form method="post" th:action="@{/reservation/user-login/authonicate}">
 					<p><label for="user-mail">メールアドレス</label></p>
@@ -33,6 +39,7 @@
 				</form>
 			</div>
 			
+			<!--お店を登録する人はこちらタブを選択すると表示される-->
 			<div class="tab-content" id="store-tab">
 					<form method="post" th:action="@{/reservation/store-login/authonicate}">
 					<p><label for="store-mail">メールアドレス</label></p>

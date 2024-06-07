@@ -52,6 +52,11 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 		}
 	}
 
+	/*
+	 * ユーザー情報をメールから取得するメソッド
+	 * 使うかどうかはわからないので、削除しても良いかも
+	 */
+	
 	@Override
 	public UserInfo findUserByMail(String mail) {
 		String sql = """
@@ -93,7 +98,6 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 		}catch(DataAccessException e){
 			throw new UserInfoNotFoundException("ユーザー情報が見つかりませんでした。");
 		}
-		
 	}
 
 }

@@ -22,6 +22,11 @@ public class StoresListViewController {
 		this.storesListViewService = storesListViewService;
 	}
 	
+	/*
+	 * ユーザーログイン成功時に、店舗画面一覧が初期画面として表示される
+	 * return 利用者情報(storeInfo)と取得した店舗一覧情報(storeViewList)をビューに送る
+	 */
+	
 	@GetMapping("/store-list")
 	public String storesListView(
 			@ModelAttribute("userInfo") UserInfo userInfo,			

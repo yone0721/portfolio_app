@@ -2,6 +2,7 @@
 <html xmlns="">
 <head>
 	<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{../../css/store-view-layout.css}" href="#" type="text/css">
 	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
 	<meta charset="UTF-8">
 	<title>店舗一覧画面</title>
@@ -23,12 +24,12 @@
 			</tr>
 			<div th:each="storeView:${storesViewList}">
 			<tr>
-				<td th:text="${storeView.storeName}">店舗名</td>
-				<td th:text="${storeView.City}+${storeView.municipalities}
+				<td class="storeName" th:text="${storeView.storeName}">店舗名</td>
+				<td class="city" th:text="${storeView.City}+${storeView.municipalities}
 					+${storeView.streetAddress} + ${storeView.building}">店舗住所</td>
-				<td th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
+				<td class="businessHours" th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
 				<td>
-					<div th:each="holiday:${storeView.holidays}">
+					<div class="holiday" th:each="holiday:${storeView.holidays}">
 						<span th:text="${holiday}"></span>
 					</div>
 				</td>

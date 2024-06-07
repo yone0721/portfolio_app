@@ -35,7 +35,7 @@ public class LoginUserController {
 				UserInfo userInfo = authonicateuser(mail,password);
 				
 				if(!(userInfo == null)) {
-					System.out.println("ユーザーメール："+ userInfo.getMail());
+//					System.out.println("ユーザーメール："+ userInfo.getMail());
 					redirect.addFlashAttribute("userInfo",userInfo);
 					return "redirect:/reservation/views/store-list";
 				}

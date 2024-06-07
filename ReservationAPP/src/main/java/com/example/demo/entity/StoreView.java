@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
+
 public class StoreView {
 //	メンバ変数
 	@NotNull
@@ -144,6 +145,15 @@ public class StoreView {
 				case "6" -> { this.holidays.add("土");}
 			}
 		}	
+	}
+	
+	/*
+	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
+	 */
+	
+	public int valueOfIntegerReservationLimit(String storeReservationLimit) {
+		
+		return storeReservationLimit != null ? Integer.parseInt(storeReservationLimit): null;
 	}
 	
 	
