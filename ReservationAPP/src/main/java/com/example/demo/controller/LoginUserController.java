@@ -37,7 +37,7 @@ public class LoginUserController {
 				if(!(userInfo == null)) {
 					System.out.println("ユーザーメール："+ userInfo.getMail());
 					redirect.addFlashAttribute("userInfo",userInfo);
-					return "redirect:/reservation/user-pages/user-login-complete";
+					return "redirect:/reservation/views/store-list";
 				}
 			} catch (NoSuchAlgorithmException e) {
 				

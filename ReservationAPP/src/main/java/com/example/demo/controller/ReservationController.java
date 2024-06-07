@@ -21,17 +21,13 @@ public class ReservationController {
 		this.userInfoService = userInfoService;
 	}
 	
-	@GetMapping("/user-login-complete")
+	@GetMapping("/")
 	public String storeListIndex(
 			@ModelAttribute("userInfo") UserInfo userInfo,
 			Model model
 			) {
-		System.out.println("/user-login-complete");
-		
-		System.out.println(userInfo.getUserId());
-		
-		model.addAttribute("userInfo",userInfo);
-		return "view/stores-index";
+
+		return "view/";
 		
 	}	
 }

@@ -3,7 +3,6 @@
 <head>
 	<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
 	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
-	<link rel="stylesheet" th:href="@{../../css/confirm.css}" href="#" type="text/css">
 	<meta charset="UTF-8">
 	<title>店舗一覧画面</title>
 </head>
@@ -14,15 +13,30 @@
 			<p th:text="*{userName}"></p>
 		</div>
 
-		
-<!--		<div class="store-list">-->
-<!--			<th:each="storeInfo:${storeInfoList}">-->
-<!--				<ul>-->
-<!--					<li th:text="${storeInfo.storeName}"></li>-->
-<!--				</ul>-->
-<!--			</th:each>-->
-<!--		</div>-->
+		<table class="store-list">
+			<tr>
+				<th>店舗名</th>
+				<th>店舗住所</th>
+				<th>営業時間</th>
+				<th>定休日</th>
+				<th>詳細</th>
+			</tr>
+			<div th:each="storeView:${storesViewList}">
+			<tr>
+				<td th:text="${storeView.storeName}">店舗名</td>
+				<td th:text="${storeView.City}+${storeView.municipalities}
+					+${storeView.streetAddress} + ${storeView.building}">店舗住所</td>
+				<td th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
+				<td>
+					<div th:each="holiday:${storeView.holidays}">
+						<span th:text="${holiday}"></span>
+					</div>
+				</td>
+				<td>
+					詳細ボタン
+				</td>
+			</tr>
+		</table>
 	</div>
-	
 </body>
 </html>
