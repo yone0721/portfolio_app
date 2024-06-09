@@ -105,7 +105,59 @@ public class StoreView {
 		return holidays;
 	}
 
-//	コンストラクタ
+public void setStoreId(int storeId) {
+		this.storeId = storeId;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setMunicipalities(String municipalities) {
+		this.municipalities = municipalities;
+	}
+
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+
+	public void setBuilding(String building) {
+		this.building = building;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setStoreReservationLimit(String storeReservationLimit) {
+		this.storeReservationLimit = storeReservationLimit;
+	}
+
+	public void setIsOpened(String isOpened) {
+		this.isOpened = isOpened;
+	}
+
+	public void setIsClosed(String isClosed) {
+		this.isClosed = isClosed;
+	}
+
+	public void setHolidays(List<String> holidays) {
+		this.holidays = holidays;
+	}
+
+	//	コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
 			@NotNull String postCode, 
@@ -145,8 +197,8 @@ public class StoreView {
 				case "6" -> { this.holidays.add("土");}
 			}
 		}	
-	}
-	
+	}	
+		
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
 	 */
