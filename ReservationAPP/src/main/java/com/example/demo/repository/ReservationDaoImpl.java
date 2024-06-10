@@ -38,7 +38,8 @@ public class ReservationDaoImpl implements ReservationDao {
 			FROM store_info_tb AS store
 			INNER JOIN store_regular_holidays AS holidays
 			ON holidays.store_id = store.store_id
-			GROUP BY holidays.store_id;""";
+			GROUP BY holidays.store_id
+			LIMIT 10;""";
 		
 		List<Map<String,Object>> getStoresList = jdbcTemplate.queryForList(sql);
 		return null;

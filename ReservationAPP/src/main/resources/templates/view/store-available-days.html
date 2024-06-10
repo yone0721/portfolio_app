@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" >
+<head>
+	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{../../css/header.css}" type="text/css">
+	<meta charset="UTF-8">
+	<title>店舗の詳細画面</title>
+</head>
+<body>
+	<header th:replace="~{/view/header::header}"></header>
+	<div class="user-container">
+		<div th:Object="${userInfo}">
+			<p th:text="*{userName}"></p>
+		</div>
+	</div>
+	<div class="container">
+		<table>
+			
+			
+		</table>
+		<form>
+			<input type="date">
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+tr {
+	text-align: center;
+	margin:20px;
+	border:solid 3rem rgb(192, 192, 192);
+}
+
+td {
+	margin:5px 10px;
+	padding:10px 10px;
+}
+
+.holiday{
+	float: left;
+}

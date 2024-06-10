@@ -138,27 +138,27 @@ WHERE reservation.is_canceled = "N";
 
 /*
  *　定休日テーブル
- *　0: 日曜日, 1: 月曜日, ..., 6: 土曜日
+ *　1: 日曜日, 2: 月曜日, ..., 7: 土曜日
  */
 
 INSERT INTO store_regular_holidays(
-    store_id,day_of_week)VALUES(13,0);
-INSERT INTO store_regular_holidays(
     store_id,day_of_week)VALUES(13,6);
+INSERT INTO store_regular_holidays(
+    store_id,day_of_week)VALUES(13,7);
 INSERT INTO store_regular_holidays(
     store_id,day_of_week)VALUES(14,1);
 INSERT INTO store_regular_holidays(
-    store_id,day_of_week)VALUES(14,4);
-INSERT INTO store_regular_holidays(
-    store_id,day_of_week)VALUES(15,3);
+    store_id,day_of_week)VALUES(14,7);
 INSERT INTO store_regular_holidays(
     store_id,day_of_week)VALUES(15,4);
 INSERT INTO store_regular_holidays(
     store_id,day_of_week)VALUES(15,5);
 INSERT INTO store_regular_holidays(
-    store_id,day_of_week)VALUES(16,0);
+    store_id,day_of_week)VALUES(15,6);
 INSERT INTO store_regular_holidays(
     store_id,day_of_week)VALUES(16,1);
+INSERT INTO store_regular_holidays(
+    store_id,day_of_week)VALUES(16,2);
 
 /*
 *　定休日と店舗情報の取得

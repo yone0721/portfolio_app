@@ -45,7 +45,11 @@ public class UserInfo {
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-//	DB更新・挿入用コンストラクタ
+	/*
+	 *	DB更新・挿入用コンストラクタ
+	 *  次の項目はデフォルト値の設定やNULL許容があるので省いています。
+	 *  userId,building,createdAt,updatedAt
+	 */
 	public UserInfo(
 			@NotNull String mail,
 			@NotNull String userName, 

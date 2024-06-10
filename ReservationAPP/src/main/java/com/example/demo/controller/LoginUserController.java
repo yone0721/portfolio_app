@@ -13,16 +13,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.LoginForm;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.exception.UserInfoNotFoundException;
 import com.example.demo.service.UserInfoService;
 
 @Controller
 @RequestMapping("/reservation/user-login")
 public class LoginUserController {
 	private final UserInfoService userInfoService;
+
 	
 	public LoginUserController(UserInfoService userInfoService) {
 		this.userInfoService = userInfoService;
 	}
+	
+	/*
+	 * @param("mail") ログイン時に入力されたメールアドレス
+	 * @param("password") ログイン時に入力されたパスワード
+	 * 
+	 */
 	
 	@PostMapping("/authonicate")
 	public String login(
@@ -30,17 +38,21 @@ public class LoginUserController {
 			@RequestParam("password") String password,
 			Model model,RedirectAttributes redirect) {
 			
-			
+			UserInfo userInfo;
 			try {
-				UserInfo userInfo = authonicateuser(mail,password);
+				userInfo = authenticateUser(mail,password);
 				
 				if(!(userInfo == null)) {
-					System.out.println("ユーザーメール："+ userInfo.getMail());
+//					System.out.println("ユーザーメール："+ userInfo.getMail());
+					
+					
 					redirect.addFlashAttribute("userInfo",userInfo);
-					return "redirect:/reservation/user-pages/user-login-complete";
+					return "redirect:/reservation/views/user-login-complete";
 				}
-			} catch (NoSuchAlgorithmException e) {
 				
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch(UserInfoNotFoundException e) {
 				e.printStackTrace();
 			}
 			
@@ -49,9 +61,10 @@ public class LoginUserController {
 			model.addAttribute("userchecked","checked");
 			model.addAttribute("loginForm",loginForm);
 			return "view/login";
+			
 	}
 	
-	public UserInfo authonicateuser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
+	public UserInfo authenticateUser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
 		UserInfo userInfo = userInfoService.checkLoginForm(inputMail);
 		
 		String hashPass = this.userInfoService.hashPass(inputPassword);

@@ -141,9 +141,10 @@ public class UserInfoDaoImpl implements UserInfoDao {
 					created_at,
 					updated_at
 				FROM user_info_tb WHERE mail = ?""";
-		Map<String,Object> result = jdbcTemplate.queryForMap(sql,mail);
+		
 		
 		try {
+			Map<String,Object> result = jdbcTemplate.queryForMap(sql,mail);
 			UserInfo userInfo = new UserInfo(
 					(int)result.get("user_id"),
 					(String)result.get("mail"),
@@ -162,6 +163,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
 			
 			Optional<UserInfo> userInfoOpt = Optional.ofNullable(userInfo);
 			return userInfoOpt;
+			
 		}catch(EmptyResultDataAccessException e) {
 			throw new UserInfoNotFoundException("ユーザー情報が存在しないか、データ取得に失敗しました。");
 		}

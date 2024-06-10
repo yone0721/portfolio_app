@@ -39,6 +39,12 @@ public class StoreInfo {
 	@NotNull
 	private String storePassword;
 	
+	/*
+	 * storeReservationLimit:
+	 * DB上ではIntegerだが、NULLを格納することも考慮すると
+	 * Javaのintでは格納できないので、Stringで定義
+	 */
+	
 	@Nullable
 	private String storeReservationLimit;
 	

@@ -41,6 +41,12 @@ public class StoreInfoForm {
 	@Pattern(regexp="^[a-zA-Z0-9]{8,32}+$",message="パスワードは8字以上32字以内、半角英数字でご入力ください。")
 	private String storePassword;
 	
+	/*
+	 * storeReservationLimit:
+	 * DB上ではIntegerだが、NULLを格納することも考慮すると
+	 * Javaのintでは格納できないので、Stringで定義
+	 */
+	
 	@Nullable
 	@Pattern(regexp="^[0-9]{1,3}",message="半角数字で入力してください。")
 	private String storeReservationLimit;
