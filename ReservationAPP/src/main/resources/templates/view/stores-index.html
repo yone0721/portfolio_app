@@ -29,8 +29,9 @@
 						+${storeView.streetAddress} + ${storeView.building}">店舗住所</td>
 					<td class="businessHours" th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
 					<td>
+<!--						<div th:text="${storeView.holidays}"></div>-->
 						<div class="holiday" th:each="holiday:${storeView.holidays}">
-							<span th:text="${holiday}"></span>
+							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
 						</div>
 					</td>
 					<td>
@@ -38,13 +39,17 @@
 
 							<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
 							<input type="hidden" th:name="storeName" th:value="${storeView.storeName}">
-							<input type="hidden" th:name="city" th:value="${storeView.City}">
+							<input type="hidden" th:name="postCode" th:value="${storeView.postCode}">
+							<input type="hidden" th:name="city" th:value="${storeView.city}">
 							<input type="hidden" th:name="municipalities" th:value="${storeView.municipalities}">
 							<input type="hidden" th:name="streetAddress" th:value="${storeView.streetAddress}">
 							<input type="hidden" th:name="building" th:value="${storeView.building}">
+							<input type="hidden" th:name="mail" th:value="${storeView.mail}">
+							<input type="hidden" th:name="phone" th:value="${storeView.phone}">
+							<input type="hidden" th:name="storeReservationLimit" th:value="${storeView.storeReservationLimit}">
 							<input type="hidden" th:name="isOpened" th:value="${storeView.isOpened}">
-							<input type="hidden" th:name="osClosed" th:value="${storeView.isClosed}">
-							<input type="hidden" th:name="holidays" th:value="${storeView.holidays}">
+							<input type="hidden" th:name="isClosed" th:value="${storeView.isClosed}">
+							<input type="hidden" th:name="holidays" th:each="holiday:${storeView.holidays}" th:value="${holiday}">
 							<input class="btn" type="submit" value="詳細">
 						</form>
 					</td>

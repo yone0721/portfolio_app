@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class StoreView {
 	 */
 	
 	@Nullable
-	private String storeReservationLimit;
+	private Integer storeReservationLimit;
 	
 	@NotNull
 	private String isOpened;
@@ -50,7 +51,7 @@ public class StoreView {
 	@NotNull
 	private String isClosed;
 	
-	private List<String> holidays = new ArrayList<>();
+	private List<DayOfWeek> holidays = new ArrayList<>();
 
 //	getter
 	public int getStoreId() {
@@ -89,7 +90,7 @@ public class StoreView {
 		return phone;
 	}
 
-	public String getStoreReservationLimit() {
+	public Integer getStoreReservationLimit() {
 		return storeReservationLimit;
 	}
 
@@ -101,7 +102,7 @@ public class StoreView {
 		return isClosed;
 	}
 
-	public List<String> getHolidays() {
+	public List<DayOfWeek> getHolidays() {
 		return holidays;
 	}
 
@@ -141,7 +142,7 @@ public void setStoreId(int storeId) {
 		this.phone = phone;
 	}
 
-	public void setStoreReservationLimit(String storeReservationLimit) {
+	public void setStoreReservationLimit(Integer storeReservationLimit) {
 		this.storeReservationLimit = storeReservationLimit;
 	}
 
@@ -153,24 +154,32 @@ public void setStoreId(int storeId) {
 		this.isClosed = isClosed;
 	}
 
-	public void setHolidays(List<String> holidays) {
-		this.holidays = holidays;
+	public void setHolidays(List<DayOfWeek> holidays) {
+		this.holidays.clear();
+		for(DayOfWeek holiday:holidays) {
+			this.holidays.add(holiday);			
+		}
+	}
+	
+	public StoreView() {
+		
 	}
 
-	//	コンストラクタ
+	//	DB取得用コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
 			@NotNull String postCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
-			@NotNull String streetAddress, String building, 
+			@NotNull String streetAddress,
+			String building, 
 			@NotNull String mail,
 			@NotNull String phone, 
-			@Nullable String storeReservationLimit, 
+			@Nullable Integer storeReservationLimit, 
 			@NotNull String isOpened, 
 			@NotNull String isClosed,
 			String holidays) {
-		super();
+
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.postCode = postCode;
@@ -184,29 +193,85 @@ public void setStoreId(int storeId) {
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
 		
-		String[] holidaysId = holidays.split(",");
 		
-		for(String holidayId:holidaysId) {
-			switch(holidayId) {
-				case "0" -> { this.holidays.add("日");}
-				case "1" -> { this.holidays.add("月");}
-				case "2" -> { this.holidays.add("火");}
-				case "3" -> { this.holidays.add("水");}
-				case "4" -> { this.holidays.add("木");}
-				case "5" -> { this.holidays.add("金");}
-				case "6" -> { this.holidays.add("土");}
-			}
-		}	
-	}	
+		String[] requestHolidays = holidays.split(",");
 		
+		for(String requestHoliday:requestHolidays) {
+			
+			/*
+			 * Javaの列挙型DayOfWeek型から
+			 * 合致するint型の曜日を取得
+			 * 
+			 * DayOfWeek型のint振り分け
+			 * 1:月曜日 2:火曜日 ... 7:日曜日
+			 * 
+			 * DayOfWeekのString型の振り分け
+			 * MONDAY, THUSEDAY, WEDNESDAY, ... SUNDAY
+			 */
+		
+				int holidayParseInt = Integer.parseInt(requestHoliday);
+				this.holidays.add(DayOfWeek.of(holidayParseInt));
+		
+		}
+	}
+	
+	//	選択した店舗の詳細格納用コンストラクタ
+	public StoreView(@NotNull int storeId, 
+			@NotNull String storeName, 
+			@NotNull String postCode, 
+			@NotNull String city,
+			@NotNull String municipalities, 
+			@NotNull String streetAddress,
+			String building, 
+			@NotNull String mail,
+			@NotNull String phone, 
+			@Nullable Integer storeReservationLimit, 
+			@NotNull String isOpened, 
+			@NotNull String isClosed,
+			List<DayOfWeek> holidays) {
+		
+		this.storeId = storeId;
+		this.storeName = storeName;
+		this.postCode = postCode;
+		this.city = city;
+		this.municipalities = municipalities;
+		this.streetAddress = streetAddress;
+		this.building = building;
+		this.mail = mail;
+		this.phone = phone;
+		this.storeReservationLimit = storeReservationLimit;
+		this.isOpened = isOpened;
+		this.isClosed = isClosed;
+		
+		for(DayOfWeek holiday:holidays) {
+			int dayOfWeekId = holiday.getValue();
+			this.holidays.add(DayOfWeek.of(dayOfWeekId));
+		}
+	}
+
+	
+	public String getJPDayOfWeek(DayOfWeek dayOfWeek) {
+		int dayOfWeekId = dayOfWeek.getValue();
+		
+		return switch(dayOfWeekId){
+			case 1 -> "月";
+			case 2 -> "火";
+			case 3 -> "水";
+			case 4 -> "木";
+			case 5 -> "金";
+			case 6 -> "土";
+			case 7 -> "日";
+			default -> null;
+		};
+	}
+
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
 	 */
-	
-	public int valueOfIntegerReservationLimit(String storeReservationLimit) {
-		
-		return storeReservationLimit != null ? Integer.parseInt(storeReservationLimit): null;
-	}
-	
+//	
+//	public int valueOfIntegerReservationLimit(String storeReservationLimit) {
+//		return storeReservationLimit != null ? Integer.parseInt(storeReservationLimit): null;
+//	}
+//	
 	
 }

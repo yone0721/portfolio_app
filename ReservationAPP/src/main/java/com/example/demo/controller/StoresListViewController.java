@@ -21,10 +21,11 @@ public class StoresListViewController {
 	
 	private final StoresListViewService storesListViewService;
 	private final UserSession userSession;
-	
-	public StoresListViewController(StoresListViewService storesListViewService) {
+
+	public StoresListViewController(StoresListViewService storesListViewService,
+			UserSession userSession) {
 		this.storesListViewService = storesListViewService;
-		this.userSession = new UserSession();
+		this.userSession = userSession;
 	}
 	
 	/*
@@ -37,8 +38,8 @@ public class StoresListViewController {
 				@ModelAttribute("userInfo") UserInfo userInfo,
 				RedirectAttributes redirect
 			) {
+		
 		userSession.setUserInfo(userInfo);
-		System.out.println("セッション：" + userSession.getUserInfo());
 		redirect.addFlashAttribute(userInfo);
 		return "redirect:/reservation/views/store-list";
 	}
@@ -49,12 +50,12 @@ public class StoresListViewController {
 	public String storesListView(		
 			Model model) {
 		
-		System.out.println("セッション：" + userSession.getUserInfo());
-		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
 		
+		UserInfo userInfo = userSession.getUserInfo();
+		
 		model.addAttribute("storesViewList",storeViewList);
-		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("userInfo",userInfo);
 		return "view/stores-index";
 	}
 	
@@ -62,8 +63,6 @@ public class StoresListViewController {
 	public String storeAvailableDays(		
 			@ModelAttribute StoreView storeView,			
 			Model model) {
-		
-		System.out.println("ｱｳﾞｪｲﾗﾎﾞｫ");
 		
 		
 		model.addAttribute("storeView",storeView);

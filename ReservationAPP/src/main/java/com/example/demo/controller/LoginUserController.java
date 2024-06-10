@@ -15,17 +15,15 @@ import com.example.demo.entity.LoginForm;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.UserInfoNotFoundException;
 import com.example.demo.service.UserInfoService;
-import com.example.demo.session.UserSession;
 
 @Controller
 @RequestMapping("/reservation/user-login")
 public class LoginUserController {
 	private final UserInfoService userInfoService;
-	private final UserSession userSession;
+
 	
-	public LoginUserController(UserInfoService userInfoService,UserSession userSession) {
+	public LoginUserController(UserInfoService userInfoService) {
 		this.userInfoService = userInfoService;
-		this.userSession = userSession;
 	}
 	
 	/*
@@ -42,7 +40,7 @@ public class LoginUserController {
 			
 			UserInfo userInfo;
 			try {
-				userInfo = authonicateuser(mail,password);
+				userInfo = authenticateUser(mail,password);
 				
 				if(!(userInfo == null)) {
 //					System.out.println("ユーザーメール："+ userInfo.getMail());
@@ -66,7 +64,7 @@ public class LoginUserController {
 			
 	}
 	
-	public UserInfo authonicateuser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
+	public UserInfo authenticateUser(String inputMail,String inputPassword) throws NoSuchAlgorithmException {
 		UserInfo userInfo = userInfoService.checkLoginForm(inputMail);
 		
 		String hashPass = this.userInfoService.hashPass(inputPassword);
