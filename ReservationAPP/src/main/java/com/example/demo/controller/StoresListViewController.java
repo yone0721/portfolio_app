@@ -44,7 +44,12 @@ public class StoresListViewController {
 		return "redirect:/reservation/views/store-list";
 	}
 	
-	
+	/*
+	 * 店舗一覧画面への遷移メソッド
+	 * @param("storeViewList")	DBから取得した店舗データ10件分までのリストを格納
+	 * @param("userInfo")		セッションで保持しているユーザー情報
+	 * * @return				店舗一覧画面への遷移
+	 */
 	
 	@GetMapping("/store-list")
 	public String storesListView(		
@@ -58,6 +63,13 @@ public class StoresListViewController {
 		model.addAttribute("userInfo",userInfo);
 		return "view/stores-index";
 	}
+	
+	/*
+	 * 空き予約画面への遷移メソッド
+	 * @param("storeView")	一覧から選択した店舗の情報を格納するエンティティ
+	 * @param("userInfo")	セッションで保持しているユーザー情報
+	 * * @return			空き予約確認画面への遷移
+	 */
 	
 	@PostMapping("/store-available-days")
 	public String storeAvailableDays(		

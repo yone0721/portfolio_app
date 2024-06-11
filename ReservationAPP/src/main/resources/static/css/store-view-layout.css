@@ -3,14 +3,16 @@
 tr {
 	text-align: center;
 	margin:20px;
-	border:solid 3rem rgb(192, 192, 192);
+	border:solid 1px rgb(192, 192, 192);
 }
 
 td {
 	margin:5px 10px;
 	padding:10px 10px;
+/*	border:solid 1px rgb(192, 192, 192);*/
 }
 
 .holiday{
-	float: left;
+	justify-content: center;
+	display: flex;
 }

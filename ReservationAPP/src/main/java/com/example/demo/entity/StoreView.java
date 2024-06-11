@@ -244,27 +244,42 @@ public void setStoreId(int storeId) {
 		this.isClosed = isClosed;
 		
 		for(DayOfWeek holiday:holidays) {
-			int dayOfWeekId = holiday.getValue();
-			this.holidays.add(DayOfWeek.of(dayOfWeekId));
+//			int dayOfWeekId = holiday.getValue();
+//			this.holidays.add(DayOfWeek.of(dayOfWeekId));
+			this.holidays.add(holiday);
 		}
 	}
 
+	/*
+	 * DayOfWeekの文字列を漢字一字表記に変えるメソッド
+	 */
 	
 	public String getJPDayOfWeek(DayOfWeek dayOfWeek) {
 		int dayOfWeekId = dayOfWeek.getValue();
 		
 		return switch(dayOfWeekId){
-			case 1 -> "月";
-			case 2 -> "火";
-			case 3 -> "水";
-			case 4 -> "木";
-			case 5 -> "金";
-			case 6 -> "土";
-			case 7 -> "日";
+			case 1 -> "月";		// DayOfWeek.valueOf()：MONDAY
+			case 2 -> "火";		// DayOfWeek.valueOf()：TUSEDAY
+			case 3 -> "水"; 	// DayOfWeek.valueOf()：WEDNESDAY
+			case 4 -> "木"; 	// DayOfWeek.valueOf()：THURSEDAY
+			case 5 -> "金"; 	// DayOfWeek.valueOf()：FRIDAY
+			case 6 -> "土"; 	// DayOfWeek.valueOf()：SATURDAY
+			case 7 -> "日"; 	// DayOfWeek.valueOf()：SUNDAY
 			default -> null;
 		};
 	}
-
+	
+	public String getAddHyphenPhone(String phone) {
+		
+		if(phone.length() == 10) {
+			return String.format("[0-9]{3}-[0-9]{3}-[0-9]{4}", phone);
+			
+		}else {
+			return String.format("[0-9]{3}-[0-9]{4}-[0-9]{4}", phone);
+		}
+		
+	}
+	
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
 	 */
