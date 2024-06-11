@@ -263,3 +263,7 @@ FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id
 GROUP BY holidays.store_id\G
+
+ALTER TABLE reservation_table
+ADD num_of_people INTEGER NOT NULL DEFAULT 1
+AFTER at_reservation_date;

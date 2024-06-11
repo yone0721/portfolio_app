@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS reservation_table (
     user_id INTEGER NOT NULL,
     store_id INTEGER NOT NULL,
     at_reservation_date DATETIME NOT NULL,
+    num_of_people INTEGER NOT NULL DEFAULT 1,
     at_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (reservation_id,user_id,store_id),

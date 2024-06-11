@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.StoreView;
@@ -66,33 +64,15 @@ public class StoresListViewController {
 		return "view/stores-index";
 	}
 	
-	/*
-	 * 空き予約画面への遷移メソッド
-	 * @param("storeView")	一覧から選択した店舗の情報を格納するエンティティ
-	 * @param("userInfo")	セッションで保持しているユーザー情報
-	 * * @return			空き予約確認画面への遷移
-	 */
-	
-	@PostMapping("/store-available-days")
-	public String storeAvailableDays(		
-			@ModelAttribute StoreView storeView,			
-			Model model) {
-		
-		
-		model.addAttribute("storeView",storeView);
-		model.addAttribute("userInfo",userSession.getUserInfo());
-		return "view/reservation-input";
-	}
-	
-	@PostMapping()
-	public String checkAvailableDays(
-			@RequestParam("reservationDate") LocalDateTime reservationDate,
+	@PostMapping("/transition-reserve")
+	public String transitionReserve(
 			@ModelAttribute StoreView storeView,
-			Model model,
 			RedirectAttributes redirect
 			) {
 		
-		
-		return "";
+		redirect.addFlashAttribute("storeView",storeView);
+		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		return "redirect:/reservation/reserve/store-available-days";
 	}
+	
 }

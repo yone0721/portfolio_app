@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.entity.Reservation;
-import com.example.demo.entity.UserInfo;
 
 public interface UserReservationDao {
-	List<Map<String,Object>> findReservationAll(UserInfo userInfo);
-	int insert(Reservation reservation);
-	int update(Reservation reservation);
-	int cancelReservation(Reservation reservation);
-} 
+	List<Map<String,Object>> findAllReservationById(int userId);
+	Map<String,Object> findReservationById(int userId,int reservationId);
+	void insert(Reservation reservation);
+	void update(Reservation reservation);
+//	int delete(); isDeletedフラグがtrueの予約をすべて消すメソッド　バッチ処理で使用する？
+}
