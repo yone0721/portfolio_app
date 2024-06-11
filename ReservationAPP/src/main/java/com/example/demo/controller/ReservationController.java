@@ -11,7 +11,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.service.UserInfoService;
 
 @Controller
-@RequestMapping("/reservation/user-pages")
+@RequestMapping("/reservation/")
 public class ReservationController {
 	
 	private final UserInfoService userInfoService;

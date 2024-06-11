@@ -40,7 +40,6 @@ INDEX VERSION 1.134+C:\Users\zakon\OneDrive\íUìﬂóp\ì]êEóp\Spring_Boot\.metadata\
 4004178422.index
 221698349.index
 1824757830.index
-2178559932.index
 1380046573.index
 3385636815.index
 2327312994.index

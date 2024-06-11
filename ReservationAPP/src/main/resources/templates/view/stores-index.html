@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="">
 <head>
-	<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
-	<link rel="stylesheet" th:href="@{../../css/store-view-layout.css}" href="#" type="text/css">
-	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/header.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="#" type="text/css">
 	<meta charset="UTF-8">
 	<title>店舗一覧画面</title>
 </head>
@@ -28,9 +28,9 @@
 					<td class="city" th:text="${storeView.city}+${storeView.municipalities}
 						+${storeView.streetAddress} + ${storeView.building}">店舗住所</td>
 					<td class="businessHours" th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
-					<td>
+					<td class="holiday">
 <!--						<div th:text="${storeView.holidays}"></div>-->
-						<div class="holiday" th:each="holiday:${storeView.holidays}">
+						<div th:each="holiday:${storeView.holidays}">
 							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
 						</div>
 					</td>

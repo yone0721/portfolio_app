@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.StoreView;
@@ -79,6 +81,18 @@ public class StoresListViewController {
 		
 		model.addAttribute("storeView",storeView);
 		model.addAttribute("userInfo",userSession.getUserInfo());
-		return "view/store-available-days";
+		return "view/reservation-input";
+	}
+	
+	@PostMapping()
+	public String checkAvailableDays(
+			@RequestParam("reservationDate") LocalDateTime reservationDate,
+			@ModelAttribute StoreView storeView,
+			Model model,
+			RedirectAttributes redirect
+			) {
+		
+		
+		return "";
 	}
 }

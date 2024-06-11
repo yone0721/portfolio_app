@@ -269,16 +269,7 @@ public void setStoreId(int storeId) {
 		};
 	}
 	
-	public String getAddHyphenPhone(String phone) {
-		
-		if(phone.length() == 10) {
-			return String.format("[0-9]{3}-[0-9]{3}-[0-9]{4}", phone);
-			
-		}else {
-			return String.format("[0-9]{3}-[0-9]{4}-[0-9]{4}", phone);
-		}
-		
-	}
+
 	
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド

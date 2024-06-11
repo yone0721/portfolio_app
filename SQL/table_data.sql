@@ -182,3 +182,84 @@ FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id
 GROUP BY holidays.store_id;
+
+
+/*
+*   予約データのサンプル
+*/
+
+INSERT INTO reservation_table (
+    user_id,
+    store_id,
+    at_reservation_date
+) VALUES (
+    1,
+    14,
+    now()
+);
+INSERT INTO reservation_table (
+    user_id,
+    store_id,
+    at_reservation_date
+) VALUES (
+    1,
+    14,
+    now()
+);
+INSERT INTO reservation_table (
+    user_id,
+    store_id,
+    at_reservation_date
+) VALUES (
+    1,
+    15,
+    now()
+);
+
+
+/*
+*   予約上限数の計算用SQL
+*/
+
+SELECT
+    COUNT(store_id) AS reservations
+FROM reservation_table\G
+
+/*
+*　指定した店舗の残り予約数も取得するクエリ
+*/
+
+SELECT
+    store.store_name,
+    store.store_reservation_limit - (
+    SELECT
+        COUNT(reservation_id)
+    FROM reservation_table AS res
+    WHERE res.store_id = 15
+    )
+FROM store_info_tb AS store
+WHERE store.store_id = 15;
+
+SELECT
+    store.store_id,
+    store.store_name,
+    store.post_code,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    store.store_reservation_limit - (
+    SELECT
+        COUNT(reservation_id)
+    FROM reservation_table AS res
+    WHERE res.store_id = store.store_id
+    ) AS store_reservation_limit,
+    store.is_opened,
+    store.is_closed,
+    GROUP_CONCAT(holidays.day_of_week)
+FROM store_info_tb AS store
+INNER JOIN store_regular_holidays AS holidays
+ON holidays.store_id = store.store_id
+GROUP BY holidays.store_id\G

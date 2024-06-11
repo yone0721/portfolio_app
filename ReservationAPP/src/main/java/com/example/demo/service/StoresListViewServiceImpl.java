@@ -33,7 +33,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 			List<StoreView> storesViewList = new ArrayList<>();
 			List<Map<String,Object>> storesMapList = dao.findAllStores();
 			
-			for(Map storeMap:storesMapList) {
+			for(Map storeMap:storesMapList) {				
 				StoreView storeView = new StoreView(
 						(int)storeMap.get("store_id"),
 						(String)storeMap.get("store_name"),
@@ -45,7 +45,8 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 								(String)storeMap.get("building"):"" ,
 						(String)storeMap.get("mail"),
 						(String)storeMap.get("phone"),
-						(Integer)storeMap.get("store_reservation_Limit"),
+						storeMap.get("store_reservation_Limit") == null ?
+								null: (int)((long)storeMap.get("store_reservation_Limit")),
 						(String)storeMap.get("is_opened"),
 						(String)storeMap.get("is_closed"),
 						(String)storeMap.get("holidays")					
