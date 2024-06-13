@@ -56,6 +56,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				INNER JOIN store_info_tb AS store
 				ON store.store_id = reservation.store_id
 				WHERE reservation.user_id = ?
+				AND reservation.is_deleted = 0
 				ORDER BY reservation.at_reservation_date DESC
 				LIMIT 10	
 				""";
@@ -99,7 +100,10 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				FROM reservation_table AS reservation
 				INNER JOIN store_info_tb AS store
 				ON store.store_id = reservation.store_id
-				WHERE reservation.user_id = ? AND reservation.reservation_id = ?
+				WHERE 
+					reservation.user_id = ? 
+				AND reservation.reservation_id = ?
+				AND reservation.is_deleted = 0
 				ORDER BY reservation.at_reservation_date DESC
 				""";
 		
