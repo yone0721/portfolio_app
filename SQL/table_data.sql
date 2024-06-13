@@ -286,3 +286,18 @@ SELECT
 FROM reservation_table
 WHERE store_id = 14
 AND at_reservation_date LIKE '2024-06-12%'
+
+SELECT
+    user.user_id,
+    user.user_name,
+    store.store_id,
+    store.store_name,
+    res.at_reservation_date,
+    res.num_of_people,
+    res.at_created
+FROM reservation_table AS res
+LEFT JOIN user_info_tb AS user
+ON user.user_id = res.user_id
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.at_created LIKE '2024-06-13 15%'\G

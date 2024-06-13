@@ -69,13 +69,20 @@
 					</td>
 				</tr>				
 			</table>
-			
-		<form method="post" th:action="@{/reservation/reserve/make-a-reservation}">
-			<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
-			<input type="hidden" th:name="atReservationDate" th:value="${selectDate}">
-			<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
-			<input class="btn btn-primary" type="submit" value="予約を送信する">
-		</form>
+		<div class="form-container">			
+			<form method="post" th:action="@{store-available-days}">
+				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
+				<input type="hidden" th:name="selectDate" th:value="${selectDate}">
+				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
+				<input class="btn btn-primary" type="submit" value="予約を修正する">
+			</form>
+			<form method="post" th:action="@{/reservation/reserve/make-a-reservation}">
+				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
+				<input type="hidden" th:name="atReservationDate" th:value="${selectDate}">
+				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
+				<input class="btn btn-primary" type="submit" value="予約を送信する">
+			</form>
+		</div>
 	</div>
 </body>
 </html>

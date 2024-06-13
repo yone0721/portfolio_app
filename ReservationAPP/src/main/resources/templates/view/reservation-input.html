@@ -48,8 +48,8 @@
 						<input th:name="atReservationDate" id="atReservationDate" type="date" th:value="${atReservationDate}" required>
 						<th:block  th:each="error:${errors}">
 							<div th:if="${errors != null}">
-									<th:block class="text-danger" th:if="${error.key == 'reservationDateError'}" th:text="${error.value}"></th:block>
-									<th:block class="text-danger" th:if="${error.key == 'reservationLimitError'}" th:text="${error.value}"></th:block>
+									<div class="text-danger" th:if="${error.key == 'reservationDateError'}" th:text="${error.value}"></div>
+									<div class="text-danger" th:if="${error.key == 'reservationLimitError'}" th:text="${error.value}"></div>
 							</div>
 						</th:block>
 					</td>
@@ -60,7 +60,7 @@
 						<input th:name="numOfPeople" id="numOfPeoplle" type="number" min="1" th:value="${numOfPeople}" required>
 						<th:block  th:each="error:${errors}">
 							<div th:if="${errors != null}">
-								<th:block class="text-danger" th:if="${error.key == 'numOfPeopleError'}" th:text="${error.value}"></th:block>
+								<div class="text-danger" th:if="${error.key == 'numOfPeopleError'}" th:text="${error.value}"></div>
 							</div>
 						</th:block>
 					</td>

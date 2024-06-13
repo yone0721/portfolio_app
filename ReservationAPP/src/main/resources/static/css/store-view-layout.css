@@ -17,3 +17,12 @@ td {
 	justify-content: left;
 	display: flex;
 }
+
+.form-container{
+	margin:10px 10px;
+	justify-content: left;
+	display: flex;	
+}
+.form-container>form{
+	margin:0 5px;
+}

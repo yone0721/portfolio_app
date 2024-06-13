@@ -63,6 +63,16 @@ public class UserReservationController {
 		return "view/reservation-input";
 	}
 	
+	@PostMapping("/store-available-days")
+	public String storeAvailableDays(
+			@RequestParam("selectDate") String selectDate,
+			@RequestParam("numOfPeople") int numOfPeople,
+			Model model) {
+
+		model.addAttribute("storeView",userSession.getStoreView());
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		return "view/reservation-input";
+	}
 	/*
 	 * 予約確認への遷移メソッド
 	 * 失敗すると空き予約画面に遷移して、エラーを表示する
@@ -128,10 +138,6 @@ public class UserReservationController {
 				throw new FailedInsertSQLException("予約数が上限に達してしまったため、他の日程で予約を入れてください。");
 			}
 			
-			System.out.println("Reservation格納前");
-			System.out.println(atReservationDate);
-			System.out.println(numOfPeople);
-			
 //			予約情報をインスタンスへ格納して登録
 			Reservation reservation = new Reservation(
 					userSession.getUserInfo().getUserId(),
@@ -174,6 +180,7 @@ public class UserReservationController {
 		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
 		return "redirect:/reservation/views/open-store-list";
 	}
+	
 //	定休日・予約の空き・人数のバリデーションメソッド
 	
 	public Map<String,String> checkReservationDateAndLimit(StoreView storeView,LocalDate reservationDate,int numOfPeople){
