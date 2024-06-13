@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
 public class Reservation {
@@ -19,10 +21,11 @@ public class Reservation {
 	private String storeName;
 	
 	@NotEmpty
-	private LocalDateTime atReservationDate;
+	private LocalDate atReservationDate;
 	
 	@NotEmpty
-	private int NumOfPeople;
+	@Min(1)
+	private int numOfPeople;
 	
 	@NotEmpty
 	private LocalDateTime atCreated;
@@ -35,7 +38,7 @@ public class Reservation {
 			int userId,
 			int storeId,
 			String storeName,
-			LocalDateTime atReservationDate,
+			LocalDate atReservationDate,
 			int NumOfPeople,
 			LocalDateTime atCreated,
 			boolean isDeleted
@@ -45,7 +48,7 @@ public class Reservation {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.atReservationDate = atReservationDate;
-		this.NumOfPeople = NumOfPeople;
+		this.numOfPeople = numOfPeople;
 		this.atCreated = atCreated;
 		this.isDeleted = isDeleted;
 	}
@@ -54,13 +57,13 @@ public class Reservation {
 	public Reservation(
 			int userId,
 			int storeId,
-			LocalDateTime atReservationDate,
-			int NumOfPeople
+			LocalDate atReservationDate,
+			int numOfPeople
 			) {
 		this.userId = userId;
 		this.storeId = storeId;
 		this.atReservationDate = atReservationDate;
-		this.NumOfPeople = NumOfPeople;
+		this.numOfPeople = numOfPeople;
 	}
 	
 	public int getReservationId() {
@@ -81,17 +84,17 @@ public class Reservation {
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
-	public LocalDateTime getAtReservationDate() {
+	public LocalDate getAtReservationDate() {
 		return atReservationDate;
 	}
-	public void setAtReservationDate(LocalDateTime atReservationDate) {
+	public void setAtReservationDate(LocalDate atReservationDate) {
 		this.atReservationDate = atReservationDate;
 	}
 	public int getNumOfPeople() {
-		return NumOfPeople;
+		return numOfPeople;
 	}
 	public void setNumOfPeople(int numOfPeople) {
-		NumOfPeople = numOfPeople;
+		numOfPeople = numOfPeople;
 	}
 	public LocalDateTime getAtCreated() {
 		return atCreated;

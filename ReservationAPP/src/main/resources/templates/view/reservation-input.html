@@ -9,13 +9,13 @@
 </head>
 <body>
 	<header th:replace="~{/view/header::header}"></header>
-	<div class="user-container">
-		<div th:Object="${userInfo}">
-			<p th:text="*{userName}"></p>
-		</div>
-	</div>
 	<div class="container">
-		<form method="post" action="@{reserve}">
+		<div class="user-container">
+			<div th:Object="${userInfo}">
+				<p th:text="*{userName} + 'さん、こんにちは' "></p>
+			</div>
+		</div>
+		<form method="post" th:action="@{reserve-confirm}">
 			<table th:Object="${storeView}">
 				<tr>
 					<td>店舗名</td>
@@ -45,15 +45,26 @@
 				<tr>
 					<td>予約日</td>
 					<td>
-						<input th:name="reservationDate" id="reservationDate" type="date" >
+						<input th:name="atReservationDate" id="atReservationDate" type="date" th:value="${atReservationDate}" required>
+						<th:block  th:each="error:${errors}">
+							<div th:if="${errors != null}">
+									<th:block class="text-danger" th:if="${error.key == 'reservationDateError'}" th:text="${error.value}"></th:block>
+									<th:block class="text-danger" th:if="${error.key == 'reservationLimitError'}" th:text="${error.value}"></th:block>
+							</div>
+						</th:block>
 					</td>
 				</tr>				
 				<tr>
 					<td>予約人数</td>
 					<td>
-						<input th:name="numOfPeople" id="numOfPeoplle" type="number" min="1">
+						<input th:name="numOfPeople" id="numOfPeoplle" type="number" min="1" th:value="${numOfPeople}" required>
+						<th:block  th:each="error:${errors}">
+							<div th:if="${errors != null}">
+								<th:block class="text-danger" th:if="${error.key == 'numOfPeopleError'}" th:text="${error.value}"></th:block>
+							</div>
+						</th:block>
 					</td>
-				</tr>				
+				</tr>
 			</table>
 			
 			<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" >
+<head>
+	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{../../css/header.css}" type="text/css">
+<meta charset="UTF-8">
+<title>予約完了</title>
+</head>
+<body>
+	<header th:replace="~{/view/header::header}"></header>
+	<h1 text="${complete}"></h1>
+	<div class="container">
+		<h5>予約者情報</h5>
+		<div class="user-container">
+			<table th:Object="${userInfo}">
+				<tr>
+					<td>氏名</td>
+					<td th:text="*{userName}"></td>
+				</tr>
+				<tr>
+					<td>ふりがな</td>
+					<td th:text="*{userNameFurigana}"></td>
+				</tr>
+				<tr>
+					<td>住所</td>
+					<td th:text="*{city} + *{municipalities}
+								+ *{userAddress} + *{building}"></td>
+				</tr>
+				<tr>
+					<td>連絡先</td>
+					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+				</tr>		
+			</table>
+		</div>
+		<div class="store-container">
+			<h5>予約店舗情報</h5>
+				<table th:Object="${storeView}">
+					<tr>
+						<td>店舗名</td>
+						<td th:text="*{storeName}"></td>
+					</tr>
+					<tr>
+						<td>住所</td>
+						<td th:text="*{city} + *{municipalities}
+									+ *{streetAddress} + *{building}"></td>
+					</tr>
+					<tr>
+						<td>連絡先</td>
+						<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+					</tr>
+					<tr>
+						<td>定休日</td>
+						<td class="holiday">
+							<div th:each="holiday:*{holidays}">
+								<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>営業時間</td>
+						<td th:text="'開店時間：' + *{isOpened} + '　閉店時間：' + *{isClosed}"></td>
+					</tr>
+					<tr>
+						<td>予約日</td>
+						<td th:text="${reservation.atReservationDate}"></td>
+					</tr>				
+					<tr>
+						<td>予約人数</td>
+						<td th:text="${reservation.numOfPeople}">
+						</td>
+					</tr>				
+				</table>
+			</div>
+	</div>
+	<form method="post" th:action="@{to-store-list}">
+		<input type="submit" value="店舗一覧画面に戻る">				
+	</form>
+</body>
+</html>

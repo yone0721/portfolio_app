@@ -267,3 +267,22 @@ GROUP BY holidays.store_id\G
 ALTER TABLE reservation_table
 ADD num_of_people INTEGER NOT NULL DEFAULT 1
 AFTER at_reservation_date;
+
+
+SELECT
+    store.store_reservation_limit -(
+        SELECT
+            COUNT(reservation_id)
+        FROM reservation_table AS res
+        WHERE res.store_id = store.store_id
+        AND at_reservation_date LIKE '2024-06-11%'
+    ) AS store_reservation_limit
+FROM store_info_tb AS store
+WHERE store.store_id = 14
+
+
+SELECT
+    COUNT(reservation_id)
+FROM reservation_table
+WHERE store_id = 14
+AND at_reservation_date LIKE '2024-06-12%'

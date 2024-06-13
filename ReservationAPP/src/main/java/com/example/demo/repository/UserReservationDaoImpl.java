@@ -1,12 +1,15 @@
 package com.example.demo.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.Reservation;
 import com.example.demo.exception.FailedInsertSQLException;
@@ -23,16 +26,18 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	/*
 	 * 現在予約している情報をDBから全取得する
 	 * 
-	 * @param("reservation_id")			予約識別番号
-	 * @param("user_id")				利用者識別番号
-	 * @param("store_id")				店舗識別番号
-	 * @param("store_name")				店舗の名前
-	 * @param("at_reservation_date")	来店日
-	 * @param("num_of_people")			予約人数
-	 * @param("at_created")				予約登録日
-	 * @param("is_deleted")				削除フラグ
+	 * @param "reservation_id"			予約識別番号
+	 * @param "user_id"					利用者識別番号
+	 * @param "store_id"				店舗識別番号
+	 * @param "store_name"				店舗の名前
+	 * @param "at_reservation_date"		来店日
+	 * @param "num_of_people"			予約人数
+	 * @param "at_created"				予約登録日
+	 * @param "is_deleted"				削除フラグ
 	 * 
 	 * @retrun	取得したMapデータをリストに格納してもどす	
+	 * 
+	 * ページングは一旦考慮せず、10件までレコードを取得する様に作成
 	 */
 	
 	@Override
@@ -96,7 +101,6 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				ON store.store_id = reservation.store_id
 				WHERE reservation.user_id = ? AND reservation.reservation_id = ?
 				ORDER BY reservation.at_reservation_date DESC
-				LIMIT 10	
 				""";
 		
 		try {
@@ -105,6 +109,33 @@ public class UserReservationDaoImpl implements UserReservationDao {
 		}catch(DataAccessException e) {
 			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());
 			throw new FailedToGetReservationException("データの取得に失敗しました。");
+		}
+	}	
+	
+	@Override
+	public Integer calcNumOfEmpty(int store_id,LocalDate tgtDate) {
+		String sql ="""
+				SELECT
+					store.store_reservation_limit -(
+						SELECT
+							COUNT(reservation_id)
+						FROM reservation_table AS res
+						WHERE res.store_id = store.store_id
+						AND at_reservation_date LIKE ?
+					) AS store_reservation_limit
+				FROM store_info_tb AS store
+				WHERE store.store_id = ?
+				""";
+		try {		
+			
+			String formatDate = tgtDate.toString() + "%";
+			Map<String,Object> getLimitValue =jdbcTemplate.queryForMap(sql,formatDate,store_id);
+			return (Long)getLimitValue.get("store_reservation_limit") != null ?
+					(int)((long)getLimitValue.get("store_reservation_limit")): null;
+			
+		}catch(DataAccessException e) {
+			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());			
+			throw new FailedToGetReservationException("空き予約数の取得に失敗しました。");
 		}
 	}
 
@@ -119,6 +150,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 */
 	
 	@Override
+	@Transactional
 	public void insert(Reservation reservation) {
 		String sql ="""
 				INSERT INTO reservation_table
@@ -132,7 +164,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 			int result = jdbcTemplate.update(sql,
 					reservation.getUserId(),
 					reservation.getStoreId(),
-					reservation.getAtReservationDate(),
+					LocalDateTime.of(reservation.getAtReservationDate(),LocalTime.now()),
 					reservation.getNumOfPeople(),
 					LocalDateTime.now()
 					);
@@ -153,5 +185,6 @@ public class UserReservationDaoImpl implements UserReservationDao {
 		// TODO 自動生成されたメソッド・スタブ
 		
 	}
+
 
 }

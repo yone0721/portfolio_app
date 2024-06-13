@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotEmpty;
  * ログイン画面のth:valueに値を持たせるためのエンティティ
  * 入力したメールアドレスをログイン失敗時に
  * メールアドレス入力欄に保持する為にも使用 
- *
  */
 
 public class LoginForm {

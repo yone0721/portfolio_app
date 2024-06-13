@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.StoreInfo;
+import com.example.demo.entity.StoreInfoForm;
 import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.service.StoreInfoService;
 

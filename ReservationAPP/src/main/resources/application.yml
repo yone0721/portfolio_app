@@ -4,4 +4,6 @@ spring:
     url: jdbc:mysql://localhost:3306/reservation_db
     username: admin
     password: pass1234
+  session:
+    timeout: 1800
     

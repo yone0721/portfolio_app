@@ -35,7 +35,8 @@
 						</div>
 					</td>
 					<td>
-						<form method="post" th:action="@{transition-reserve}">
+						<form method="post" th:action="@{to-reservation-controller}">
+<!--						選択した店舗情報-->
 							<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
 							<input type="hidden" th:name="storeName" th:value="${storeView.storeName}">
 							<input type="hidden" th:name="postCode" th:value="${storeView.postCode}">
