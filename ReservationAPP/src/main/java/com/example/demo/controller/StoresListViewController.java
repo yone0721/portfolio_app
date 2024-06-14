@@ -93,4 +93,13 @@ public class StoresListViewController {
 		userSession.setUserInfo(userInfo);
 		return "redirect:/reservation/views/store-list";
 	}
+
+	@PostMapping("/user-mypage")
+	public String toUserMyPage(@ModelAttribute UserInfo userInfo,
+			RedirectAttributes redirect) {
+		
+		
+		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		return "redirect:/reservation/reserve/user-mypage";
+	}
 }

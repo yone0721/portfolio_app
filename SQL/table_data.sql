@@ -181,7 +181,7 @@ SELECT
 FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id
-GROUP BY holidays.store_id;
+GROUP BY holidays.store_id\G
 
 
 /*
@@ -222,8 +222,21 @@ INSERT INTO reservation_table (
 */
 
 SELECT
-    COUNT(store_id) AS reservations
-FROM reservation_table\G
+    store.store_name,
+    COUNT(res.store_id) AS 予約数
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.at_reservation_date LIKE '2024-06-20%'
+GROUP BY store.store_name;
+
+SELECT
+    store.store_name,
+    res.at_reservation_date
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.at_reservation_date LIKE '2024-06-20%';
 
 /*
 *　指定した店舗の残り予約数も取得するクエリ
@@ -303,22 +316,23 @@ ON store.store_id = res.store_id
 WHERE res.at_created LIKE '2024-06-13 15%'\G
 
 SELECT
-    reservation.reservation_id,
-    reservation.user_id,
-    reservation.store_id,
+    res.reservation_id,
+    res.user_id,
+    res.store_id,
     store.store_name,
-    reservation.at_reservation_date,
-    reservation.num_of_people,
-    reservation.at_created,
-    reservation.is_deleted
-FROM reservation_table AS reservation
-INNER JOIN store_info_tb AS store
-ON store.store_id = reservation.store_id
+    res.at_reservation_date,
+    res.num_of_people,
+    res.at_created,
+    res.is_deleted
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
 WHERE
-    reservation.user_id = 1
-AND reservation.store_id = 14
-AND reservation.is_deleted = 0
-ORDER BY reservation.at_reservation_date DESC
+    res.user_id = 1
+AND res.store_id = 14
+AND res.is_deleted = 0
+ORDER BY res.at_created DESC
+LIMIT 1;
 
 
 -- シーク法
@@ -359,11 +373,10 @@ SELECT
     store.phone,
     res.num_of_people
 FROM reservation_table AS res
-
 LEFT JOIN store_info_tb AS store
 ON store.store_id = res.store_id
 WHERE
-    res.store_id = 14
+    res.user_id = 1
 ORDER BY res.at_reservation_date DESC
 LIMIT 10
-OFFSET 10
+OFFSET 0

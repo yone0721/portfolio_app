@@ -53,8 +53,8 @@
 					<td th:text="*{reservation.storeName}"></td>
 					<td th:text="*{reservation.city} + *{reservation.municipalities}
 								+ *{reservation.streetAddress} + *{reservation.building}"></td>
-					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
-					<td th:text="'*{reservation.numOfPeople} + '名'"></td>
+					<td th:text="'TEL：' + *{reservation.phone} + '　MAIL：' + *{reservation.mail}"></td>
+					<td th:text="*{reservation.numOfPeople} + '名'"></td>
 					<td>詳細ボタン</td>
 				</tr>	
 			</table>

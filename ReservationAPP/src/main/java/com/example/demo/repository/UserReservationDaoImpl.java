@@ -38,38 +38,41 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 * 
 	 * @retrun	取得したMapデータをリストに格納してもどす	
 	 * 
-	 * ページングは一旦考慮せず、10件までレコードを取得する様に作成
+	 * ページネーションは一旦オフセット法を採用、10件ずつ取得
 	 */
 	
 	@Override
-	public List<Map<String, Object>> findAllReservationById(int userId) {
+	public List<Map<String, Object>> findAllReservationsByIdAndOffset(int userId,int offset) {
 		String sql = """
-				SELECT 
-					reservation.reservation_id,
-					reservation.user_id,
-					reservation.store_id,
+				SELECT
+					res.reservation_id,
+					res.user_id,
+					res.store_id,
 					store.store_name,
-					reservation.at_reservation_date,
-					reservation.num_of_people,
-					reservation.at_created,
-					reservation.is_deleted
-				FROM reservation_table AS reservation
-				INNER JOIN store_info_tb AS store
-				ON store.store_id = reservation.store_id
-				WHERE reservation.user_id = ?
-				AND reservation.is_deleted = 0
-				ORDER BY reservation.at_reservation_date DESC
+					store.city,
+					store.municipalities,
+					store.street_address,
+					store.building,
+					store.mail,
+					store.phone,
+					res.at_reservation_date,
+					res.num_of_people
+				FROM reservation_table AS res
+				LEFT JOIN store_info_tb AS store
+				ON store.store_id = res.store_id
+				WHERE res.user_id = ? AND res.is_deleted = 0
+				ORDER BY res.at_reservation_date DESC
 				LIMIT 10
-				""";
+				OFFSET ?""";
 		
 		try {
-			return jdbcTemplate.queryForList(sql, userId);
+			return jdbcTemplate.queryForList(sql,userId,offset);
 			
 		}catch(DataAccessException e) {
+			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());
 			throw new FailedToGetReservationException("データの取得に失敗しました。");
 		}
-		
-	}
+	}	
 	
 	/*
 	 * 指定した予約情報をDBから取得する
@@ -116,6 +119,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 			throw new FailedToGetReservationException("データの取得に失敗しました。");
 		}
 	}	
+	
 	
 	@Override
 	public Integer calcNumOfEmpty(int store_id,LocalDate tgtDate) {

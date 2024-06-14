@@ -57,8 +57,6 @@ public class UserReservationInfomation {
 	
 	@NotEmpty
 	private LocalDateTime atCreated;
-	
-	private boolean isDeleted;
 
 //	DBデータ取得・更新用のコンストラクタ
 	public UserReservationInfomation(
@@ -75,8 +73,7 @@ public class UserReservationInfomation {
 			@NotNull String phone,
 			@NotEmpty LocalDate atReservationDate,
 			@NotEmpty @Min(1) int numOfPeople, 
-			@NotEmpty LocalDateTime atCreated,
-			boolean isDeleted) {
+			@NotEmpty LocalDateTime atCreated) {
 		this.reservationId = reservationId;
 		this.userId = userId;
 		this.storeId = storeId;
@@ -91,7 +88,6 @@ public class UserReservationInfomation {
 		this.atReservationDate = atReservationDate;
 		this.numOfPeople = numOfPeople;
 		this.atCreated = atCreated;
-		this.isDeleted = isDeleted;
 	}
 
 	public int getReservationId() {
@@ -204,13 +200,5 @@ public class UserReservationInfomation {
 
 	public void setAtCreated(LocalDateTime atCreated) {
 		this.atCreated = atCreated;
-	}
-
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
 	}
 }	

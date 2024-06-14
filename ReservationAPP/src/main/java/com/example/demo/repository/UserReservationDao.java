@@ -7,7 +7,7 @@ import java.util.Map;
 import com.example.demo.entity.Reservation;
 
 public interface UserReservationDao {
-	List<Map<String,Object>> findAllReservationById(int userId);
+	List<Map<String, Object>> findAllReservationsByIdAndOffset(int userId, int offset);
 	Map<String,Object> findReservationById(int userId,int reservationId);
 	Integer calcNumOfEmpty(int store_id,LocalDate tgtDate);
 	void insert(Reservation reservation);

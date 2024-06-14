@@ -152,8 +152,60 @@ public class UserInfo {
 		return createdAt;
 	}
 
-	public LocalDateTime getUpdateAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setUserNameFurigana(String userNameFurigana) {
+		this.userNameFurigana = userNameFurigana;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setMunicipalities(String municipalities) {
+		this.municipalities = municipalities;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	public void setBuilding(String building) {
+		this.building = building;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 	
 }

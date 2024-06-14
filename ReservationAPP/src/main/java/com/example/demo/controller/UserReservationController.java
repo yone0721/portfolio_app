@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.entity.PageForm;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.UserReservationInfomation;
 import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.service.UserReservationService;
 import com.example.demo.session.UserSession;
@@ -182,6 +185,7 @@ public class UserReservationController {
 		return "redirect:/reservation/views/open-store-list";
 	}
 	
+	
 //	定休日・予約の空き・人数のバリデーションメソッド
 	
 	public Map<String,String> checkReservationDateAndLimit(StoreView storeView,LocalDate reservationDate,int numOfPeople){
@@ -212,5 +216,19 @@ public class UserReservationController {
 		return errors;
 	}
 	
-	
+	@PostMapping("/user-mypage")
+	public String toUserMyPage(@ModelAttribute UserInfo userInfo,Model model) {
+			PageForm pageForm = new PageForm(userInfo.getUserId(),0);
+			
+			if(userSession.getUserInfo() == null) {
+				userSession.setUserInfo(userInfo);
+			}
+			
+			List<UserReservationInfomation> reservationList =
+					userReservationService.getUserReservationListByIdAndOffset(pageForm);
+			
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",reservationList);
+		return "view/user-mypage";
+	}
 }

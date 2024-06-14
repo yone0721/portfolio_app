@@ -18,6 +18,10 @@ td {
 	display: flex;
 }
 
+h1,h2,h3,h4,h5,h6{
+	margin:10px 5px;	
+}
+
 .form-container{
 	margin:10px 10px;
 	justify-content: left;
