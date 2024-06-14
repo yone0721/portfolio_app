@@ -25,6 +25,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	
 	/*
 	 * 現在予約している情報をDBから全取得する
+	 * 10件ずつ取得するようにする
 	 * 
 	 * @param "reservation_id"			予約識別番号
 	 * @param "user_id"					利用者識別番号
@@ -58,7 +59,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				WHERE reservation.user_id = ?
 				AND reservation.is_deleted = 0
 				ORDER BY reservation.at_reservation_date DESC
-				LIMIT 10	
+				LIMIT 10
 				""";
 		
 		try {

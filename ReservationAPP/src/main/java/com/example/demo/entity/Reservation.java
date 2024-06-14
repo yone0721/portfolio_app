@@ -18,6 +18,7 @@ public class Reservation {
 	@NotEmpty
 	private int storeId;
 	
+	@Nullable
 	private String storeName;
 	
 	@NotEmpty

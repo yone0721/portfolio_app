@@ -8,7 +8,7 @@
 	<title>店舗の詳細画面</title>
 </head>
 <body>
-	<header th:replace="~{/view/header::header}"></header>
+	<header th:replace="~{/view/user-header::user-header}"></header>
 	<div class="container">
 		<div class="user-container">
 			<div th:Object="${userInfo}">
@@ -45,7 +45,7 @@
 				<tr>
 					<td>予約日</td>
 					<td>
-						<input th:name="atReservationDate" id="atReservationDate" type="date" th:value="${atReservationDate}" required>
+						<input name="atReservationDate" th:name="atReservationDate" id="atReservationDate" type="date" th:value="${atReservationDate}" required>
 						<th:block  th:each="error:${errors}">
 							<div th:if="${errors != null}">
 									<div class="text-danger" th:if="${error.key == 'reservationDateError'}" th:text="${error.value}"></div>
@@ -57,7 +57,7 @@
 				<tr>
 					<td>予約人数</td>
 					<td>
-						<input th:name="numOfPeople" id="numOfPeoplle" type="number" min="1" th:value="${numOfPeople}" required>
+						<input th:name="numOfPeople" name="numOfPeople" id="numOfPeoplle" type="number" min="1" th:value="${numOfPeople}" required>
 						<th:block  th:each="error:${errors}">
 							<div th:if="${errors != null}">
 								<div class="text-danger" th:if="${error.key == 'numOfPeopleError'}" th:text="${error.value}"></div>

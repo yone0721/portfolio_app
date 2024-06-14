@@ -301,3 +301,69 @@ ON user.user_id = res.user_id
 LEFT JOIN store_info_tb AS store
 ON store.store_id = res.store_id
 WHERE res.at_created LIKE '2024-06-13 15%'\G
+
+SELECT
+    reservation.reservation_id,
+    reservation.user_id,
+    reservation.store_id,
+    store.store_name,
+    reservation.at_reservation_date,
+    reservation.num_of_people,
+    reservation.at_created,
+    reservation.is_deleted
+FROM reservation_table AS reservation
+INNER JOIN store_info_tb AS store
+ON store.store_id = reservation.store_id
+WHERE
+    reservation.user_id = 1
+AND reservation.store_id = 14
+AND reservation.is_deleted = 0
+ORDER BY reservation.at_reservation_date DESC
+
+
+-- シーク法
+SELECT
+    res.reservation_id,
+    res.at_reservation_date,
+    res.store_id,
+    store.store_name,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    res.num_of_people
+FROM reservation_table AS res
+
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE
+    res.store_id = 14
+AND
+    (cast('2024-06-20') AS date > res.at_reservation_date)
+ORDER BY res.at_reservation_date DESC
+LIMIT 10
+
+-- オフセット法
+SELECT
+    res.reservation_id,
+    res.at_reservation_date,
+    res.store_id,
+    store.store_name,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    res.num_of_people
+FROM reservation_table AS res
+
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE
+    res.store_id = 14
+ORDER BY res.at_reservation_date DESC
+LIMIT 10
+OFFSET 10

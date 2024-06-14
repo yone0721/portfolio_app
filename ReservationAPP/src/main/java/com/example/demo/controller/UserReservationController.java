@@ -84,7 +84,7 @@ public class UserReservationController {
 	
 	@PostMapping("/reserve-confirm")
 	public String checkAvailableDays(
-			@RequestParam("atReservationDate") String selectDate,
+			@RequestParam("atReservationDate") String atReservationDate,
 			@RequestParam("numOfPeople") int numOfPeople,
 			@ModelAttribute StoreView storeView,
 			Model model
@@ -97,18 +97,18 @@ public class UserReservationController {
 		 *	・予約人数は0以下かどうか
 		 */
 		Map<String,String> errors = checkReservationDateAndLimit(
-				storeView,LocalDate.parse(selectDate),numOfPeople);
+				storeView,LocalDate.parse(atReservationDate),numOfPeople);
 		
 //		エラーが無ければ確認画面へ遷移
 		if(errors.isEmpty()) {
-			model.addAttribute("selectDate",selectDate);
+			model.addAttribute("atReservationDate",atReservationDate);
 			model.addAttribute("numOfPeople",numOfPeople);
 			model.addAttribute("userInfo",userSession.getUserInfo());
 			model.addAttribute("storeView",userSession.getStoreView());				
 			return "view/reservation-confirm";
 		}
 		
-		model.addAttribute("selectDate",selectDate);
+		model.addAttribute("atReservationDate",atReservationDate);
 		model.addAttribute("numOfPeople",numOfPeople);
 		model.addAttribute("errors",errors);
 		model.addAttribute("userInfo",userSession.getUserInfo());
@@ -152,8 +152,9 @@ public class UserReservationController {
 			return "redirect:/reservation/reserve/reservation-complete";
 			
 		}catch(FailedInsertSQLException e) {
-			e.getStackTrace();
 			
+			model.addAttribute("reservationError","予約の登録ができませんでした。");
+			model.addAttribute("exception:",e.getMessage());
 			return "view/reservation-input";
 		}		
 	}
