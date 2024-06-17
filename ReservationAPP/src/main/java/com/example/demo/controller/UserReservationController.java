@@ -29,7 +29,7 @@ import com.example.demo.session.UserSession;
 public class UserReservationController {
 	
 	private final UserReservationService userReservationService;
-	private final UserSession userSession;
+	private UserSession userSession;
 	
 	public UserReservationController(
 			UserReservationService userReservationService,UserSession userSession) {
@@ -216,19 +216,29 @@ public class UserReservationController {
 		return errors;
 	}
 	
-	@PostMapping("/user-mypage")
-	public String toUserMyPage(@ModelAttribute UserInfo userInfo,Model model) {
-			PageForm pageForm = new PageForm(userInfo.getUserId(),0);
+	@GetMapping("/user-mypage")
+	public String toUserMyPage(
+			@ModelAttribute("userSession") UserSession userSession,Model model) {
 			
-			if(userSession.getUserInfo() == null) {
-				userSession.setUserInfo(userInfo);
+			if(userSession == null) {
+				this.userSession = userSession;
 			}
 			
-			List<UserReservationInfomation> reservationList =
-					userReservationService.getUserReservationListByIdAndOffset(pageForm);
+			PageForm pageForm = new PageForm(userSession.getUserInfo().getUserId(),0);
 			
+			List<UserReservationInfomation> reservationList;
+			
+			if(userSession.getReservationList() == null) {
+				reservationList = userReservationService.getUserReservationListById(pageForm);
+			}else {
+				int lastNumber = userSession.getReservationList().size() - 1;
+				reservationList = userReservationService.getUserReservationListById(pageForm,
+						userSession.getReservationList().get(lastNumber).getReservationId());
+			}
+		userSession.setReservationList(reservationList);
+
 		model.addAttribute("userInfo",userSession.getUserInfo());
-		model.addAttribute("reservationList",reservationList);
+		model.addAttribute("reservationList",userSession.getReservationList());
 		return "view/user-mypage";
-	}
+	}			
 }

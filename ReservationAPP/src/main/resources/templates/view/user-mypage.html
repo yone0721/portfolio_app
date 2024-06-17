@@ -15,25 +15,19 @@
 			<table th:Object="${userInfo}">
 				<tr>
 					<td>ID</td>
-					<td th:text="*{userId}"></td>
-				</tr>
-				<tr>
 					<td>氏名</td>
-					<td th:text="*{userName}"></td>
-				</tr>
-				<tr>
 					<td>ふりがな</td>
-					<td th:text="*{userNameFurigana}"></td>
+					<td>住所</td>
+					<td>連絡先</td>
 				</tr>
 				<tr>
-					<td>住所</td>
+					<td th:text="*{userId}"></td>
+					<td th:text="*{userName}"></td>
+					<td th:text="*{userNameFurigana}"></td>
 					<td th:text="*{city} + *{municipalities}
 								+ *{userAddress} + *{building}"></td>
-				</tr>
-				<tr>
-					<td>連絡先</td>
 					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
-				</tr>		
+				</tr>
 			</table>
 		<div class="reservation-list-container">
 			<h5>予約中の内容</h5>
@@ -51,13 +45,18 @@
 					<td th:text="*{reservation.reservationId}"></td>
 					<td th:text="*{reservation.atReservationDate}"></td>
 					<td th:text="*{reservation.storeName}"></td>
-					<td th:text="*{reservation.city} + *{reservation.municipalities}
-								+ *{reservation.streetAddress} + *{reservation.building}"></td>
+					<td th:text="*{reservation.city} + *{reservation.municipalities} + *{reservation.streetAddress} + *{reservation.building}"></td>
 					<td th:text="'TEL：' + *{reservation.phone} + '　MAIL：' + *{reservation.mail}"></td>
 					<td th:text="*{reservation.numOfPeople} + '名'"></td>
-					<td>詳細ボタン</td>
+					<td>確認</td>
 				</tr>	
 			</table>
+			<div class="form-container">
+				<form th:if="${nextToPage > 0}" th:method="get" th:action="@{user-mypage}">
+					<input type="submit">
+				</form>
+				
+			</div>	
 		</div>
 	</div>	
 </body>

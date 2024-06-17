@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetStoresViewException;
+import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.repository.StoresListViewDao;
 
 @Service
@@ -93,12 +94,12 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 			}
 			
 		}catch(DataAccessException e) {
-			throw new StoreInfoNotFoundExcception("");
+			throw new StoreInfoNotFoundException("");
 		}
 		
 		return storeViewList;
 	}
-
+		
 	@Override
 	public UserInfo getUserByMail(String mail) {
 		

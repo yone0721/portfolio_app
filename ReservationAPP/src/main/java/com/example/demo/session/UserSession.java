@@ -1,6 +1,7 @@
 package com.example.demo.session;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
@@ -8,6 +9,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.UserReservationInfomation;
 
 /*
  * ユーザーログイン後にユーザー情報をセッションで保持するクラス
@@ -20,6 +22,7 @@ public class UserSession implements Serializable {
 	private UserInfo userInfo;
 	private Reservation reservation;
 	private StoreView storeView;
+	private List<UserReservationInfomation> reservationList;
 	
 	/*
 	 * メソッド
@@ -39,6 +42,10 @@ public class UserSession implements Serializable {
 	public StoreView getStoreView() {
 		return storeView;
 	}
+	
+	public List<UserReservationInfomation> getReservationList(){
+		return this.reservationList;
+	}
 
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
@@ -51,6 +58,11 @@ public class UserSession implements Serializable {
 	public void setStoreView(StoreView storeView) {
 		this.storeView = storeView;
 	}
+	
+	public void setReservationList(List<UserReservationInfomation> reservationList) {
+		this.reservationList = reservationList;
+	}
+	
 	public void clearUserData() {
 		userInfo = null;
 	}
@@ -61,5 +73,10 @@ public class UserSession implements Serializable {
 	public void clearStoreViewData() {
 		storeView = null;
 	}
+	public void clearReservationListData() {
+		this.reservationList = null;
+	}
+	
+	
 }
 

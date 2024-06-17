@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +64,12 @@ public class UserReservationServiceImpl implements UserReservationService {
 	 */
 	
 	@Override
-	public List<UserReservationInfomation> getUserReservationListByIdAndOffset(PageForm pageForm) {
+	public List<UserReservationInfomation> getUserReservationListById(PageForm pageForm) {
 		
 		try {
 			List<UserReservationInfomation> reservationsList = new ArrayList<>();
 			
-			List<Map<String,Object>> getReservationList = dao.findAllReservationsByIdAndOffset(pageForm.getUserId(),pageForm.getOffset());
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(pageForm.getUserId());
 			
 			for(Map getReservation: getReservationList) {
 				
@@ -82,13 +83,54 @@ public class UserReservationServiceImpl implements UserReservationService {
 						(String)getReservation.get("post_code"),
 						(String)getReservation.get("city"),
 						(String)getReservation.get("municipalities"),
-						(String)getReservation.get("streetAddress"),
-						(String)getReservation.get("building"),
+						(String)getReservation.get("street_address"),
+						(String)getReservation.get("building") != null?
+								(String)getReservation.get("building") :"",
 						(String)getReservation.get("mail"),
 						(String)getReservation.get("phone"),
 						LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
 						(int)getReservation.get("num_of_people"),
 						((LocalDateTime)getReservation.get("at_created"))
+						);
+				
+				reservationsList.add(reservation);
+			}
+			
+			return reservationsList;
+			
+		}catch(FailedToGetReservationException e) {
+			System.out.println("UserReservationServiceImplでエラー：" + e.getCause());
+			throw new FailedToGetReservationException("データの取得に失敗しました。");
+		}
+	}
+	@Override
+	public List<UserReservationInfomation> getUserReservationListById(PageForm pageForm,int reservationId) {
+		
+		try {
+			List<UserReservationInfomation> reservationsList = new ArrayList<>();
+			
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(pageForm.getUserId(),reservationId);
+			
+			for(Map getReservation: getReservationList) {
+				
+				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("at_reservation_date"));
+				
+				UserReservationInfomation reservation = new UserReservationInfomation(
+						(int)getReservation.get("reservation_id"),
+						(int)getReservation.get("user_id"),
+						(int)getReservation.get("store_id"),
+						(String)getReservation.get("store_name"),
+						(String)getReservation.get("post_code"),
+						(String)getReservation.get("city"),
+						(String)getReservation.get("municipalities"),
+						(String)getReservation.get("street_address"),
+						(String)getReservation.get("building") != null?
+								(String)getReservation.get("building") :"",
+								(String)getReservation.get("mail"),
+								(String)getReservation.get("phone"),
+								LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
+								(int)getReservation.get("num_of_people"),
+								((LocalDateTime)getReservation.get("at_created"))
 						);
 				
 				reservationsList.add(reservation);
@@ -173,6 +215,25 @@ public class UserReservationServiceImpl implements UserReservationService {
 			throw new FailedInsertSQLException("予約の登録に失敗しました。");
 		}
 	}
+	@Override
+	public Map<String,Integer> hasNextPage(UserInfo userInfo,int offset) {
+		Map<String,Integer> pagesMap = new HashMap<>();
+		
+		try {
+			List<Map<String,Object>> getPages = dao.getRemainingReservations(userInfo.getUserId(),offset);
+			pagesMap.put("nextToPage",
+					(int)getPages.get(0).get("next_to_reservation"));
+			pagesMap.put("backToPage",
+					(int)getPages.get(0).get("back_to_reservation"));		
+			
+			return pagesMap;
+		}catch(FailedToGetReservationException e) {
+			throw new FailedToGetReservationException("他の予約情報が見当たりません。");
+		}
+	
+	
+	}
+	
 	
 	@Override
 	public int getReservationLimitAtDate(StoreView storeView, LocalDate tgtDate) {

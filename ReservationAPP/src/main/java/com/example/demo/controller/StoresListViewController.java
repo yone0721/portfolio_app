@@ -104,12 +104,11 @@ public class StoresListViewController {
 		return "redirect:/reservation/views/store-list";
 	}
 
-	@PostMapping("/user-mypage")
-	public String toUserMyPage(@ModelAttribute UserInfo userInfo,
+	@GetMapping("/user-mypage")
+	public String toUserMyPage(
 			RedirectAttributes redirect) {
 		
-		
-		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		redirect.addFlashAttribute("userSession",userSession);
 		return "redirect:/reservation/reserve/user-mypage";
 	}
 }

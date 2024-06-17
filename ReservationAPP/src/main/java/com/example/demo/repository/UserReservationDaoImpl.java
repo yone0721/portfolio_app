@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 */
 	
 	@Override
-	public List<Map<String, Object>> findAllReservationsByIdAndOffset(int userId,int offset) {
+	public List<Map<String, Object>> findAllReservationsById(int userId) {
 		String sql = """
 				SELECT
 					res.reservation_id,
@@ -63,16 +64,52 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				WHERE res.user_id = ? AND res.is_deleted = 0
 				ORDER BY res.at_reservation_date DESC
 				LIMIT 10
-				OFFSET ?""";
+				""";
 		
 		try {
-			return jdbcTemplate.queryForList(sql,userId,offset);
+			return jdbcTemplate.queryForList(sql,userId);
 			
 		}catch(DataAccessException e) {
 			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());
 			throw new FailedToGetReservationException("データの取得に失敗しました。");
 		}
 	}	
+	
+	@Override
+	public List<Map<String, Object>> findAllReservationsById(int userId, int reservationId) {
+		String sql = """
+				SELECT
+					res.reservation_id,
+					res.user_id,
+					res.store_id,
+					store.store_name,
+					store.city,
+					store.municipalities,
+					store.street_address,
+					store.building,
+					store.mail,
+					store.phone,
+					res.at_reservation_date,
+					res.num_of_people
+				FROM reservation_table AS res
+				LEFT JOIN store_info_tb AS store
+				ON store.store_id = res.store_id
+				WHERE res.user_id = ?
+				AND res.is_deleted = 0
+				AND res.reservation_id < ?
+				ORDER BY res.at_reservation_date DESC
+				LIMIT 10
+				""";
+		
+		try {
+			return jdbcTemplate.queryForList(sql,userId,reservationId);
+			
+		}catch(DataAccessException e) {
+			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());
+			throw new FailedToGetReservationException("データの取得に失敗しました。");
+		}
+	}
+	
 	
 	/*
 	 * 指定した予約情報をDBから取得する
@@ -120,6 +157,23 @@ public class UserReservationDaoImpl implements UserReservationDao {
 		}
 	}	
 	
+	public List<Map<String,Object>> getRemainingReservations(int user_id,int offset) {
+		String sql = """
+				SELECT count(reservation_id) - ?  AS next_to_reservation,
+						? - count(reservation_id)  AS back_to_resevation
+				FROM reservation_table
+				WHERE user_id = ?
+				""";
+
+		try {
+			List<Map<String,Object>> RemainingPages = new ArrayList<>();
+			
+			return jdbcTemplate.queryForList(sql,offset,user_id);
+		}catch(DataAccessException  e) {
+			throw new FailedToGetReservationException("他の予約情報が見当たりません。");
+		}
+		
+	}
 	
 	@Override
 	public Integer calcNumOfEmpty(int store_id,LocalDate tgtDate) {
@@ -194,6 +248,4 @@ public class UserReservationDaoImpl implements UserReservationDao {
 		// TODO 自動生成されたメソッド・スタブ
 		
 	}
-
-
 }

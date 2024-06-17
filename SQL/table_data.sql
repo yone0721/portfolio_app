@@ -380,3 +380,25 @@ WHERE
 ORDER BY res.at_reservation_date DESC
 LIMIT 10
 OFFSET 0
+
+SELECT
+    res.reservation_id,
+    res.user_id,
+    res.store_id,
+    store.store_name,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    res.at_reservation_date,
+    res.num_of_people
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.user_id = 1
+AND res.is_deleted = 0
+AND res.reservation_id < 18
+ORDER BY res.at_reservation_date DESC
+LIMIT 10

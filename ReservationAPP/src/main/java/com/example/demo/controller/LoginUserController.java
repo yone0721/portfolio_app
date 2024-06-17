@@ -16,6 +16,8 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.UserInfoNotFoundException;
 import com.example.demo.service.UserInfoService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping("/reservation/user-login")
 public class LoginUserController {
@@ -36,14 +38,15 @@ public class LoginUserController {
 	public String login(
 			@RequestParam("mail") String mail,
 			@RequestParam("password") String password,
-			Model model,RedirectAttributes redirect) {
+			Model model,RedirectAttributes redirect,
+			HttpServletResponse response) {
 			
 			UserInfo userInfo;
 			try {
 				userInfo = authenticateUser(mail,password);
 				
 				if(!(userInfo == null)) {
-//					System.out.println("ユーザーメール："+ userInfo.getMail());
+					
 					
 					
 					redirect.addFlashAttribute("userInfo",userInfo);
