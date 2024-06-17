@@ -21,6 +21,11 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 	
+	/*
+	 * findAllStores()　			登録されている店舗情報を全取得するメソッド
+	 * store_reservation_table		予約上限数から予約済みの件数を引いた数値を格納
+	 */
+	
 	@Override
 	public List<Map<String,Object>> findAllStores() {
 		String sql = """
@@ -34,7 +39,14 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			    store.building,
 			    store.mail,
 			    store.phone,
-			    store.store_reservation_limit,
+			   
+			    store.store_reservation_limit - (
+				    SELECT
+				        COUNT(reservation_id)
+				    FROM reservation_table AS res
+				    WHERE res.store_id = store.store_id
+			    ) AS store_reservation_limit,
+			   
 			    store.is_opened,
 			    store.is_closed,
 			    GROUP_CONCAT(holidays.day_of_week) AS holidays

@@ -1,173 +1,113 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+
 public class Reservation {
+	
+	@Nullable
 	private int reservationId;
+	
+	@NotEmpty
 	private int userId;
-	private String userName;
-	private String userMail;
-	private String userPhone;
+		
+	@NotEmpty
 	private int storeId;
+	
+	@Nullable
 	private String storeName;
-	private int serviceTypeId;
-	private String serviceTypeName;
-	private int servicePlanId;
-	private String planName;	
+	
+	@NotEmpty
+	private LocalDate atReservationDate;
+	
+	@NotEmpty
+	@Min(1)
+	private int numOfPeople;
+	
+	@NotEmpty
 	private LocalDateTime atCreated;
-	private LocalDateTime atReservationDate;
+	
+	private boolean isDeleted;
+	
+//	DBデータ取得・更新用のコンストラクタ
+	public Reservation(
+			int reservationId,
+			int userId,
+			int storeId,
+			String storeName,
+			LocalDate atReservationDate,
+			int NumOfPeople,
+			LocalDateTime atCreated,
+			boolean isDeleted
+			) {
+		this.reservationId = reservationId;
+		this.userId = userId;
+		this.storeId = storeId;
+		this.storeName = storeName;
+		this.atReservationDate = atReservationDate;
+		this.numOfPeople = numOfPeople;
+		this.atCreated = atCreated;
+		this.isDeleted = isDeleted;
+	}
+	
+//	DBの挿入用
+	public Reservation(
+			int userId,
+			int storeId,
+			LocalDate atReservationDate,
+			int numOfPeople
+			) {
+		this.userId = userId;
+		this.storeId = storeId;
+		this.atReservationDate = atReservationDate;
+		this.numOfPeople = numOfPeople;
+	}
 	
 	public int getReservationId() {
 		return reservationId;
 	}
-	
-	
 	public void setReservationId(int reservationId) {
 		this.reservationId = reservationId;
 	}
 	public int getUserId() {
 		return userId;
 	}
-
-
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
-
 	public int getStoreId() {
 		return storeId;
 	}
-
-
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
-
-
-	public int getServiceTypeId() {
-		return serviceTypeId;
+	public LocalDate getAtReservationDate() {
+		return atReservationDate;
 	}
-
-
-	public void setServiceTypeId(int serviceTypeId) {
-		this.serviceTypeId = serviceTypeId;
+	public void setAtReservationDate(LocalDate atReservationDate) {
+		this.atReservationDate = atReservationDate;
 	}
-
-
-	public int getServicePlanId() {
-		return servicePlanId;
+	public int getNumOfPeople() {
+		return numOfPeople;
 	}
-
-
-	public void setServicePlanId(int servicePlanId) {
-		this.servicePlanId = servicePlanId;
+	public void setNumOfPeople(int numOfPeople) {
+		numOfPeople = numOfPeople;
 	}
-	
-
-
-	public String getUserName() {
-		return userName;
-	}
-
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-
-	public String getUserMail() {
-		return userMail;
-	}
-
-
-	public void setUserMail(String userMail) {
-		this.userMail = userMail;
-	}
-
-
-	public String getUserPhone() {
-		return userPhone;
-	}
-
-
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
-	}
-
-
-	public String getStoreName() {
-		return storeName;
-	}
-
-
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}
-
-
-	public String getServiceTypeName() {
-		return serviceTypeName;
-	}
-
-
-	public void setServiceTypeName(String serviceTypeName) {
-		this.serviceTypeName = serviceTypeName;
-	}
-
-
-	public String getPlanName() {
-		return planName;
-	}
-
-
-	public void setPlanName(String planName) {
-		this.planName = planName;
-	}
-	
 	public LocalDateTime getAtCreated() {
 		return atCreated;
 	}
-
-	public LocalDateTime getAtReservationDate() {
-		return atReservationDate;
-	}
-
-
-	public void setAtDateTime(LocalDateTime atReservationDate) {
-		this.atReservationDate = atReservationDate;
-	}
-
-	public Reservation(String userName, int userId,String userMail, String userPhone, int storeId, String storeName,int serviceTypeId, String serviceTypeName,
-			 int servicePlanId,String planName,LocalDateTime atReservationDate) {
-		this.userId = userId;
-		this.userName = userName;
-		this.userMail = userMail;
-		this.userPhone = userPhone;
-		this.storeId = storeId;
-		this.storeName = storeName;
-		this.serviceTypeId = serviceTypeId;
-		this.serviceTypeName = serviceTypeName;
-		this.servicePlanId = servicePlanId;
-		this.planName = planName;
-		this.atReservationDate = atReservationDate;
-	}
-
-	public Reservation(int reservationId, int userId, String userName, String userMail, String userPhone, int storeId,
-			String storeName, int serviceTypeId, String serviceTypeName, int servicePlanId, String planName,
-			LocalDateTime atCreated, LocalDateTime atReservationDate) {
-		this.reservationId = reservationId;
-		this.userId = userId;
-		this.userName = userName;
-		this.userMail = userMail;
-		this.userPhone = userPhone;
-		this.storeId = storeId;
-		this.storeName = storeName;
-		this.serviceTypeId = serviceTypeId;
-		this.serviceTypeName = serviceTypeName;
-		this.servicePlanId = servicePlanId;
-		this.planName = planName;
+	public void setAtCreated(LocalDateTime atCreated) {
 		this.atCreated = atCreated;
-		this.atReservationDate = atReservationDate;
 	}
-}
+	public boolean isDelted() {
+		return isDeleted;
+	}
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+}	
+	

@@ -27,8 +27,8 @@ public class LoginUserController {
 	}
 	
 	/*
-	 * @param("mail") ログイン時に入力されたメールアドレス
-	 * @param("password") ログイン時に入力されたパスワード
+	 * @param mail 			 ログイン時に入力されたメールアドレス
+	 * @param password		 ログイン時に入力されたパスワード
 	 * 
 	 */
 	

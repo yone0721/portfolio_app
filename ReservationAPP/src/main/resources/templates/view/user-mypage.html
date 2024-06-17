@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" >
+<head>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" type="text/css">
+<meta charset="UTF-8">
+<title>予約完了</title>
+</head>
+<body>
+	<header th:replace="~{/view/user-header::user-header}"></header>
+	<div class="container">
+		<div class="user-container">
+			<h5>お客様情報</h5>
+			<table th:Object="${userInfo}">
+				<tr>
+					<td>ID</td>
+					<td th:text="*{userId}"></td>
+				</tr>
+				<tr>
+					<td>氏名</td>
+					<td th:text="*{userName}"></td>
+				</tr>
+				<tr>
+					<td>ふりがな</td>
+					<td th:text="*{userNameFurigana}"></td>
+				</tr>
+				<tr>
+					<td>住所</td>
+					<td th:text="*{city} + *{municipalities}
+								+ *{userAddress} + *{building}"></td>
+				</tr>
+				<tr>
+					<td>連絡先</td>
+					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+				</tr>		
+			</table>
+		<div class="reservation-list-container">
+			<h5>予約中の内容</h5>
+			<table>
+				<tr>
+					<th>予約番号</th>
+					<th>予約日</th>
+					<th>予約店舗</th>
+					<th>店舗住所</th>
+					<th>店舗連絡先</th>
+					<th>予約人数</th>
+					<th>詳細</th>
+				</tr>	
+				<tr th:each="reservation:${reservationList}">
+					<td th:text="*{reservation.reservationId}"></td>
+					<td th:text="*{reservation.atReservationDate}"></td>
+					<td th:text="*{reservation.storeName}"></td>
+					<td th:text="*{reservation.city} + *{reservation.municipalities}
+								+ *{reservation.streetAddress} + *{reservation.building}"></td>
+					<td th:text="'TEL：' + *{reservation.phone} + '　MAIL：' + *{reservation.mail}"></td>
+					<td th:text="*{reservation.numOfPeople} + '名'"></td>
+					<td>詳細ボタン</td>
+				</tr>	
+			</table>
+		</div>
+	</div>	
+</body>
+</html>

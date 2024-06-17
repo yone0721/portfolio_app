@@ -43,30 +43,63 @@ public class StoresListViewController {
 		redirect.addFlashAttribute(userInfo);
 		return "redirect:/reservation/views/store-list";
 	}
-	
-	
+		
+	/*
+	 * 店舗一覧画面への遷移メソッド
+	 * @param("storeViewList")	DBから取得した店舗データ10件分までのリストを格納
+	 * @param("userInfo")		セッションで保持しているユーザー情報
+	 * * @return				店舗一覧画面への遷移
+	 */
 	
 	@GetMapping("/store-list")
-	public String storesListView(		
+	public String storesListView(
 			Model model) {
 		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
 		
-		UserInfo userInfo = userSession.getUserInfo();
-		
 		model.addAttribute("storesViewList",storeViewList);
-		model.addAttribute("userInfo",userInfo);
+		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
 	}
 	
-	@PostMapping("/store-available-days")
-	public String storeAvailableDays(		
-			@ModelAttribute StoreView storeView,			
-			Model model) {
+	/*
+	 * UserReservationControllerへ遷移する時のメソッド
+	 * param storeView 		一覧から選択した店舗の情報が格納されているエンティティクラス
+	 * param userInfo 		利用者の情報のエンティティクラス
+	 */
+	
+	@PostMapping("/to-reservation-controller")
+	public String toReservationController(		
+			@ModelAttribute StoreView storeView,
+			RedirectAttributes redirect) {
+		
+		redirect.addFlashAttribute("storeView",storeView);
+		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		return "redirect:/reservation/reserve/store-available-days";
+	}	
+	
+	/*
+	 * UserReservationControllerからUserInfoを受け取り
+	 * 店舗情報一覧画面に戻すメソッド
+	 */
+	@GetMapping("/open-store-list")
+	public String toStoreList(
+			@ModelAttribute("userInfo") UserInfo userInfo,
+			RedirectAttributes redirect
+			) {
+		
+		System.out.println("open-store-list:"+ userInfo);
+		
+		userSession.setUserInfo(userInfo);
+		return "redirect:/reservation/views/store-list";
+	}
+
+	@PostMapping("/user-mypage")
+	public String toUserMyPage(@ModelAttribute UserInfo userInfo,
+			RedirectAttributes redirect) {
 		
 		
-		model.addAttribute("storeView",storeView);
-		model.addAttribute("userInfo",userSession.getUserInfo());
-		return "view/store-available-days";
+		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		return "redirect:/reservation/reserve/user-mypage";
 	}
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" >
+<head>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" type="text/css">
+	<meta charset="UTF-8">
+	<title>店舗の詳細画面</title>
+</head>
+<body>
+	<header th:replace="~{/view/user-header::user-header}"></header>
+	<div class="container">
+		<h5>利用者情報</h5>
+		<table th:Object="${userInfo}">
+			<tr>
+				<td>氏名</td>
+				<td th:text="*{userName}"></td>
+			</tr>
+			<tr>
+			<tr>
+				<td>ふりがな</td>
+				<td th:text="*{userNameFurigana}"></td>
+			</tr>
+			<tr>
+				<td>住所</td>
+				<td th:text="*{city} + *{municipalities}
+							+ *{userAddress} + *{building}"></td>
+			</tr>
+			<tr>
+				<td>連絡先</td>
+				<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+			</tr>		
+		</table>
+		
+		<h5>店舗情報</h5>
+			<table th:Object="${storeView}">
+				<tr>
+					<td>店舗名</td>
+					<td th:text="*{storeName}"></td>
+				</tr>
+				<tr>
+					<td>住所</td>
+					<td th:text="*{city} + *{municipalities}
+								+ *{streetAddress} + *{building}"></td>
+				</tr>
+				<tr>
+					<td>連絡先</td>
+					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+				</tr>
+				<tr>
+					<td>定休日</td>
+					<td class="holiday">
+						<div th:each="holiday:*{holidays}">
+							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>営業時間</td>
+					<td th:text="'開店時間：' + *{isOpened} + '　閉店時間：' + *{isClosed}"></td>
+				</tr>
+				<tr>
+					<td>予約日</td>
+					<td th:text="${atReservationDate}"></td>
+				</tr>				
+				<tr>
+					<td>予約人数</td>
+					<td th:text="${numOfPeople}">
+					</td>
+				</tr>				
+			</table>
+		<div class="form-container">			
+			<form method="post" th:action="@{store-available-days}">
+				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
+				<input type="hidden" th:name="atReservationDate" th:value="${atReservationDate}">
+				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
+				<input class="btn btn-primary" type="submit" value="予約を修正する">
+			</form>
+			<form method="post" th:action="@{/reservation/reserve/make-a-reservation}">
+				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
+				<input type="hidden" th:name="atReservationDate" th:value="${atReservationDate}">
+				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
+				<input class="btn btn-primary" type="submit" value="予約を送信する">
+			</form>
+		</div>
+	</div>
+</body>
+</html>

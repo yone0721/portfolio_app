@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="">
 <head>
-	<link rel="stylesheet" th:href="@{../../css/header.css}" href="#" type="text/css">
-	<link rel="stylesheet" th:href="@{../../css/store-view-layout.css}" href="#" type="text/css">
-	<link rel="stylesheet" th:href="@{../../css/bootstrap.min.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/header.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" href="#" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="#" type="text/css">
 	<meta charset="UTF-8">
 	<title>店舗一覧画面</title>
 </head>
 <body>
-	<header th:replace="~{/view/header::header}"></header>
+	<header th:replace="~{/view/user-header::user-header}"></header>
 	<div class="container">
 		<div class="user-name" th:Object="${userInfo}">
 			<p th:text="*{userName}"></p>
@@ -28,15 +28,15 @@
 					<td class="city" th:text="${storeView.city}+${storeView.municipalities}
 						+${storeView.streetAddress} + ${storeView.building}">店舗住所</td>
 					<td class="businessHours" th:text="${storeView.isOpened} + '～' + ${storeView.isClosed}">営業時間</td>
-					<td>
+					<td class="holiday">
 <!--						<div th:text="${storeView.holidays}"></div>-->
-						<div class="holiday" th:each="holiday:${storeView.holidays}">
+						<div th:each="holiday:${storeView.holidays}">
 							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
 						</div>
 					</td>
 					<td>
-						<form method="post" th:action="@{store-available-days}">
-
+						<form method="post" th:action="@{to-reservation-controller}">
+<!--						選択した店舗情報-->
 							<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
 							<input type="hidden" th:name="storeName" th:value="${storeView.storeName}">
 							<input type="hidden" th:name="postCode" th:value="${storeView.postCode}">
