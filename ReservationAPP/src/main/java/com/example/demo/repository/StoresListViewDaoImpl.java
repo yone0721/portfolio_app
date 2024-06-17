@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetStoresViewException;
+import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.exception.UserInfoNotFoundException;
 
 @Repository
@@ -66,10 +67,59 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 	}
 
 	/*
+	 * 	検索機能で使用するメソッド
+	 * 	@param(keyWord) 	検索する文字列
+	 * 	@return 			keyWordを文字列に含む店舗情報を格納したMapList
+	 */
+	@Override
+	public List<Map<String, Object>> findAllStoresByKeyWord(String keyWord) {
+		String sql = """
+				SELECT
+				    store.store_id,
+				    store.store_name,
+				    store.post_code,
+				    store.city,
+				    store.municipalities,
+				    store.street_address,
+				    store.building,
+				    store.mail,
+				    store.phone,
+				   
+				    store.store_reservation_limit - (
+					    SELECT
+					        COUNT(reservation_id)
+					    FROM reservation_table AS res
+					    WHERE res.store_id = store.store_id
+				    ) AS store_reservation_limit,
+				   
+				    store.is_opened,
+				    store.is_closed,
+				    GROUP_CONCAT(holidays.day_of_week) AS holidays
+				FROM store_info_tb AS store
+				INNER JOIN store_regular_holidays AS holidays
+				ON holidays.store_id = store.store_id
+				WHERE MATCH
+					(store.store_name,
+					 store.city,
+					 store.municipalities,
+					 store.street_address,
+					 store.building)
+				AGAINST (? IN NATURAL LANGUAGE MODE)
+				GROUP BY holidays.store_id
+				LIMIT 10;""";
+		
+		try {
+			return jdbcTemplate.queryForList(sql,keyWord);
+		}catch(DataAccessException e) {
+			throw new StoreInfoNotFoundException("関連店舗が見つかりませんでした。");
+		}
+		
+	}
+
+	/*
 	 * ユーザー情報をメールから取得するメソッド
 	 * 使うかどうかはわからないので、削除しても良いかも
 	 */
-	
 	@Override
 	public UserInfo findUserByMail(String mail) {
 		String sql = """
@@ -112,5 +162,4 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			throw new UserInfoNotFoundException("ユーザー情報が見つかりませんでした。");
 		}
 	}
-
 }
