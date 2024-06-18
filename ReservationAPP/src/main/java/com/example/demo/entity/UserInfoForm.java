@@ -127,5 +127,49 @@ public class UserInfoForm {
 	public String getBuilding() {
 		return building;
 	}	
+	
+	public String getPostCodeAddHyphen() {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(postCode.substring(0,3));
+		sb.append("-");
+		sb.append(postCode.substring(3,7));
+		
+		return sb.toString();
+	}
+	
+	public String getPhoneAddHyphen() {	
+		if(phone.length() == 11) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(phone.substring(0,3));
+			sb.append("-");
+			sb.append(phone.substring(3,7));
+			sb.append("-");
+			sb.append(phone.substring(7,11));
+			
+			return sb.toString();
+		}
+		
+		if(phone.substring(0,2).equals("03")) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(phone.substring(0,2));
+			sb.append("-");
+			sb.append(phone.substring(2,6));
+			sb.append("-");
+			sb.append(phone.substring(6,10));
+			
+			return sb.toString();
+			
+		}else{
+			StringBuilder sb = new StringBuilder();
+			sb.append(phone.substring(0,4));
+			sb.append("-");
+			sb.append(phone.substring(4,6));
+			sb.append("-");
+			sb.append(phone.substring(6,10));
+			
+			return sb.toString();
+		}
+	}
 
 }

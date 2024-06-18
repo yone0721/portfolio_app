@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.PageForm;
+import com.example.demo.entity.Page;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
@@ -186,6 +187,116 @@ public class UserReservationController {
 	}
 	
 	
+	/*
+	 * マイページへ遷移する時に使う一番初めのロジック
+	 *  
+	 * @param reservationList				DBからユーザーの予約情報を全取得して格納したリスト
+	 * @param Page							マイページに一覧を表示する時に、ページの遷移を判定するクラス
+	 * @param displayReservationList		一覧に表示する予約情報のリスト　最大10件まで格納する
+	 * 
+	 * @return 
+	 */
+	
+	@GetMapping("/user-mypage")
+	public String toUserMyPage(
+			@ModelAttribute("userSession") UserSession userSession,Model model) {
+			
+		if(userSession == null) {
+			this.userSession = userSession;
+		}
+		
+
+		List<UserReservationInfomation> reservationList = userReservationService.getUserReservationListById(userSession.getUserInfo());
+		userSession.setReservationList(reservationList);
+		
+		
+		Page page = new Page();
+		page.config((long)reservationList.size());
+		
+		userSession.setPage(page);
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(reservationList,page);
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+	@PostMapping("/user-mypage")
+	public String reservationInfomationToUserMyPage(
+			Model model) {
+
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getReservationList(),userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+
+//	次の一覧10件を表示するメソッド
+	@GetMapping("/back-user-mypage")
+	public String backUserMyPage(
+			Model model) {
+		
+//		現在のページをひとつ前に戻す
+		userSession.getPage().backPage();
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getReservationList(),userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+//	次の一覧10件を表示するメソッド
+	@GetMapping("/next-user-mypage")
+	public String nextUserMyPage(
+			Model model) {
+		
+//		現在のページを次に進める
+		userSession.getPage().nextPage();
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getReservationList(),userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+	@PostMapping("/reservation-infomation")
+	public String displayReservationInfomation(
+			@ModelAttribute UserReservationInfomation userReservationInfomation,
+			Model model) {
+		
+		
+		model.addAttribute("userReservatioInfomation",userReservationInfomation);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		return "view/reservation-info";
+	}
+	
+	
+	
 //	定休日・予約の空き・人数のバリデーションメソッド
 	
 	public Map<String,String> checkReservationDateAndLimit(StoreView storeView,LocalDate reservationDate,int numOfPeople){
@@ -216,29 +327,21 @@ public class UserReservationController {
 		return errors;
 	}
 	
-	@GetMapping("/user-mypage")
-	public String toUserMyPage(
-			@ModelAttribute("userSession") UserSession userSession,Model model) {
-			
-			if(userSession == null) {
-				this.userSession = userSession;
+	
+//	一覧に表示する予約情報を取得するメソッド
+	
+	public List<UserReservationInfomation> getDisplayReservationList(List<UserReservationInfomation> reservationList,Page page){
+		List<UserReservationInfomation> displayReservationList = new ArrayList<>();
+		
+		try {
+			for(int i = page.offset();i < page.offset() + Page.OUTPUT_NUM ;i++) {
+				displayReservationList.add(reservationList.get(i));
 			}
-			
-			PageForm pageForm = new PageForm(userSession.getUserInfo().getUserId(),0);
-			
-			List<UserReservationInfomation> reservationList;
-			
-			if(userSession.getReservationList() == null) {
-				reservationList = userReservationService.getUserReservationListById(pageForm);
-			}else {
-				int lastNumber = userSession.getReservationList().size() - 1;
-				reservationList = userReservationService.getUserReservationListById(pageForm,
-						userSession.getReservationList().get(lastNumber).getReservationId());
-			}
-		userSession.setReservationList(reservationList);
-
-		model.addAttribute("userInfo",userSession.getUserInfo());
-		model.addAttribute("reservationList",userSession.getReservationList());
-		return "view/user-mypage";
-	}			
+		}catch(IndexOutOfBoundsException e){
+			e.printStackTrace();
+		}
+		
+		return displayReservationList;
+		
+	}
 }

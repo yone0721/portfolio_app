@@ -5,7 +5,7 @@
 	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
 	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" type="text/css">
 <meta charset="UTF-8">
-<title>予約完了</title>
+<title>マイページ</title>
 </head>
 <body>
 	<header th:replace="~{/view/user-header::user-header}"></header>
@@ -26,7 +26,7 @@
 					<td th:text="*{userNameFurigana}"></td>
 					<td th:text="*{city} + *{municipalities}
 								+ *{userAddress} + *{building}"></td>
-					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
+					<td th:text="'TEL：' + ${userInfo.getPhoneAddHyphen()} + '　MAIL：' + *{mail}"></td>
 				</tr>
 			</table>
 		<div class="reservation-list-container">
@@ -41,19 +41,52 @@
 					<th>予約人数</th>
 					<th>詳細</th>
 				</tr>	
-				<tr th:each="reservation:${reservationList}">
+<!--				<tr th:each="i:${#numbers.sequence(0,displayReservationList.size()-1)}">-->
+<!--					<td th:text="${displayReservationList[i].reservationId}"></td>-->
+<!--					<td th:text="${displayReservationList[i].atReservationDate}"></td>-->
+<!--					<td th:text="${displayReservationList[i].storeName}"></td>-->
+<!--					<td th:text="${displayReservationList[i].city} + ${displayReservationList[i].municipalities} + ${displayReservationList[i].streetAddress} + ${displayReservationList[i].building}"></td>-->
+<!--					<td th:text="'TEL：' + ${displayReservationList[i].phone} + '　MAIL：' + ${displayReservationList[i].mail}"></td>-->
+<!--					<td th:text="${displayReservationList[i].numOfPeople} + '名'"></td>-->
+<!--					<td>-->
+
+<!--					</td>-->
+<!--				</tr>	-->
+				<tr th:each="reservation:${displayReservationList}">
 					<td th:text="*{reservation.reservationId}"></td>
 					<td th:text="*{reservation.atReservationDate}"></td>
 					<td th:text="*{reservation.storeName}"></td>
 					<td th:text="*{reservation.city} + *{reservation.municipalities} + *{reservation.streetAddress} + *{reservation.building}"></td>
-					<td th:text="'TEL：' + *{reservation.phone} + '　MAIL：' + *{reservation.mail}"></td>
+					<td th:text="'TEL：' + *{reservation.getPhoneAddHyphen()} + '　MAIL：' + *{reservation.mail}"></td>
 					<td th:text="*{reservation.numOfPeople} + '名'"></td>
-					<td>確認</td>
+					<td>
+						<form method="post" th:action="@{reservation-infomation}">
+							<input type="hidden" name="reservationId" th:value="*{reservation.reservationId}">
+							<input type="hidden" name="userId" th:value="${userInfo.userId}">
+							<input type="hidden" name="storeId" th:value="*{reservation.storeId}">
+							<input type="hidden" name="storeName" th:value="*{reservation.storeName}">
+							<input type="hidden" name="postCode" th:value="*{reservation.postCode}">
+							<input type="hidden" name="city" th:value="*{reservation.city}">
+							<input type="hidden" name="municipalities" th:value="*{reservation.municipalities}">
+							<input type="hidden" name="streetAddress" th:value="*{reservation.streetAddress}">
+							<input type="hidden" name="building" th:value="*{reservation.building}">
+							<input type="hidden" name="mail" th:value="*{reservation.mail}">
+							<input type="hidden" name="phone" th:value="*{reservation.phone}">
+							<input type="hidden" name="atReservationDate" th:value="*{reservation.atReservationDate}">
+							<input type="hidden" name="numOfPeople" th:value="*{reservation.numOfPeople}">
+							<input type="hidden" name="atCreated" th:value="*{reservation.atCreated}">
+							<input type="submit" th:value="確認">
+						</form>
+					</td>
 				</tr>	
 			</table>
-			<div class="form-container">
-				<form th:if="${nextToPage > 0}" th:method="get" th:action="@{user-mypage}">
-					<input type="submit">
+			<div class="form-container" th:Object="${page}">
+				<form th:if="${page.backPageDisplay()}" th:method="get" th:action="@{back-user-mypage}">
+					<input type="submit" value="前へ">
+				</form>
+				<div th:text="*{currentPage} + ' / ' + *{maxPage}"></div>
+				<form th:if="${page.nextPageDisplay()}" th:method="get" th:action="@{next-user-mypage}">
+					<input type="submit" value="次へ">
 				</form>
 				
 			</div>	

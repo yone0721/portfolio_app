@@ -34,11 +34,11 @@
 				</tr>
 				<tr>
 					<td><label for="phone">連絡先：</label></td>
-					<td><p th:text="*{phone}"></p></td>
+					<td><p th:text="${userInfoForm.getPhoneAddHyphen()}"></p></td>
 				</tr>
 				<tr>
 					<td><label for="postCode">郵便番号：</label></td>
-					<td><p th:text="*{postCode}"></p></td>
+					<td><p th:text="${userInfoForm.getPostCodeAddHyphen()}"></p></td>
 				</tr>
 				<tr>
 					<td><label for="city">都道府県：</label></td>
@@ -105,11 +105,11 @@
 				</tr>
 				<tr>
 					<td><label for="phone">連絡先：</label></td>
-					<td><p th:text="*{phone}"></p></td>
+					<td><p th:text="${storeInfoForm.getPhoneAddHyphen()}"></p></td>
 				</tr>
 				<tr>
 					<td><label for="postCode">郵便番号：</label></td>
-					<td><p th:text="*{postCode}"></p></td>
+					<td><p th:text="${storeInfoForm.getPostCodeAddHyphen()}"></p></td>
 				</tr>
 				<tr>
 					<td><label for="city">都道府県：</label></td>

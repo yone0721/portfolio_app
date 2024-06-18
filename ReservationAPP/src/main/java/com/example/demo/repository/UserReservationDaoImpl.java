@@ -50,6 +50,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					res.user_id,
 					res.store_id,
 					store.store_name,
+					store.post_code,
 					store.city,
 					store.municipalities,
 					store.street_address,
@@ -62,9 +63,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				LEFT JOIN store_info_tb AS store
 				ON store.store_id = res.store_id
 				WHERE res.user_id = ? AND res.is_deleted = 0
-				ORDER BY res.at_reservation_date DESC
-				LIMIT 10
-				""";
+				ORDER BY res.at_reservation_date DESC""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql,userId);
@@ -83,6 +82,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					res.user_id,
 					res.store_id,
 					store.store_name,
+					store.post_code,
 					store.city,
 					store.municipalities,
 					store.street_address,

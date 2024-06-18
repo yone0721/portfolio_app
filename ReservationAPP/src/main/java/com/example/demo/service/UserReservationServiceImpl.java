@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.PageForm;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
@@ -64,12 +63,12 @@ public class UserReservationServiceImpl implements UserReservationService {
 	 */
 	
 	@Override
-	public List<UserReservationInfomation> getUserReservationListById(PageForm pageForm) {
+	public List<UserReservationInfomation> getUserReservationListById(UserInfo userInfo) {
 		
 		try {
 			List<UserReservationInfomation> reservationsList = new ArrayList<>();
 			
-			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(pageForm.getUserId());
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(userInfo.getUserId());
 			
 			for(Map getReservation: getReservationList) {
 				
@@ -104,12 +103,12 @@ public class UserReservationServiceImpl implements UserReservationService {
 		}
 	}
 	@Override
-	public List<UserReservationInfomation> getUserReservationListById(PageForm pageForm,int reservationId) {
+	public List<UserReservationInfomation> getUserReservationListById(UserInfo userInfo,int reservationId) {
 		
 		try {
 			List<UserReservationInfomation> reservationsList = new ArrayList<>();
 			
-			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(pageForm.getUserId(),reservationId);
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(userInfo.getUserId(),reservationId);
 			
 			for(Map getReservation: getReservationList) {
 				

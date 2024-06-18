@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" >
+<head>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/store-view-layout.css}" type="text/css">
+	<meta charset="UTF-8">
+	<title>店舗の詳細画面</title>
+</head>
+<body>
+	<header th:replace="~{/view/user-header::user-header}"></header>
+	<div class="container">
+		<h5>店舗情報</h5>
+			<table th:Object="${userReservatioInfomation}">
+				<tr>
+					<td>店舗名</td>
+					<td th:text="*{storeName}"></td>
+				</tr>
+				<tr>
+					<td>住所</td>
+					<td th:text="'〒' + ${userReservationInfomation.getPostCodeAddHyphen()} + ' ' + *{city} + *{municipalities}
+								+ *{streetAddress} + *{building}"></td>
+				</tr>
+				<tr>
+					<td>連絡先</td>
+					<td th:text="'TEL：' + ${userReservationInfomation.getPhoneAddHyphen()} + '　MAIL：' + *{mail}"></td>
+				</tr>
+				<tr>
+					<td>予約日</td>
+					<td th:text="*{atReservationDate}"></td>
+				</tr>				
+				<tr>
+					<td>予約人数</td>
+					<td th:text="*{numOfPeople}	+ '名'">
+					</td>
+				</tr>				
+			</table>
+		<div class="form-container">		
+			<form th:action="@{user-mypage}" method="post">
+				<input type="submit" th:value="戻る">
+			</form>	
+		</div>
+	</div>
+</body>
+</html>
