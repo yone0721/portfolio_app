@@ -61,6 +61,16 @@ public class StoresListViewController {
 		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
 	}
+	@GetMapping("/search-store-list")
+	public String searchStoresListView(
+			Model model) {
+		
+		List<StoreView> storeViewList = storesListViewService.getStoresList();
+		
+		model.addAttribute("storesViewList",storeViewList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		return "view/stores-index";
+	}
 	
 	/*
 	 * UserReservationControllerへ遷移する時のメソッド

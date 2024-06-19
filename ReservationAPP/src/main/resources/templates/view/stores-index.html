@@ -13,7 +13,7 @@
 		<div class="user-name" th:Object="${userInfo}">
 			<p th:text="*{userName}"></p>
 		</div>
-
+		<div th:replace="~{/view/search-contains::search-form}"></div>
 		<table class="store-list">
 			<tr>
 				<th>店舗名</th>
