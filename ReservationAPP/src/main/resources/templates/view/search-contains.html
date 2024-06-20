@@ -9,6 +9,8 @@
 				<summary>詳細条件を設定する</summary>
 				<div class="form select-cities">
 					<h6>都道府県</h6>
+<!--					本来はDBに都道府県のデータを格納して、そこから情報を引っ張る-->
+<!--					今回はフロントで直書き-->
 					<table>	
 						<tr>
 							<td class="area">北海道・東北</td>
@@ -218,31 +220,30 @@
 								<input type="time" id="close" name="isOpened">								
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Monday" value="月曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Monday" value="1">
 								<label for="Monday">月曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Tuseday" value="火曜日">
-								<label for="Tuseday">火曜日</label>		
+								<input name="dayOfWeeks" type="checkbox" id="Tuseday" value="2">								<label for="Tuseday">火曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Wednesday" value="水曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Wednesday" value="3">
 								<label for="Wednesday">水曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Thursday" value="木曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Thursday" value="4">
 								<label for="Thursday">木曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Friday" value="金曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Friday" value="5">
 								<label for="Friday">金曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Saturday" value="土曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Saturday" value="6">
 								<label for="Saturday">土曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Sunday" value="日曜日">
+								<input name="dayOfWeeks" type="checkbox" id="Sunday" value="7">
 								<label for="Sunday">日曜日</label>		
 							</td>
 						</tr>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.entity.SearchContain;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.StoresListViewService;
@@ -61,8 +62,10 @@ public class StoresListViewController {
 		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
 	}
+	
 	@GetMapping("/search-store-list")
-	public String searchStoresListView(
+	public String searchesStoresListView(
+			SearchContain searchContain,
 			Model model) {
 		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
@@ -71,7 +74,7 @@ public class StoresListViewController {
 		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
 	}
-	
+
 	/*
 	 * UserReservationControllerへ遷移する時のメソッド
 	 * param storeView 		一覧から選択した店舗の情報が格納されているエンティティクラス
@@ -112,4 +115,5 @@ public class StoresListViewController {
 		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
 		return "redirect:/reservation/reserve/user-mypage";
 	}
+
 }

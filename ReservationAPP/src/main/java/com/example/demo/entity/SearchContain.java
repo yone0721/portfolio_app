@@ -1,7 +1,12 @@
 package com.example.demo.entity;
 
+import java.sql.Time;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.annotation.Nullable;
 
 /*
  * 検索条件を格納する為のクラス
@@ -14,14 +19,19 @@ import java.util.List;
  */
 
 public class SearchContain {
-	private String keyword;
+	@Nullable
+	private List<String> keyword;
 	
+	@Nullable
 	private List<String> cities;
 	
+	@Nullable
 	private String isOpened;
 	
+	@Nullable
 	private String isClosed;
 	
+	@Nullable
 	private List<DayOfWeek> dayOfWeeks;
 
 	public SearchContain(
@@ -29,33 +39,40 @@ public class SearchContain {
 			List<String> cities,
 			String isOpened,
 			String isClosed,
-			List<DayOfWeek> dayOfWeeks) {
-		this.keyword = keyword;
-		this.cities = cities;
-		this.isOpened = isOpened;
-		this.isClosed = isClosed;
-		this.dayOfWeeks = dayOfWeeks;
-	}
-	
-	public SearchContain(
-			String keyword, 
-			List<String> cities,
-			String isOpened,
-			String isClosed,
-			int... dayOfWeeks) {
-		this.keyword = keyword;
+			Integer... dayOfWeeks) {
+		this.setKeyword(keyword);
 		this.cities = cities;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
 		this.setDayOfWeeks(dayOfWeeks);
 	}
+	
+//	public SearchContain(
+//			String keyword, 
+//			List<String> cities,
+//			String isOpened,
+//			String isClosed,
+//			List<DayOfWeek> dayOfWeeks) {
+//		this.keyword = keyword;
+//		this.cities = cities;
+//		this.isOpened = isOpened;
+//		this.isClosed = isClosed;
+//		this.dayOfWeeks = dayOfWeeks;
+//	}
+	
 
-	public String getKeyword() {
+	public List<String> getKeyword() {
 		return keyword;
 	}
 
 	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+		if(!(keyword == null)) {
+			String[] keywords = keyword.split("\s");
+			
+			for(String extractKeyword:keywords) {
+				this.keyword.add(extractKeyword);			
+			}
+		}
 	}
 
 	public List<String> getCities() {
@@ -89,11 +106,53 @@ public class SearchContain {
 	public void setDayOfWeeks(List<DayOfWeek> dayOfWeeks) {
 		this.dayOfWeeks = dayOfWeeks;
 	}
-	public void setDayOfWeeks(int... dayOfWeeks) {
+	
+	/*
+	 * @param dayOfWeeks(int) 	DayOfWeek.of()メソッドに渡す引数　1.月曜日 2.火曜日 ... 7.日曜日
+	 */
+	public void setDayOfWeeks(Integer... dayOfWeeks) {
 		
-		for(int dayOfWeek:dayOfWeeks) {
-			this.dayOfWeeks.add(DayOfWeek.of(dayOfWeek));			
+		if(dayOfWeeks != null) {
+			for(Integer dayOfWeek:dayOfWeeks) {
+				this.dayOfWeeks.add(DayOfWeek.of(dayOfWeek));
+			}
 		}
+	}
+	
+	public List<StoreView> extractSearchingStores(List<StoreView> storeViewList){
+		List<StoreView> extractStoresList = new ArrayList<>();
+		
+		LocalTime tgtTimeIsOpened = Time.valueOf(this.isOpened).toLocalTime();
+		LocalTime tgtTimeIsClosed = Time.valueOf(this.isClosed).toLocalTime();
+		
+		for(StoreView storeView:storeViewList) {
+			if(!(this.cities == null) 
+					&& this.cities.contains(storeView.getCity())) {
+				extractStoresList.add(storeView);
+				continue;
+			}
+			
+			if(!(tgtTimeIsOpened == null)
+						&& tgtTimeIsOpened.isAfter(Time.valueOf(storeView.getIsOpened()).toLocalTime())) {
+				extractStoresList.add(storeView);
+				continue;				
+			}
+			
+			if(!(tgtTimeIsClosed != null)
+					&& tgtTimeIsClosed.isBefore(Time.valueOf(storeView.getIsClosed()).toLocalTime())) {	
+				extractStoresList.add(storeView);
+				continue;				
+			}
+			
+			if(!(this.dayOfWeeks == null) ) {
+				for(DayOfWeek holiday:storeView.getHolidays()) {
+					
+				}
+			}
+				
+		}
+		
+		
 	}
 	
 }
