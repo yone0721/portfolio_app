@@ -18,7 +18,7 @@ import jakarta.annotation.Nullable;
  *
  */
 
-public class SearchContain {
+public class SearchCriteria {
 	@Nullable
 	private List<String> keyword;
 	
@@ -34,7 +34,7 @@ public class SearchContain {
 	@Nullable
 	private List<DayOfWeek> dayOfWeeks;
 
-	public SearchContain(
+	public SearchCriteria(
 			String keyword, 
 			List<String> cities,
 			String isOpened,
@@ -47,7 +47,7 @@ public class SearchContain {
 		this.setDayOfWeeks(dayOfWeeks);
 	}
 	
-//	public SearchContain(
+//	public SearchCriteria(
 //			String keyword, 
 //			List<String> cities,
 //			String isOpened,
@@ -67,7 +67,7 @@ public class SearchContain {
 
 	public void setKeyword(String keyword) {
 		if(!(keyword == null)) {
-			String[] keywords = keyword.split("\s");
+			String[] keywords = keyword.split(" +");
 			
 			for(String extractKeyword:keywords) {
 				this.keyword.add(extractKeyword);			
@@ -119,40 +119,89 @@ public class SearchContain {
 		}
 	}
 	
+	/*
+	 * 指定した検索条件のどれか1つに該当する店舗情報を絞り込み、
+	 * リストに格納して戻すメソッド
+	 */
+	
 	public List<StoreView> extractSearchingStores(List<StoreView> storeViewList){
 		List<StoreView> extractStoresList = new ArrayList<>();
 		
-		LocalTime tgtTimeIsOpened = Time.valueOf(this.isOpened).toLocalTime();
-		LocalTime tgtTimeIsClosed = Time.valueOf(this.isClosed).toLocalTime();
-		
 		for(StoreView storeView:storeViewList) {
-			if(!(this.cities == null) 
-					&& this.cities.contains(storeView.getCity())) {
+			if(matchingKeyword(storeView)
+				|| matchingCity(storeView)
+				|| matchingBusinessHours(storeView)
+				|| matchingWorkingDays(storeView)) {
+				
 				extractStoresList.add(storeView);
 				continue;
-			}
-			
-			if(!(tgtTimeIsOpened == null)
-						&& tgtTimeIsOpened.isAfter(Time.valueOf(storeView.getIsOpened()).toLocalTime())) {
-				extractStoresList.add(storeView);
-				continue;				
-			}
-			
-			if(!(tgtTimeIsClosed != null)
-					&& tgtTimeIsClosed.isBefore(Time.valueOf(storeView.getIsClosed()).toLocalTime())) {	
-				extractStoresList.add(storeView);
-				continue;				
-			}
-			
-			if(!(this.dayOfWeeks == null) ) {
-				for(DayOfWeek holiday:storeView.getHolidays()) {
-					
-				}
-			}
-				
+			}			
 		}
+		return extractStoresList;
+				
+	}
+
+	/*
+	 * 該当キーワードが店舗名、都道府県以外の住所と合致するか判定するメソッド
+	 * （今回カテゴリは作っていない為、カテゴリ除く）
+	 */
+	
+	public boolean matchingKeyword(StoreView storeView) {
+		boolean isMatch = false;
 		
-		
+		isMatch = this.keyword.contains(storeView.getStoreName()) 
+				|| this.keyword.contains(storeView.getMunicipalities())
+				|| this.keyword.contains(storeView.getStreetAddress())
+				|| this.keyword.contains(storeView.getBuilding());
+
+		return isMatch;	
 	}
 	
+	/*
+	 * 選択した都道府県に合致しているかどうかを調べるメソッド
+	 */
+	
+	public boolean matchingCity(StoreView storeView) {
+		
+		return this.cities.contains(storeView.getCity());
+	}
+	
+	
+	/*
+	 * matchingBusinessHours	指定した開店時間と閉店時間に該当するかどうか判定するメソッド
+	 */
+	public boolean matchingBusinessHours(StoreView storeView) {
+		LocalTime tgtOpened = Time.valueOf(this.isOpened).toLocalTime();
+		LocalTime tgtClosed = Time.valueOf(this.isClosed).toLocalTime();
+		LocalTime storeIsOpened = Time.valueOf(storeView.getIsOpened()).toLocalTime();
+		LocalTime storeIsClosed = Time.valueOf(storeView.getIsClosed()).toLocalTime();
+
+		boolean isMatch = false;
+		
+		if(!(tgtOpened == null)) {
+			isMatch = tgtOpened.equals(storeIsOpened) || tgtOpened.isAfter(storeIsOpened);
+		}
+		if(!(tgtClosed == null)) {
+			isMatch = tgtClosed.equals(storeIsClosed) || tgtOpened.isBefore(storeIsClosed);
+		}
+		return isMatch;
+	}
+	
+	/*
+	 * 指定した曜日に、店舗が稼働している曜日があるかどうか判定するメソッド
+	 */
+	
+	public boolean matchingWorkingDays(StoreView storeView) {
+		boolean isMatch = false;
+		
+		for(DayOfWeek holiday:storeView.getHolidays()) {
+			isMatch = !(this.dayOfWeeks.contains(holiday));
+			
+			if(isMatch == true) {
+				break;
+			}
+		}
+		return isMatch;
+	}
 }
+

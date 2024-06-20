@@ -33,7 +33,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 				SELECT 
 					store_id,
 					store_name,
-					post_code,
+					zip_code,
 					city,
 					municipalities,
 					street_address,
@@ -55,7 +55,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 				StoreInfo storeInfo = new StoreInfo(
 						(int)getStoreInfo.get("store_id"),
 						(String)getStoreInfo.get("store_name"),
-						(String)getStoreInfo.get("post_code"),
+						(String)getStoreInfo.get("zip_code"),
 						(String)getStoreInfo.get("city"),
 						(String)getStoreInfo.get("municipalities"),
 						(String)getStoreInfo.get("street_address"),
@@ -84,7 +84,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 				SELECT 					
 					store_id,
 					store_name,
-					post_code,
+					zip_code,
 					city,
 					municipalities,
 					street_address,
@@ -104,7 +104,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 			StoreInfo storeInfo = new StoreInfo(
 					(int)getStoreInfo.get("store_id"),
 					(String)getStoreInfo.get("store_name"),
-					(String)getStoreInfo.get("post_code"),
+					(String)getStoreInfo.get("zip_code"),
 					(String)getStoreInfo.get("city"),
 					(String)getStoreInfo.get("municipalities"),
 					(String)getStoreInfo.get("street_address"),
@@ -130,7 +130,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		String sql = """
 				INSERT INTO store_info_tb(
 					store_name,
-					post_code,
+					zip_code,
 					city,
 					municipalities,
 					street_address,
@@ -147,7 +147,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		try {
 				return jdbcTemplate.update(sql,
 							storeInfo.getStoreName(),
-							storeInfo.getPostCode(),
+							storeInfo.getZipCode(),
 							storeInfo.getCity(),
 							storeInfo.getMunicipalities(),
 							storeInfo.getStreetAddress(),
@@ -170,7 +170,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		String sql = """
 				INSERT INTO store_info_tb(
 					store_name,
-					post_code,
+					zip_code,
 					city,
 					municipalities,
 					street_address,
@@ -186,7 +186,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		try {
 			return jdbcTemplate.update(sql,
 					storeInfo.getStoreName(),
-					storeInfo.getPostCode(),
+					storeInfo.getZipCode(),
 					storeInfo.getCity(),
 					storeInfo.getMunicipalities(),
 					storeInfo.getStreetAddress(),
@@ -210,7 +210,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 				UPDATE store_info_tb
 				SET 
 					store_name = ?,
-					post_code = ?,
+					zip_code = ?,
 					city = ?,
 					municpalities = ?,
 					street_address = ?, 
@@ -225,7 +225,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		try {
 			return jdbcTemplate.update(sql,
 					storeInfo.getStoreName(),
-					storeInfo.getPostCode(),
+					storeInfo.getZipCode(),
 					storeInfo.getCity(),
 					storeInfo.getMunicipalities(),
 					storeInfo.getStreetAddress(),
@@ -269,7 +269,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 				SELECT 					
 					store_id,
 					store_name,
-					post_code,
+					zip_code,
 					city,
 					municipalities,
 					street_address,
@@ -290,7 +290,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 			StoreInfo storeInfo = new StoreInfo(
 					(int)getStoreInfo.get("store_id"),
 					(String)getStoreInfo.get("store_name"),
-					(String)getStoreInfo.get("post_code"),
+					(String)getStoreInfo.get("zip_code"),
 					(String)getStoreInfo.get("city"),
 					(String)getStoreInfo.get("municipalities"),
 					(String)getStoreInfo.get("street_address"),

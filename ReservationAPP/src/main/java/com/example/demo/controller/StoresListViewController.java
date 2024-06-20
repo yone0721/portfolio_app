@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.SearchContain;
+import com.example.demo.entity.SearchCriteria;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.StoresListViewService;
@@ -65,7 +65,7 @@ public class StoresListViewController {
 	
 	@GetMapping("/search-store-list")
 	public String searchesStoresListView(
-			SearchContain searchContain,
+			SearchCriteria searchCriteria,
 			Model model) {
 		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();

@@ -4,7 +4,7 @@
 */
 INSERT INTO store_info_tb (
     store_name,
-    post_code,
+    zip_code,
     city,
     municipalities,
     street_address,
@@ -33,7 +33,7 @@ INSERT INTO store_info_tb (
 
 INSERT INTO store_info_tb (
     store_name,
-    post_code,
+    zip_code,
     city,
     municipalities,
     street_address,
@@ -62,7 +62,7 @@ INSERT INTO store_info_tb (
 
 INSERT INTO store_info_tb (
     store_name,
-    post_code,
+    zip_code,
     city,
     municipalities,
     street_address,
@@ -92,7 +92,7 @@ INSERT INTO store_info_tb (
 
 INSERT INTO store_info_tb (
     store_name,
-    post_code,
+    zip_code,
     city,
     municipalities,
     street_address,
@@ -167,7 +167,7 @@ INSERT INTO store_regular_holidays(
 SELECT
     store.store_id,
     store.store_name,
-    store.post_code,
+    store.zip_code,
     store.city,
     store.municipalities,
     store.street_address,
@@ -191,7 +191,7 @@ GROUP BY holidays.store_id\G
 INSERT INTO reservation_table (
     user_id,
     store_id,
-    at_reservation_date
+    reserved_at
 ) VALUES (
     1,
     14,
@@ -200,7 +200,7 @@ INSERT INTO reservation_table (
 INSERT INTO reservation_table (
     user_id,
     store_id,
-    at_reservation_date
+    reserved_at
 ) VALUES (
     1,
     14,
@@ -209,7 +209,7 @@ INSERT INTO reservation_table (
 INSERT INTO reservation_table (
     user_id,
     store_id,
-    at_reservation_date
+    reserved_at
 ) VALUES (
     1,
     15,
@@ -227,16 +227,16 @@ SELECT
 FROM reservation_table AS res
 LEFT JOIN store_info_tb AS store
 ON store.store_id = res.store_id
-WHERE res.at_reservation_date LIKE '2024-06-20%'
+WHERE res.reserved_at LIKE '2024-06-20%'
 GROUP BY store.store_name;
 
 SELECT
     store.store_name,
-    res.at_reservation_date
+    res.reserved_at
 FROM reservation_table AS res
 LEFT JOIN store_info_tb AS store
 ON store.store_id = res.store_id
-WHERE res.at_reservation_date LIKE '2024-06-20%';
+WHERE res.reserved_at LIKE '2024-06-20%';
 
 /*
 *　指定した店舗の残り予約数も取得するクエリ
@@ -256,7 +256,7 @@ WHERE store.store_id = 15;
 SELECT
     store.store_id,
     store.store_name,
-    store.post_code,
+    store.zip_code,
     store.city,
     store.municipalities,
     store.street_address,
@@ -279,7 +279,7 @@ GROUP BY holidays.store_id\G
 
 ALTER TABLE reservation_table
 ADD num_of_people INTEGER NOT NULL DEFAULT 1
-AFTER at_reservation_date;
+AFTER reserved_at;
 
 
 SELECT
@@ -288,7 +288,7 @@ SELECT
             COUNT(reservation_id)
         FROM reservation_table AS res
         WHERE res.store_id = store.store_id
-        AND at_reservation_date LIKE '2024-06-11%'
+        AND reserved_at LIKE '2024-06-11%'
     ) AS store_reservation_limit
 FROM store_info_tb AS store
 WHERE store.store_id = 14
@@ -298,14 +298,14 @@ SELECT
     COUNT(reservation_id)
 FROM reservation_table
 WHERE store_id = 14
-AND at_reservation_date LIKE '2024-06-12%'
+AND reserved_at LIKE '2024-06-12%'
 
 SELECT
     user.user_id,
     user.user_name,
     store.store_id,
     store.store_name,
-    res.at_reservation_date,
+    res.reserved_at,
     res.num_of_people,
     res.at_created
 FROM reservation_table AS res
@@ -320,7 +320,7 @@ SELECT
     res.user_id,
     res.store_id,
     store.store_name,
-    res.at_reservation_date,
+    res.reserved_at,
     res.num_of_people,
     res.at_created,
     res.is_deleted
@@ -338,7 +338,7 @@ LIMIT 1;
 -- シーク法
 SELECT
     res.reservation_id,
-    res.at_reservation_date,
+    res.reserved_at,
     res.store_id,
     store.store_name,
     store.city,
@@ -355,14 +355,14 @@ ON store.store_id = res.store_id
 WHERE
     res.store_id = 14
 AND
-    (cast('2024-06-20') AS date > res.at_reservation_date)
-ORDER BY res.at_reservation_date DESC
+    (cast('2024-06-20') AS date > res.reserved_at)
+ORDER BY res.reserved_at DESC
 LIMIT 10
 
 -- オフセット法
 SELECT
     res.reservation_id,
-    res.at_reservation_date,
+    res.reserved_at,
     res.store_id,
     store.store_name,
     store.city,
@@ -377,6 +377,6 @@ LEFT JOIN store_info_tb AS store
 ON store.store_id = res.store_id
 WHERE
     res.user_id = 1
-ORDER BY res.at_reservation_date DESC
+ORDER BY res.reserved_at DESC
 LIMIT 10
 OFFSET 0
