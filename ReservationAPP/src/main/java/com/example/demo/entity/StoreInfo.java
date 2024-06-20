@@ -17,7 +17,7 @@ public class StoreInfo {
 	private String storeName;
 	
 	@NotNull
-	private String postCode;
+	private String zipCode;
 	
 	@NotNull
 	private String city;
@@ -64,7 +64,7 @@ public class StoreInfo {
 //	DB挿入・更新用コンストラクタ
 	public StoreInfo(
 			@NotNull String storeName, 
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
 			@NotNull String streetAddress, 
@@ -77,7 +77,7 @@ public class StoreInfo {
 			@NotNull String isClosed,
 			LocalDateTime updatedAt) {
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -95,7 +95,7 @@ public class StoreInfo {
 	public StoreInfo(
 			@NotNull int storeId, @NotNull
 			String storeName, @NotNull
-			String postCode,
+			String zipCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String streetAddress, String building,
@@ -109,7 +109,7 @@ public class StoreInfo {
 			LocalDateTime updatedAt) {
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -128,7 +128,7 @@ public class StoreInfo {
 	public StoreInfo(
 			@NotNull int storeId, @NotNull
 			String storeName, @NotNull
-			String postCode,
+			String zipCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String streetAddress, String building,
@@ -139,7 +139,7 @@ public class StoreInfo {
 			@NotNull String isClosed) {
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -163,8 +163,8 @@ public class StoreInfo {
 		return storeReservationLimit;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 	
 	public String getCity() {
@@ -211,12 +211,12 @@ public class StoreInfo {
 		return updatedAt;
 	}
 	
-	public String getPostCodeAddHyphen() {
+	public String getZipCodeAddHyphen() {
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(postCode.substring(0,3));
+		sb.append(zipCode.substring(0,3));
 		sb.append("-");
-		sb.append(postCode.substring(3,7));
+		sb.append(zipCode.substring(3,7));
 		
 		return sb.toString();
 	}

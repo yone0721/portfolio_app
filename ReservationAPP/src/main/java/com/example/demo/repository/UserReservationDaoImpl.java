@@ -32,9 +32,9 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 * @param "user_id"					利用者識別番号
 	 * @param "store_id"				店舗識別番号
 	 * @param "store_name"				店舗の名前
-	 * @param "at_reservation_date"		来店日
+	 * @param "reserved_at"		来店日
 	 * @param "num_of_people"			予約人数
-	 * @param "at_created"				予約登録日
+	 * @param "created_at"				予約登録日
 	 * @param "is_deleted"				削除フラグ
 	 * 
 	 * @retrun	取得したMapデータをリストに格納してもどす	
@@ -50,20 +50,20 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					res.user_id,
 					res.store_id,
 					store.store_name,
-					store.post_code,
+					store.zip_code,
 					store.city,
 					store.municipalities,
 					store.street_address,
 					store.building,
 					store.mail,
 					store.phone,
-					res.at_reservation_date,
+					res.reserved_at,
 					res.num_of_people
 				FROM reservation_table AS res
 				LEFT JOIN store_info_tb AS store
 				ON store.store_id = res.store_id
 				WHERE res.user_id = ? AND res.is_deleted = 0
-				ORDER BY res.at_reservation_date DESC""";
+				ORDER BY res.reserved_at DESC""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql,userId);
@@ -82,14 +82,14 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					res.user_id,
 					res.store_id,
 					store.store_name,
-					store.post_code,
+					store.zip_code,
 					store.city,
 					store.municipalities,
 					store.street_address,
 					store.building,
 					store.mail,
 					store.phone,
-					res.at_reservation_date,
+					res.reserved_at,
 					res.num_of_people
 				FROM reservation_table AS res
 				LEFT JOIN store_info_tb AS store
@@ -97,7 +97,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				WHERE res.user_id = ?
 				AND res.is_deleted = 0
 				AND res.reservation_id < ?
-				ORDER BY res.at_reservation_date DESC
+				ORDER BY res.reserved_at DESC
 				LIMIT 10
 				""";
 		
@@ -118,9 +118,9 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 * @param("user_id")				利用者識別番号
 	 * @param("store_id")				店舗識別番号
 	 * @param("store_name")				店舗の名前
-	 * @param("at_reservation_date")	来店日
+	 * @param("reserved_at")	来店日
 	 * @param("num_of_people")			予約人数
-	 * @param("at_created")				予約登録日
+	 * @param("created_at")				予約登録日
 	 * @param("is_deleted")				削除フラグ
 	 * 
 	 * @retrun	取得したMapデータをもどす	
@@ -134,9 +134,9 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					reservation.user_id,
 					reservation.store_id,
 					store.store_name,
-					reservation.at_reservation_date,
+					reservation.reserved_at,
 					reservation.num_of_people,
-					reservation.at_created,
+					reservation.created_at,
 					reservation.is_deleted
 				FROM reservation_table AS reservation
 				INNER JOIN store_info_tb AS store
@@ -145,7 +145,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 					reservation.user_id = ? 
 				AND reservation.reservation_id = ?
 				AND reservation.is_deleted = 0
-				ORDER BY reservation.at_reservation_date DESC
+				ORDER BY reservation.reserved_at DESC
 				""";
 		
 		try {
@@ -184,7 +184,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 							COUNT(reservation_id)
 						FROM reservation_table AS res
 						WHERE res.store_id = store.store_id
-						AND at_reservation_date LIKE ?
+						AND reserved_at LIKE ?
 					) AS store_reservation_limit
 				FROM store_info_tb AS store
 				WHERE store.store_id = ?
@@ -207,9 +207,9 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	 * 
 	 * @param("user_id")				利用者識別番号
 	 * @param("store_id")				店舗識別番号
-	 * @param("at_reservation_date")	来店日
+	 * @param("reserved_at")	来店日
 	 * @param("num_of_people")			予約人数
-	 * @param("at_created")				予約登録日
+	 * @param("created_at")				予約登録日
 	 */
 	
 	@Override
@@ -219,15 +219,15 @@ public class UserReservationDaoImpl implements UserReservationDao {
 				INSERT INTO reservation_table
 					(user_id,
 					store_id,
-					at_reservation_date,
+					reserved_at,
 					num_of_people,
-					at_created)
+					created_at)
 					VALUES(?,?,?,?,?)""";
 		try {
 			int result = jdbcTemplate.update(sql,
 					reservation.getUserId(),
 					reservation.getStoreId(),
-					LocalDateTime.of(reservation.getAtReservationDate(),LocalTime.now()),
+					LocalDateTime.of(reservation.getReservedAt(),LocalTime.now()),
 					reservation.getNumOfPeople(),
 					LocalDateTime.now()
 					);

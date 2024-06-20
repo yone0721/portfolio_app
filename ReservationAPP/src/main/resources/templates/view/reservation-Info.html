@@ -18,7 +18,7 @@
 				</tr>
 				<tr>
 					<td>住所</td>
-					<td th:text="'〒' + ${userReservationInfomation.getPostCodeAddHyphen()} + ' ' + *{city} + *{municipalities}
+					<td th:text="'〒' + ${userReservationInfomation.getZipCodeAddHyphen()} + ' ' + *{city} + *{municipalities}
 								+ *{streetAddress} + *{building}"></td>
 				</tr>
 				<tr>
@@ -27,7 +27,7 @@
 				</tr>
 				<tr>
 					<td>予約日</td>
-					<td th:text="*{atReservationDate}"></td>
+					<td th:text="*{reservedAt}"></td>
 				</tr>				
 				<tr>
 					<td>予約人数</td>

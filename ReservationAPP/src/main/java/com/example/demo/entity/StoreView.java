@@ -17,7 +17,7 @@ public class StoreView {
 	private String storeName;
 	
 	@NotNull
-	private String postCode;
+	private String zipCode;
 	
 	@NotNull
 	private String city;
@@ -62,8 +62,8 @@ public class StoreView {
 		return storeName;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 
 	public String getCity() {
@@ -114,8 +114,8 @@ public void setStoreId(int storeId) {
 		this.storeName = storeName;
 	}
 
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 
 	public void setCity(String city) {
@@ -168,7 +168,7 @@ public void setStoreId(int storeId) {
 	//	DB取得用コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
 			@NotNull String streetAddress,
@@ -182,7 +182,7 @@ public void setStoreId(int storeId) {
 
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -218,7 +218,7 @@ public void setStoreId(int storeId) {
 	//	選択した店舗の詳細格納用コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
 			@NotNull String streetAddress,
@@ -232,7 +232,7 @@ public void setStoreId(int storeId) {
 		
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -269,12 +269,12 @@ public void setStoreId(int storeId) {
 		};
 	}
 	
-	public String getPostCodeAddHyphen() {
+	public String getZipCodeAddHyphen() {
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(postCode.substring(0,3));
+		sb.append(zipCode.substring(0,3));
 		sb.append("-");
-		sb.append(postCode.substring(3,7));
+		sb.append(zipCode.substring(3,7));
 		
 		return sb.toString();
 	}

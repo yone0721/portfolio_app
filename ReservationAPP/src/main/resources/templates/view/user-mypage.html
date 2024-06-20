@@ -43,7 +43,7 @@
 				</tr>	
 <!--				<tr th:each="i:${#numbers.sequence(0,displayReservationList.size()-1)}">-->
 <!--					<td th:text="${displayReservationList[i].reservationId}"></td>-->
-<!--					<td th:text="${displayReservationList[i].atReservationDate}"></td>-->
+<!--					<td th:text="${displayReservationList[i].reservedAt}"></td>-->
 <!--					<td th:text="${displayReservationList[i].storeName}"></td>-->
 <!--					<td th:text="${displayReservationList[i].city} + ${displayReservationList[i].municipalities} + ${displayReservationList[i].streetAddress} + ${displayReservationList[i].building}"></td>-->
 <!--					<td th:text="'TEL：' + ${displayReservationList[i].phone} + '　MAIL：' + ${displayReservationList[i].mail}"></td>-->
@@ -54,7 +54,7 @@
 <!--				</tr>	-->
 				<tr th:each="reservation:${displayReservationList}">
 					<td th:text="*{reservation.reservationId}"></td>
-					<td th:text="*{reservation.atReservationDate}"></td>
+					<td th:text="*{reservation.reservedAt}"></td>
 					<td th:text="*{reservation.storeName}"></td>
 					<td th:text="*{reservation.city} + *{reservation.municipalities} + *{reservation.streetAddress} + *{reservation.building}"></td>
 					<td th:text="'TEL：' + *{reservation.getPhoneAddHyphen()} + '　MAIL：' + *{reservation.mail}"></td>
@@ -65,16 +65,16 @@
 							<input type="hidden" name="userId" th:value="${userInfo.userId}">
 							<input type="hidden" name="storeId" th:value="*{reservation.storeId}">
 							<input type="hidden" name="storeName" th:value="*{reservation.storeName}">
-							<input type="hidden" name="postCode" th:value="*{reservation.postCode}">
+							<input type="hidden" name="zipCode" th:value="*{reservation.zipCode}">
 							<input type="hidden" name="city" th:value="*{reservation.city}">
 							<input type="hidden" name="municipalities" th:value="*{reservation.municipalities}">
 							<input type="hidden" name="streetAddress" th:value="*{reservation.streetAddress}">
 							<input type="hidden" name="building" th:value="*{reservation.building}">
 							<input type="hidden" name="mail" th:value="*{reservation.mail}">
 							<input type="hidden" name="phone" th:value="*{reservation.phone}">
-							<input type="hidden" name="atReservationDate" th:value="*{reservation.atReservationDate}">
+							<input type="hidden" name="reservedAt" th:value="*{reservation.reservedAt}">
 							<input type="hidden" name="numOfPeople" th:value="*{reservation.numOfPeople}">
-							<input type="hidden" name="atCreated" th:value="*{reservation.atCreated}">
+							<input type="hidden" name="createdAt" th:value="*{reservation.createdAt}">
 							<input type="submit" th:value="確認">
 						</form>
 					</td>

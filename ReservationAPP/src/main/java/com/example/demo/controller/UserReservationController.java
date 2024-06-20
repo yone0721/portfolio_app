@@ -88,7 +88,7 @@ public class UserReservationController {
 	
 	@PostMapping("/reserve-confirm")
 	public String checkAvailableDays(
-			@RequestParam("atReservationDate") String atReservationDate,
+			@RequestParam("reservedAt") String reservedAt,
 			@RequestParam("numOfPeople") int numOfPeople,
 			@ModelAttribute StoreView storeView,
 			Model model
@@ -101,18 +101,18 @@ public class UserReservationController {
 		 *	・予約人数は0以下かどうか
 		 */
 		Map<String,String> errors = checkReservationDateAndLimit(
-				storeView,LocalDate.parse(atReservationDate),numOfPeople);
+				storeView,LocalDate.parse(reservedAt),numOfPeople);
 		
 //		エラーが無ければ確認画面へ遷移
 		if(errors.isEmpty()) {
-			model.addAttribute("atReservationDate",atReservationDate);
+			model.addAttribute("reservedAt",reservedAt);
 			model.addAttribute("numOfPeople",numOfPeople);
 			model.addAttribute("userInfo",userSession.getUserInfo());
 			model.addAttribute("storeView",userSession.getStoreView());				
 			return "view/reservation-confirm";
 		}
 		
-		model.addAttribute("atReservationDate",atReservationDate);
+		model.addAttribute("reservedAt",reservedAt);
 		model.addAttribute("numOfPeople",numOfPeople);
 		model.addAttribute("errors",errors);
 		model.addAttribute("userInfo",userSession.getUserInfo());
@@ -128,7 +128,7 @@ public class UserReservationController {
 
 	@PostMapping("make-a-reservation")
 	public String makeAReservation(
-			@RequestParam("atReservationDate") String atReservationDate,	
+			@RequestParam("reservedAt") String reservedAt,	
 			@RequestParam("numOfPeople") String numOfPeople,	
 			RedirectAttributes redirect,
 			Model model
@@ -137,7 +137,7 @@ public class UserReservationController {
 		try {
 //			予約を送信する前に、もう一度予約が空いてるかを確認
 			if(userReservationService.getReservationLimitAtDate(
-					userSession.getStoreView(), LocalDate.parse(atReservationDate)) < 1) {
+					userSession.getStoreView(), LocalDate.parse(reservedAt)) < 1) {
 				
 				throw new FailedInsertSQLException("予約数が上限に達してしまったため、他の日程で予約を入れてください。");
 			}
@@ -146,7 +146,7 @@ public class UserReservationController {
 			Reservation reservation = new Reservation(
 					userSession.getUserInfo().getUserId(),
 					userSession.getStoreView().getStoreId(),
-					LocalDate.parse(atReservationDate),
+					LocalDate.parse(reservedAt),
 					Integer.parseInt(numOfPeople)
 				);
 			

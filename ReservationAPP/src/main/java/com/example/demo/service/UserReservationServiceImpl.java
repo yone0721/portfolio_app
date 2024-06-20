@@ -72,14 +72,14 @@ public class UserReservationServiceImpl implements UserReservationService {
 			
 			for(Map getReservation: getReservationList) {
 				
-				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("at_reservation_date"));
+				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("reserved_at"));
 
 				UserReservationInfomation reservation = new UserReservationInfomation(
 						(int)getReservation.get("reservation_id"),
 						(int)getReservation.get("user_id"),
 						(int)getReservation.get("store_id"),
 						(String)getReservation.get("store_name"),
-						(String)getReservation.get("post_code"),
+						(String)getReservation.get("zip_code"),
 						(String)getReservation.get("city"),
 						(String)getReservation.get("municipalities"),
 						(String)getReservation.get("street_address"),
@@ -89,7 +89,7 @@ public class UserReservationServiceImpl implements UserReservationService {
 						(String)getReservation.get("phone"),
 						LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
 						(int)getReservation.get("num_of_people"),
-						((LocalDateTime)getReservation.get("at_created"))
+						((LocalDateTime)getReservation.get("created_at"))
 						);
 				
 				reservationsList.add(reservation);
@@ -112,14 +112,14 @@ public class UserReservationServiceImpl implements UserReservationService {
 			
 			for(Map getReservation: getReservationList) {
 				
-				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("at_reservation_date"));
+				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("reserved_at"));
 				
 				UserReservationInfomation reservation = new UserReservationInfomation(
 						(int)getReservation.get("reservation_id"),
 						(int)getReservation.get("user_id"),
 						(int)getReservation.get("store_id"),
 						(String)getReservation.get("store_name"),
-						(String)getReservation.get("post_code"),
+						(String)getReservation.get("zip_code"),
 						(String)getReservation.get("city"),
 						(String)getReservation.get("municipalities"),
 						(String)getReservation.get("street_address"),
@@ -129,7 +129,7 @@ public class UserReservationServiceImpl implements UserReservationService {
 								(String)getReservation.get("phone"),
 								LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
 								(int)getReservation.get("num_of_people"),
-								((LocalDateTime)getReservation.get("at_created"))
+								((LocalDateTime)getReservation.get("created_at"))
 						);
 				
 				reservationsList.add(reservation);
@@ -180,9 +180,9 @@ public class UserReservationServiceImpl implements UserReservationService {
 						(int)getReservation.get("user_id"),
 						(int)getReservation.get("store_id"),
 						(String)getReservation.get("store_name"),
-						((Timestamp)getReservation.get("at_reservation_date")).toLocalDateTime().toLocalDate(),
+						((Timestamp)getReservation.get("reserved_at")).toLocalDateTime().toLocalDate(),
 						(int)getReservation.get("num_of_people"),
-						((Timestamp)getReservation.get("at_created")).toLocalDateTime(),
+						((Timestamp)getReservation.get("created_at")).toLocalDateTime(),
 						(boolean)getReservation.get("is_deleted")					
 					);
 		}catch(FailedToGetReservationException e) {

@@ -39,7 +39,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 				StoreView storeView = new StoreView(
 						(int)storeMap.get("store_id"),
 						(String)storeMap.get("store_name"),
-						(String)storeMap.get("post_code"),
+						(String)storeMap.get("zip_code"),
 						(String)storeMap.get("city"),
 						(String)storeMap.get("municipalities"),
 						(String)storeMap.get("street_address"),
@@ -75,7 +75,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 				StoreView storeView = new StoreView(
 						(int)storeMap.get("store_id"),
 						(String)storeMap.get("store_name"),
-						(String)storeMap.get("post_code"),
+						(String)storeMap.get("zip_code"),
 						(String)storeMap.get("city"),
 						(String)storeMap.get("municipalities"),
 						(String)storeMap.get("street_address"),

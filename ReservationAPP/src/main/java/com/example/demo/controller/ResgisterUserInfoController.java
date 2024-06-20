@@ -80,7 +80,7 @@ public class ResgisterUserInfoController {
 					userInfoForm.getUserNameFurigana(),
 					userInfoForm.getPhone(),
 					userInfoForm.getUserPassword(),
-					userInfoForm.getPostCode(),
+					userInfoForm.getZipCode(),
 					userInfoForm.getCity(),
 					userInfoForm.getMunicipalities(),
 					userInfoForm.getStreetAddress(),
