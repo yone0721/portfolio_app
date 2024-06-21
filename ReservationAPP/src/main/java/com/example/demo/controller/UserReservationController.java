@@ -69,7 +69,7 @@ public class UserReservationController {
 	
 	@PostMapping("/store-available-days")
 	public String storeAvailableDays(
-			@RequestParam("selectDate") String selectDate,
+			@RequestParam("reservedAt") String reservedAt,
 			@RequestParam("numOfPeople") int numOfPeople,
 			Model model) {
 

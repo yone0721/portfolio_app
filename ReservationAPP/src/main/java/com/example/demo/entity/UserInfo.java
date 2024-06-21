@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.demo.factory.FormatToFixStrings;
+
 import jakarta.validation.constraints.NotNull;
 
 public class UserInfo {
@@ -84,7 +86,7 @@ public class UserInfo {
 			@NotNull String userNameFurigana,
 			@NotNull String phone, 
 			@NotNull String userPassword, 
-			@NotNull String postCode,
+			@NotNull String zipCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String userAddress,
@@ -95,9 +97,9 @@ public class UserInfo {
 		this.mail = mail;
 		this.userName = userName;
 		this.userNameFurigana = userNameFurigana;
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 		this.userPassword = userPassword;
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.userAddress = userAddress;
@@ -173,7 +175,7 @@ public class UserInfo {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public void setUserPassword(String userPassword) {
@@ -181,7 +183,7 @@ public class UserInfo {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public void setCity(String city) {

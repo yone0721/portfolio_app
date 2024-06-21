@@ -176,7 +176,7 @@ public class UserReservationDaoImpl implements UserReservationDao {
 	}
 	
 	@Override
-	public Integer calcNumOfEmpty(int store_id,LocalDate tgtDate) {
+	public int calcNumOfEmpty(int store_id,LocalDate tgtDate) {
 		String sql ="""
 				SELECT
 					store.store_reservation_limit -(
@@ -193,11 +193,13 @@ public class UserReservationDaoImpl implements UserReservationDao {
 			
 			String formatDate = tgtDate.toString() + "%";
 			Map<String,Object> getLimitValue =jdbcTemplate.queryForMap(sql,formatDate,store_id);
-			return (Long)getLimitValue.get("store_reservation_limit") != null ?
-					(int)((long)getLimitValue.get("store_reservation_limit")): null;
+			Long result = (Long)getLimitValue.get("store_reservation_limit") != null ?
+					(long)getLimitValue.get("store_reservation_limit"): null;
+			
+			return result.intValue();
 			
 		}catch(DataAccessException e) {
-			System.out.println("UserReservationDaoImplでエラー：" + e.getStackTrace());			
+			e.printStackTrace();		
 			throw new FailedToGetReservationException("空き予約数の取得に失敗しました。");
 		}
 	}

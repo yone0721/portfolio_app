@@ -11,7 +11,7 @@ public interface UserReservationDao {
 	List<Map<String, Object>> findAllReservationsById(int userId,int reservationId);
 	Map<String,Object> findReservationById(int userId,int reservationId);
 	List<Map<String,Object>> getRemainingReservations(int user_id,int offset);
-	Integer calcNumOfEmpty(int store_id,LocalDate tgtDate);
+	int calcNumOfEmpty(int store_id,LocalDate tgtDate);
 	void insert(Reservation reservation);
 	void update(Reservation reservation);
 //	int delete(); isDeletedフラグがtrueの予約をすべて消すメソッド　バッチ処理で使用する？

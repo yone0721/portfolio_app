@@ -98,8 +98,6 @@ public class StoresListViewController {
 			RedirectAttributes redirect
 			) {
 		
-		System.out.println("open-store-list:"+ userInfo);
-		
 		userSession.setUserInfo(userInfo);
 		return "redirect:/reservation/views/store-list";
 	}
