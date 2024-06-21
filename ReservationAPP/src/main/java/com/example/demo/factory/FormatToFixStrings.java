@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class FormatToFixStrings {
 	
 	public static void main(String[] args) {
-		String num = formatPhoneNumberWithHyphens("0424432177");
+		String num = formatPhoneNumberWithHyphens("012044444444");
 		System.out.println(num);
 		
 	}
@@ -16,6 +16,14 @@ public class FormatToFixStrings {
 	 */
 	
 	public static String formatZipCodeWithHyphens(String zipCode) {
+		String checkZipCode = "^[0-9]{7}";
+		Pattern zipCodePattern = Pattern.compile(checkZipCode);
+		Matcher zipCodeMatcher = zipCodePattern.matcher(zipCode);
+		
+		if(!(zipCodeMatcher.find())) {
+			return zipCode;
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append(zipCode.substring(0,3));
@@ -30,6 +38,14 @@ public class FormatToFixStrings {
 	 * 今回は簡単に3パターン作成する
 	 */
 	public static String formatPhoneNumberWithHyphens(String phoneNumber) {
+		
+		String checkPhoneNumber = "^[0-9]{10,12}";
+		Pattern phoneNumberPattern = Pattern.compile(checkPhoneNumber);
+		Matcher phoneNumberMatcher = phoneNumberPattern.matcher(phoneNumber);
+		
+		if(!(phoneNumberMatcher.find())) {
+			return phoneNumber;
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -86,7 +102,7 @@ public class FormatToFixStrings {
 			
 			return sb.toString();
 		}
-		return sb.toString();
+		return phoneNumber;
 	}
 	
 }
