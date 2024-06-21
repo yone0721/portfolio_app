@@ -32,7 +32,7 @@ public class Page {
 	}
 	
 //	前ページボタンを表示するか、現在のページ数が1以上あるかどうかの判定
-	public boolean backPageDisplay() {
+	public boolean prevPageDisplay() {
 		return currentPage > 1;
 	}
 //	次ページボタンを表示するか、現在のページ数が最大ページ数より少ないかどうかの判定
@@ -51,8 +51,8 @@ public class Page {
 	}
 	
 //	前ページへ飛ぶ
-	public void backPage() {
-		if(backPageDisplay()) {
+	public void prevPage() {
+		if(prevPageDisplay()) {
 			currentPage--;
 		}
 	}

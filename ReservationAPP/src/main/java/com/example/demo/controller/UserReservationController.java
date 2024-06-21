@@ -245,12 +245,12 @@ public class UserReservationController {
 	}		
 
 //	次の一覧10件を表示するメソッド
-	@GetMapping("/back-user-mypage")
-	public String backUserMyPage(
+	@GetMapping("/prev-user-mypage")
+	public String prevUserMyPage(
 			Model model) {
 		
 //		現在のページをひとつ前に戻す
-		userSession.getPage().backPage();
+		userSession.getPage().prevPage();
 		
 //		表示する10件を格納する
 		List<UserReservationInfomation> displayReservationList =

@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.demo.factory.FormatToFixStrings;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -58,7 +60,7 @@ public class UserReservationInfomation {
 	@NotEmpty
 	private LocalDateTime createdAt;
 
-//	DBデータ取得・更新用のコンストラクタ
+//	DBデータ取得コンストラクタ
 	public UserReservationInfomation(
 			int reservationId,
 			@NotEmpty int userId,
@@ -78,13 +80,13 @@ public class UserReservationInfomation {
 		this.userId = userId;
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 		this.reservedAt = reservedAt;
 		this.numOfPeople = numOfPeople;
 		this.createdAt = createdAt;
@@ -127,7 +129,7 @@ public class UserReservationInfomation {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public String getCity() {
@@ -173,53 +175,9 @@ public class UserReservationInfomation {
 	public String getPhone() {
 		return phone;
 	}
-	public String getZipCodeAddHyphen() {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(zipCode.substring(0,3));
-		sb.append("-");
-		sb.append(zipCode.substring(3,7));
-		
-		return sb.toString();
-	}
-	
-	public String getPhoneAddHyphen() {	
-		if(phone.length() == 11) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,3));
-			sb.append("-");
-			sb.append(phone.substring(3,7));
-			sb.append("-");
-			sb.append(phone.substring(7,11));
-			
-			return sb.toString();
-		}
-		
-		if(phone.substring(0,2).equals("03")) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,2));
-			sb.append("-");
-			sb.append(phone.substring(2,6));
-			sb.append("-");
-			sb.append(phone.substring(6,10));
-			
-			return sb.toString();
-			
-		}else{
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,4));
-			sb.append("-");
-			sb.append(phone.substring(4,6));
-			sb.append("-");
-			sb.append(phone.substring(6,10));
-			
-			return sb.toString();
-		}
-
-	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public LocalDate getReservedAt() {

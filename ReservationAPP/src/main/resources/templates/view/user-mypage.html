@@ -26,7 +26,7 @@
 					<td th:text="*{userNameFurigana}"></td>
 					<td th:text="*{city} + *{municipalities}
 								+ *{userAddress} + *{building}"></td>
-					<td th:text="'TEL：' + ${userInfo.getPhoneAddHyphen()} + '　MAIL：' + *{mail}"></td>
+					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
 				</tr>
 			</table>
 		<div class="reservation-list-container">
@@ -57,7 +57,7 @@
 					<td th:text="*{reservation.reservedAt}"></td>
 					<td th:text="*{reservation.storeName}"></td>
 					<td th:text="*{reservation.city} + *{reservation.municipalities} + *{reservation.streetAddress} + *{reservation.building}"></td>
-					<td th:text="'TEL：' + *{reservation.getPhoneAddHyphen()} + '　MAIL：' + *{reservation.mail}"></td>
+					<td th:text="'TEL：' + *{reservation.phone} + '　MAIL：' + *{reservation.mail}"></td>
 					<td th:text="*{reservation.numOfPeople} + '名'"></td>
 					<td>
 						<form method="post" th:action="@{reservation-infomation}">
@@ -81,7 +81,7 @@
 				</tr>	
 			</table>
 			<div class="form-container" th:Object="${page}">
-				<form th:if="${page.backPageDisplay()}" th:method="get" th:action="@{back-user-mypage}">
+				<form th:if="${page.prevPageDisplay()}" th:method="get" th:action="@{prev-user-mypage}">
 					<input type="submit" value="前へ">
 				</form>
 				<div th:text="*{currentPage} + ' / ' + *{maxPage}"></div>

@@ -18,12 +18,12 @@
 				</tr>
 				<tr>
 					<td>住所</td>
-					<td th:text="'〒' + ${userReservationInfomation.getZipCodeAddHyphen()} + ' ' + *{city} + *{municipalities}
+					<td th:text="'〒' + *{zipCode} + ' ' + *{city} + *{municipalities}
 								+ *{streetAddress} + *{building}"></td>
 				</tr>
 				<tr>
 					<td>連絡先</td>
-					<td th:text="'TEL：' + ${userReservationInfomation.getPhoneAddHyphen()} + '　MAIL：' + *{mail}"></td>
+					<td th:text="'TEL：' + *{phone} + '　MAIL：' + *{mail}"></td>
 				</tr>
 				<tr>
 					<td>予約日</td>

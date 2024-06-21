@@ -4,6 +4,8 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.factory.FormatToFixStrings;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -115,7 +117,7 @@ public void setStoreId(int storeId) {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public void setCity(String city) {
@@ -139,7 +141,7 @@ public void setStoreId(int storeId) {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public void setStoreReservationLimit(Integer storeReservationLimit) {
@@ -182,13 +184,13 @@ public void setStoreId(int storeId) {
 
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.zipCode = zipCode;
+		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = phone;
+		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
 		this.storeReservationLimit = storeReservationLimit;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
@@ -268,51 +270,7 @@ public void setStoreId(int storeId) {
 			default -> null;
 		};
 	}
-	
-	public String getZipCodeAddHyphen() {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(zipCode.substring(0,3));
-		sb.append("-");
-		sb.append(zipCode.substring(3,7));
-		
-		return sb.toString();
-	}
-	
-	public String getPhoneAddHyphen() {	
-		if(phone.length() == 11) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,3));
-			sb.append("-");
-			sb.append(phone.substring(3,7));
-			sb.append("-");
-			sb.append(phone.substring(7,11));
-			
-			return sb.toString();
-		}
-		
-		if(phone.substring(0,2).equals("03")) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,2));
-			sb.append("-");
-			sb.append(phone.substring(2,6));
-			sb.append("-");
-			sb.append(phone.substring(6,10));
-			
-			return sb.toString();
-			
-		}else{
-			StringBuilder sb = new StringBuilder();
-			sb.append(phone.substring(0,4));
-			sb.append("-");
-			sb.append(phone.substring(4,6));
-			sb.append("-");
-			sb.append(phone.substring(6,10));
-			
-			return sb.toString();
-		}
-	}
-	
+
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
 	 */
