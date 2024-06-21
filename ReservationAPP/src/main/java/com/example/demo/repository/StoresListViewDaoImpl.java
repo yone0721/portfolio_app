@@ -55,7 +55,7 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			INNER JOIN store_regular_holidays AS holidays
 			ON holidays.store_id = store.store_id
 			GROUP BY holidays.store_id
-			LIMIT 10;""";
+			LIMIT 10""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql); 

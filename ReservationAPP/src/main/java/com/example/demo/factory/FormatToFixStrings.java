@@ -3,13 +3,11 @@ package com.example.demo.factory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+ * 整数のみの電話番号や郵便番号にハイフンを加えるクラス
+ */
+
 public class FormatToFixStrings {
-	
-	public static void main(String[] args) {
-		String num = formatPhoneNumberWithHyphens("012044444444");
-		System.out.println(num);
-		
-	}
 	
 	/*
 	 * 郵便番号にハイフンを追加するメソッド

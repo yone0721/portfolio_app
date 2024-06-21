@@ -176,7 +176,7 @@ public class UserReservationController {
 	}
 	
 	@PostMapping("/to-store-list")
-	public String toStoreList(
+	public String goToStoreList(
 			RedirectAttributes redirect) {
 		
 		userSession.clearStoreViewData();
@@ -198,7 +198,7 @@ public class UserReservationController {
 	 */
 	
 	@GetMapping("/user-mypage")
-	public String toUserMyPage(
+	public String goToUserMyPage(
 			@ModelAttribute("userSession") UserSession userSession,Model model) {
 			
 		if(userSession == null) {
@@ -244,13 +244,13 @@ public class UserReservationController {
 		return "view/user-mypage";
 	}		
 
-//	次の一覧10件を表示するメソッド
+//	前の一覧10件を表示するメソッド
 	@GetMapping("/prev-user-mypage")
-	public String prevUserMyPage(
+	public String displayPrevUserMyPage(
 			Model model) {
 		
 //		現在のページをひとつ前に戻す
-		userSession.getPage().prevPage();
+		userSession.getPage().goToPreviousPage();
 		
 //		表示する10件を格納する
 		List<UserReservationInfomation> displayReservationList =
@@ -266,11 +266,11 @@ public class UserReservationController {
 	
 //	次の一覧10件を表示するメソッド
 	@GetMapping("/next-user-mypage")
-	public String nextUserMyPage(
+	public String displayNextUserMyPage(
 			Model model) {
 		
 //		現在のページを次に進める
-		userSession.getPage().nextPage();
+		userSession.getPage().goToNextPage();
 		
 //		表示する10件を格納する
 		List<UserReservationInfomation> displayReservationList =
@@ -316,9 +316,12 @@ public class UserReservationController {
 				|| reservationDate == null) {
 			errors.put("reservationDateError","本日以降の日付を選択してください。");			
 		}
-		
-		if(userReservationService.getReservationLimitAtDate(storeView, reservationDate) < 1){
-			errors.put("reservationLimitError","選択した日程は予約上限に達しました。他の日付でお探しください。");			
+		try {
+			if(userReservationService.getReservationLimitAtDate(storeView, reservationDate) < 1){
+				errors.put("reservationLimitError","選択した日程は予約上限に達しました。他の日付でお探しください。");			
+			}			
+		}catch(NullPointerException e) {
+			errors.put("reservationLimitError","予期せぬエラーが発生しました。他の日付をお選びください。");
 		}
 		
 		if(numOfPeople < 1){

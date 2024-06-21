@@ -52,7 +52,7 @@ public class StoresListViewController {
 	 */
 	
 	@GetMapping("/store-list")
-	public String storesListView(
+	public String displayStoresList(
 			Model model) {
 		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
@@ -79,7 +79,7 @@ public class StoresListViewController {
 	 */
 	
 	@PostMapping("/to-reservation-controller")
-	public String toReservationController(		
+	public String moveToReservationController(		
 			@ModelAttribute StoreView storeView,
 			RedirectAttributes redirect) {
 		
@@ -93,7 +93,7 @@ public class StoresListViewController {
 	 * 店舗情報一覧画面に戻すメソッド
 	 */
 	@GetMapping("/open-store-list")
-	public String toStoreList(
+	public String displayStoresListFromUserReservationController(
 			@ModelAttribute("userInfo") UserInfo userInfo,
 			RedirectAttributes redirect
 			) {

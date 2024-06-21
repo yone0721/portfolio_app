@@ -32,34 +32,34 @@ public class Page {
 	}
 	
 //	前ページボタンを表示するか、現在のページ数が1以上あるかどうかの判定
-	public boolean prevPageDisplay() {
+	public boolean shouldDisplayPreviousPageButton() {
 		return currentPage > 1;
 	}
 //	次ページボタンを表示するか、現在のページ数が最大ページ数より少ないかどうかの判定
-	public boolean nextPageDisplay() {
+	public boolean shouldDisplayNextPageButton() {
 		return currentPage < maxPage;
 	}
 	
 //	トップページに戻る
-	public void topPage() {
+	public void goToFirstPage() {
 		currentPage = 1;
 	}
 	
 //	最後のページへ飛ぶ
-	public void lastPage() {
+	public void goToLastPage() {
 		currentPage = (int)maxPage;
 	}
 	
 //	前ページへ飛ぶ
-	public void prevPage() {
-		if(prevPageDisplay()) {
+	public void goToPreviousPage() {
+		if(shouldDisplayPreviousPageButton()) {
 			currentPage--;
 		}
 	}
 	
 //	次ページへ飛ぶ
-	public void nextPage() {
-		if(nextPageDisplay()) {
+	public void goToNextPage() {
+		if(shouldDisplayNextPageButton()) {
 			currentPage++;
 		}
 	}
