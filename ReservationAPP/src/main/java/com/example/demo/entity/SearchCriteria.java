@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jakarta.annotation.Nullable;
@@ -20,10 +21,10 @@ import jakarta.annotation.Nullable;
 
 public class SearchCriteria {
 	@Nullable
-	private List<String> keyword;
+	private List<String> keyword  = new ArrayList<>();
 	
 	@Nullable
-	private List<String> cities;
+	private List<String> cities  = new ArrayList<>();
 	
 	@Nullable
 	private String isOpened;
@@ -32,19 +33,19 @@ public class SearchCriteria {
 	private String isClosed;
 	
 	@Nullable
-	private List<DayOfWeek> dayOfWeeks;
+	private List<DayOfWeek> dayOfWeeks = new ArrayList<>();
 
 	public SearchCriteria(
-			String keyword, 
-			List<String> cities,
-			String isOpened,
-			String isClosed,
-			Integer... dayOfWeeks) {
-		this.setKeyword(keyword);
+			@Nullable String keyword, 
+			@Nullable List<String> cities,
+			@Nullable String isOpened,
+			@Nullable String isClosed,
+			@Nullable Integer... dayOfWeeks) {
+		setKeyword(keyword);
 		this.cities = cities;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
-		this.setDayOfWeeks(dayOfWeeks);
+		setDayOfWeeks(dayOfWeeks);
 	}
 	
 //	public SearchCriteria(
@@ -66,7 +67,7 @@ public class SearchCriteria {
 	}
 
 	public void setKeyword(String keyword) {
-		if(!(keyword == null)) {
+		if(!(keyword.isEmpty())) {
 			String[] keywords = keyword.split(" +");
 			
 			for(String extractKeyword:keywords) {
@@ -110,9 +111,12 @@ public class SearchCriteria {
 	/*
 	 * @param dayOfWeeks(int) 	DayOfWeek.of()メソッドに渡す引数　1.月曜日 2.火曜日 ... 7.日曜日
 	 */
-	public void setDayOfWeeks(Integer... dayOfWeeks) {
+	public void setDayOfWeeks(Integer[] dayOfWeeks) {
 		
-		if(dayOfWeeks != null) {
+		System.out.println(dayOfWeeks.length);
+		System.out.println(Arrays.toString(dayOfWeeks));
+		
+		if(!(dayOfWeeks == null) && dayOfWeeks.length > 0) {
 			for(Integer dayOfWeek:dayOfWeeks) {
 				this.dayOfWeeks.add(DayOfWeek.of(dayOfWeek));
 			}
@@ -128,7 +132,7 @@ public class SearchCriteria {
 		List<StoreView> extractStoresList = new ArrayList<>();
 		
 		for(StoreView storeView:storeViewList) {
-			if(matchingKeyword(storeView)
+			if(matchingKeywordInStoresList(storeView)
 				|| matchingCity(storeView)
 				|| matchingBusinessHours(storeView)
 				|| matchingWorkingDays(storeView)) {
@@ -146,7 +150,7 @@ public class SearchCriteria {
 	 * （今回カテゴリは作っていない為、カテゴリ除く）
 	 */
 	
-	public boolean matchingKeyword(StoreView storeView) {
+	public boolean matchingKeywordInStoresList(StoreView storeView) {
 		boolean isMatch = false;
 		
 		isMatch = this.keyword.contains(storeView.getStoreName()) 
