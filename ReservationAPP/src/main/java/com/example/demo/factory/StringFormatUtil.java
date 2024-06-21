@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * 整数のみの電話番号や郵便番号にハイフンを加えるクラス
  */
 
-public class FormatToFixStrings {
+public class StringFormatUtil {
 	
 	/*
 	 * 郵便番号にハイフンを追加するメソッド

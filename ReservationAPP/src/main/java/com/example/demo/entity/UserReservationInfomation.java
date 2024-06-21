@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.example.demo.factory.FormatToFixStrings;
+import com.example.demo.factory.StringFormatUtil;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
@@ -80,13 +80,13 @@ public class UserReservationInfomation {
 		this.userId = userId;
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 		this.reservedAt = reservedAt;
 		this.numOfPeople = numOfPeople;
 		this.createdAt = createdAt;
@@ -129,7 +129,7 @@ public class UserReservationInfomation {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public String getCity() {
@@ -177,7 +177,7 @@ public class UserReservationInfomation {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public LocalDate getReservedAt() {

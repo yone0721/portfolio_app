@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.demo.factory.FormatToFixStrings;
+import com.example.demo.factory.StringFormatUtil;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -117,7 +117,7 @@ public void setStoreId(int storeId) {
 	}
 
 	public void setZipCode(String zipCode) {
-		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public void setCity(String city) {
@@ -141,7 +141,7 @@ public void setStoreId(int storeId) {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public void setStoreReservationLimit(Integer storeReservationLimit) {
@@ -184,13 +184,13 @@ public void setStoreId(int storeId) {
 
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.zipCode = FormatToFixStrings.formatZipCodeWithHyphens(zipCode);
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = FormatToFixStrings.formatPhoneNumberWithHyphens(phone);
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 		this.storeReservationLimit = storeReservationLimit;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
