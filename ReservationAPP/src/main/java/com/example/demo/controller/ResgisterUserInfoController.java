@@ -29,7 +29,7 @@ public class ResgisterUserInfoController {
 	}
 	
 	@PostMapping("/register")
-	public String resgiter(@RequestParam("position") String position,
+	public String resgiterUserInfo(@RequestParam("position") String position,
 			UserInfoForm userInfoForm,
 			Model model) {
 		
@@ -45,7 +45,7 @@ public class ResgisterUserInfoController {
 	}
 	
 	@PostMapping("/user-confirm")
-	public String registerConfirm(@Validated UserInfoForm userInfoForm,
+	public String registerUserInfoConfirm(@Validated UserInfoForm userInfoForm,
 			BindingResult result,Model model) {
 		
 		if(result.hasErrors()) {
@@ -70,7 +70,7 @@ public class ResgisterUserInfoController {
 	}	
 	
 		@PostMapping("/user-complete")
-		public String registerComplete(	@Validated UserInfoForm userInfoForm,
+		public String registerUserInfoComplete(	@Validated UserInfoForm userInfoForm,
 				BindingResult result,Model model,RedirectAttributes redirect) {
 			System.out.println("Password：" + userInfoForm.getUserPassword());
 			
@@ -80,7 +80,7 @@ public class ResgisterUserInfoController {
 					userInfoForm.getUserNameFurigana(),
 					userInfoForm.getPhone(),
 					userInfoForm.getUserPassword(),
-					userInfoForm.getPostCode(),
+					userInfoForm.getZipCode(),
 					userInfoForm.getCity(),
 					userInfoForm.getMunicipalities(),
 					userInfoForm.getStreetAddress(),

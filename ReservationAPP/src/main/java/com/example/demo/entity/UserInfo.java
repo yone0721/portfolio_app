@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.demo.factory.StringFormatUtil;
+
 import jakarta.validation.constraints.NotNull;
 
 public class UserInfo {
@@ -26,7 +28,7 @@ public class UserInfo {
 	private String userPassword;
 	
 	@NotNull
-	private String postCode;
+	private String zipCode;
 	
 	@NotNull
 	private String city;
@@ -56,7 +58,7 @@ public class UserInfo {
 			@NotNull String userNameFurigana,
 			@NotNull String phone, 
 			@NotNull String userPassword, 
-			@NotNull String postCode,
+			@NotNull String zipCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String userAddress,
@@ -68,7 +70,7 @@ public class UserInfo {
 		this.userNameFurigana = userNameFurigana;
 		this.phone = phone;
 		this.userPassword = userPassword;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.userAddress = userAddress;
@@ -84,7 +86,7 @@ public class UserInfo {
 			@NotNull String userNameFurigana,
 			@NotNull String phone, 
 			@NotNull String userPassword, 
-			@NotNull String postCode,
+			@NotNull String zipCode,
 			@NotNull String city,
 			@NotNull String municipalities,
 			@NotNull String userAddress,
@@ -95,9 +97,9 @@ public class UserInfo {
 		this.mail = mail;
 		this.userName = userName;
 		this.userNameFurigana = userNameFurigana;
-		this.phone = phone;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 		this.userPassword = userPassword;
-		this.postCode = postCode;
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.userAddress = userAddress;
@@ -130,8 +132,8 @@ public class UserInfo {
 		return userPassword;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 	public String getCity() {
 		return city;
@@ -173,15 +175,15 @@ public class UserInfo {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
 
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setZipCode(String zipCode) {
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public void setCity(String city) {
@@ -207,5 +209,5 @@ public class UserInfo {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
 }

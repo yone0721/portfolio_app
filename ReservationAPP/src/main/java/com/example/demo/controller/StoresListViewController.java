@@ -52,7 +52,17 @@ public class StoresListViewController {
 	 */
 	
 	@GetMapping("/store-list")
-	public String storesListView(
+	public String displayStoresList(
+			Model model) {
+		
+		List<StoreView> storeViewList = storesListViewService.getStoresList();
+		
+		model.addAttribute("storesViewList",storeViewList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		return "view/stores-index";
+	}
+	@GetMapping("/serched-store-list")
+	public String serchedStoresListView(
 			Model model) {
 		
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
@@ -69,7 +79,7 @@ public class StoresListViewController {
 	 */
 	
 	@PostMapping("/to-reservation-controller")
-	public String toReservationController(		
+	public String moveToReservationController(		
 			@ModelAttribute StoreView storeView,
 			RedirectAttributes redirect) {
 		
@@ -83,23 +93,20 @@ public class StoresListViewController {
 	 * 店舗情報一覧画面に戻すメソッド
 	 */
 	@GetMapping("/open-store-list")
-	public String toStoreList(
+	public String displayStoresListFromUserReservationController(
 			@ModelAttribute("userInfo") UserInfo userInfo,
 			RedirectAttributes redirect
 			) {
-		
-		System.out.println("open-store-list:"+ userInfo);
 		
 		userSession.setUserInfo(userInfo);
 		return "redirect:/reservation/views/store-list";
 	}
 
-	@PostMapping("/user-mypage")
-	public String toUserMyPage(@ModelAttribute UserInfo userInfo,
+	@GetMapping("/user-mypage")
+	public String toUserMyPage(
 			RedirectAttributes redirect) {
 		
-		
-		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
+		redirect.addFlashAttribute("userSession",userSession);
 		return "redirect:/reservation/reserve/user-mypage";
 	}
 }

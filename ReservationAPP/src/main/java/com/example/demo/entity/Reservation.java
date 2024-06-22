@@ -22,14 +22,14 @@ public class Reservation {
 	private String storeName;
 	
 	@NotEmpty
-	private LocalDate atReservationDate;
+	private LocalDate reservedAt;
 	
 	@NotEmpty
 	@Min(1)
 	private int numOfPeople;
 	
 	@NotEmpty
-	private LocalDateTime atCreated;
+	private LocalDateTime createdAt;
 	
 	private boolean isDeleted;
 	
@@ -39,18 +39,18 @@ public class Reservation {
 			int userId,
 			int storeId,
 			String storeName,
-			LocalDate atReservationDate,
+			LocalDate reservedAt,
 			int NumOfPeople,
-			LocalDateTime atCreated,
+			LocalDateTime createdAt,
 			boolean isDeleted
 			) {
 		this.reservationId = reservationId;
 		this.userId = userId;
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.atReservationDate = atReservationDate;
+		this.reservedAt = reservedAt;
 		this.numOfPeople = numOfPeople;
-		this.atCreated = atCreated;
+		this.createdAt = createdAt;
 		this.isDeleted = isDeleted;
 	}
 	
@@ -58,12 +58,12 @@ public class Reservation {
 	public Reservation(
 			int userId,
 			int storeId,
-			LocalDate atReservationDate,
+			LocalDate reservedAt,
 			int numOfPeople
 			) {
 		this.userId = userId;
 		this.storeId = storeId;
-		this.atReservationDate = atReservationDate;
+		this.reservedAt = reservedAt;
 		this.numOfPeople = numOfPeople;
 	}
 	
@@ -85,23 +85,24 @@ public class Reservation {
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
-	public LocalDate getAtReservationDate() {
-		return atReservationDate;
+	public LocalDate getReservedAt() {
+		return reservedAt;
 	}
-	public void setAtReservationDate(LocalDate atReservationDate) {
-		this.atReservationDate = atReservationDate;
+	public void setReservedAt(LocalDate reservedAt) {
+		this.reservedAt = reservedAt;
 	}
+	
 	public int getNumOfPeople() {
 		return numOfPeople;
 	}
 	public void setNumOfPeople(int numOfPeople) {
 		numOfPeople = numOfPeople;
 	}
-	public LocalDateTime getAtCreated() {
-		return atCreated;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
-	public void setAtCreated(LocalDateTime atCreated) {
-		this.atCreated = atCreated;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 	public boolean isDelted() {
 		return isDeleted;

@@ -1,124 +1,3 @@
-/*
-　　店舗情報テーブル
-    テストデータ
-*/
-INSERT INTO store_info_tb (
-    store_name,
-    post_code,
-    city,
-    municipalities,
-    street_address,
-    mail,
-    phone,
-    store_password,
-    store_reservation_limit,
-    is_opened,
-    is_closed,
-    created_at
-) VALUES (
-    'QVハウス',
-    '1234567',
-    '東京都',
-    '港区',
-    '新橋1-1-1',
-    'qv@example.com',
-    '0120444444',
-    'vZTc2ib8y05o1qMfm1qsC1ca4mbYImIOkB736+OhHU8=',
-    15,
-    '08:00',
-    '17:00',
-    now()
-);
---pass1234
-
-INSERT INTO store_info_tb (
-    store_name,
-    post_code,
-    city,
-    municipalities,
-    street_address,
-    mail,
-    phone,
-    store_password,
-    store_reservation_limit,
-    is_opened,
-    is_closed,
-    created_at
-) VALUES (
-    '牛貴族',
-    '9876543',
-    '東京都',
-    '千代田区',
-    '丸の内',
-    'ushiki@example.com',
-    '0120123456',
-    'dUBo+TygkD4dt/CtPsWmFhecc49GKVndI4C24nQ2gNs=',
-    15,
-    '10:00',
-    '21:00',
-    now()
-);
--- aaaa1111
-
-INSERT INTO store_info_tb (
-    store_name,
-    post_code,
-    city,
-    municipalities,
-    street_address,
-    building,
-    mail,
-    phone,
-    store_password,
-
-    is_opened,
-    is_closed,
-    created_at
-) VALUES (
-    'リングサロン',
-    '1070062',
-    '東京都',
-    '港区',
-    '南青山3丁目1番36号',
-    '青山丸竹ビル',
-    'ring-salon@example.com',
-    '00011112222',
-    'abcd1234',
-    '10:00',
-    '19:00',
-    now()
-);
---abcd1234
-
-INSERT INTO store_info_tb (
-    store_name,
-    post_code,
-    city,
-    municipalities,
-    street_address,
-    mail,
-    phone,
-    store_password,
-    store_reservation_limit,
-    is_opened,
-    is_closed,
-    created_at
-) VALUES (
-    '銅の皿',
-    '1111111',
-    '東京都',
-    '渋谷区',
-    '原宿',
-    'dousara@example.com',
-    '0120334334',
-    '6PqCOnbzqvcGj9IGi6gdH8s7aAvYVCdt3ELWE5dUJAs=',
-    15,
-    '10:00',
-    '22:00',
-    now()
-);
---pass5678
-
 SELECT
     reservation.reservation_id,
     user.user_id,
@@ -167,7 +46,7 @@ INSERT INTO store_regular_holidays(
 SELECT
     store.store_id,
     store.store_name,
-    store.post_code,
+    store.zip_code,
     store.city,
     store.municipalities,
     store.street_address,
@@ -181,7 +60,7 @@ SELECT
 FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id
-GROUP BY holidays.store_id\G
+GROUP BY holidays.store_id
 
 
 /*
@@ -380,3 +259,25 @@ WHERE
 ORDER BY res.at_reservation_date DESC
 LIMIT 10
 OFFSET 0
+
+SELECT
+    res.reservation_id,
+    res.user_id,
+    res.store_id,
+    store.store_name,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    res.at_reservation_date,
+    res.num_of_people
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.user_id = 1
+AND res.is_deleted = 0
+AND res.reservation_id < 18
+ORDER BY res.at_reservation_date DESC
+LIMIT 10
