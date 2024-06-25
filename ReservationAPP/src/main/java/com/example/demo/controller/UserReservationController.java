@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.PageForm;
+import com.example.demo.entity.Page;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
-import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserReservationInfomation;
 import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.service.UserReservationService;
@@ -29,7 +29,7 @@ import com.example.demo.session.UserSession;
 public class UserReservationController {
 	
 	private final UserReservationService userReservationService;
-	private final UserSession userSession;
+	private UserSession userSession;
 	
 	public UserReservationController(
 			UserReservationService userReservationService,UserSession userSession) {
@@ -50,15 +50,18 @@ public class UserReservationController {
 	
 	@GetMapping("/store-available-days")
 	public String storeAvailableDays(
-			@ModelAttribute("userInfo") UserInfo userInfo,
+			@ModelAttribute("useSession") UserSession userSessionInfo,
 			@ModelAttribute("storeView") StoreView storeView,
 			Model model) {
+		
+		if(this.userSession == null) {
+			this.userSession = userSession;
+		}
 		
 		if(userSession.getStoreView() != null) {
 			userSession.clearStoreViewData();
 		}
 		
-		userSession.setUserInfo(userInfo);
 		userSession.setStoreView(storeView);
 		
 		model.addAttribute("storeView",userSession.getStoreView());
@@ -68,7 +71,7 @@ public class UserReservationController {
 	
 	@PostMapping("/store-available-days")
 	public String storeAvailableDays(
-			@RequestParam("selectDate") String selectDate,
+			@RequestParam("reservedAt") String reservedAt,
 			@RequestParam("numOfPeople") int numOfPeople,
 			Model model) {
 
@@ -87,7 +90,7 @@ public class UserReservationController {
 	
 	@PostMapping("/reserve-confirm")
 	public String checkAvailableDays(
-			@RequestParam("atReservationDate") String atReservationDate,
+			@RequestParam("reservedAt") String reservedAt,
 			@RequestParam("numOfPeople") int numOfPeople,
 			@ModelAttribute StoreView storeView,
 			Model model
@@ -100,18 +103,18 @@ public class UserReservationController {
 		 *	・予約人数は0以下かどうか
 		 */
 		Map<String,String> errors = checkReservationDateAndLimit(
-				storeView,LocalDate.parse(atReservationDate),numOfPeople);
+				storeView,LocalDate.parse(reservedAt),numOfPeople);
 		
 //		エラーが無ければ確認画面へ遷移
 		if(errors.isEmpty()) {
-			model.addAttribute("atReservationDate",atReservationDate);
+			model.addAttribute("reservedAt",reservedAt);
 			model.addAttribute("numOfPeople",numOfPeople);
 			model.addAttribute("userInfo",userSession.getUserInfo());
 			model.addAttribute("storeView",userSession.getStoreView());				
 			return "view/reservation-confirm";
 		}
 		
-		model.addAttribute("atReservationDate",atReservationDate);
+		model.addAttribute("reservedAt",reservedAt);
 		model.addAttribute("numOfPeople",numOfPeople);
 		model.addAttribute("errors",errors);
 		model.addAttribute("userInfo",userSession.getUserInfo());
@@ -127,7 +130,7 @@ public class UserReservationController {
 
 	@PostMapping("make-a-reservation")
 	public String makeAReservation(
-			@RequestParam("atReservationDate") String atReservationDate,	
+			@RequestParam("reservedAt") String reservedAt,	
 			@RequestParam("numOfPeople") String numOfPeople,	
 			RedirectAttributes redirect,
 			Model model
@@ -135,25 +138,29 @@ public class UserReservationController {
 		
 		try {
 //			予約を送信する前に、もう一度予約が空いてるかを確認
-			if(userReservationService.getReservationLimitAtDate(
-					userSession.getStoreView(), LocalDate.parse(atReservationDate)) < 1) {
+//			nullの場合は予約数の上限なし
+			
+			Integer checkLimitResult = userReservationService.getReservationLimitAtDate(
+					userSession.getStoreView(), LocalDate.parse(reservedAt));
+			
+			if((checkLimitResult == null)
+					|| checkLimitResult > 0) {
 				
-				throw new FailedInsertSQLException("予約数が上限に達してしまったため、他の日程で予約を入れてください。");
-			}
-			
 //			予約情報をインスタンスへ格納して登録
-			Reservation reservation = new Reservation(
-					userSession.getUserInfo().getUserId(),
-					userSession.getStoreView().getStoreId(),
-					LocalDate.parse(atReservationDate),
-					Integer.parseInt(numOfPeople)
-				);
-			
-			userReservationService.submitReservation(reservation);
-			userSession.setReservation(reservation);
-		
-			return "redirect:/reservation/reserve/reservation-complete";
-			
+				Reservation reservation = new Reservation(
+						userSession.getUserInfo().getUserId(),
+						userSession.getStoreView().getStoreId(),
+						LocalDate.parse(reservedAt),
+						Integer.parseInt(numOfPeople)
+						);
+				
+				userReservationService.submitReservation(reservation);
+				userSession.setReservation(reservation);
+				
+				return "redirect:/reservation/reserve/reservation-complete";
+			}
+			throw new FailedInsertSQLException("予約数が上限に達してしまったため、他の日程で予約を入れてください。");
+						
 		}catch(FailedInsertSQLException e) {
 			
 			model.addAttribute("reservationError","予約の登録ができませんでした。");
@@ -175,7 +182,7 @@ public class UserReservationController {
 	}
 	
 	@PostMapping("/to-store-list")
-	public String toStoreList(
+	public String goToStoreList(
 			RedirectAttributes redirect) {
 		
 		userSession.clearStoreViewData();
@@ -184,6 +191,116 @@ public class UserReservationController {
 		redirect.addFlashAttribute("userInfo",userSession.getUserInfo());
 		return "redirect:/reservation/views/open-store-list";
 	}
+	
+	
+	/*
+	 * マイページへ遷移する時に使う一番初めのロジック
+	 *  
+	 * @param reservationList				DBからユーザーの予約情報を全取得して格納したリスト
+	 * @param Page							マイページに一覧を表示する時に、ページの遷移を判定するクラス
+	 * @param displayReservationList		一覧に表示する予約情報のリスト　最大10件まで格納する
+	 * 
+	 * @return 
+	 */
+	
+	@GetMapping("/user-mypage")
+	public String goToUserMyPage(
+			@ModelAttribute("userSession") UserSession userSession,
+			Model model) {
+			
+		if(this.userSession == null) {
+			this.userSession = userSession;
+		}
+
+		List<UserReservationInfomation> reservationList 
+			= userReservationService.getUserReservationListById(userSession.getUserInfo());
+		userSession.setReservationList(reservationList);
+		
+		
+		Page page = new Page();
+		page.config((long)reservationList.size());
+		
+		userSession.setPage(page);
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(page);
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+	@PostMapping("/user-mypage")
+	public String reservationInfomationToUserMyPage(
+			Model model) {
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+
+//	前の一覧10件を表示するメソッド
+	@GetMapping("/prev-user-mypage")
+	public String displayPrevUserMyPage(
+			Model model) {
+		
+//		現在のページをひとつ前に戻す
+		userSession.getPage().goToPreviousPage();
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+//	次の一覧10件を表示するメソッド
+	@GetMapping("/next-user-mypage")
+	public String displayNextUserMyPage(
+			Model model) {
+		
+//		現在のページを次に進める
+		userSession.getPage().goToNextPage();
+		
+//		表示する10件を格納する
+		List<UserReservationInfomation> displayReservationList =
+				getDisplayReservationList(userSession.getPage());
+		
+		
+		model.addAttribute("page",userSession.getPage());
+		model.addAttribute("displayReservationList",displayReservationList);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		model.addAttribute("reservationList",userSession.getReservationList());
+		return "view/user-mypage";
+	}		
+	
+	@PostMapping("/reservation-infomation")
+	public String displayReservationInfomation(
+			@ModelAttribute UserReservationInfomation userReservationInfomation,
+			Model model) {
+		
+		
+		model.addAttribute("userReservatioInfomation",userReservationInfomation);
+		model.addAttribute("userInfo",userSession.getUserInfo());
+		return "view/reservation-info";
+	}
+	
 	
 	
 //	定休日・予約の空き・人数のバリデーションメソッド
@@ -205,9 +322,12 @@ public class UserReservationController {
 				|| reservationDate == null) {
 			errors.put("reservationDateError","本日以降の日付を選択してください。");			
 		}
-		
-		if(userReservationService.getReservationLimitAtDate(storeView, reservationDate) < 1){
-			errors.put("reservationLimitError","選択した日程は予約上限に達しました。他の日付でお探しください。");			
+		try {
+			if(userReservationService.getReservationLimitAtDate(storeView, reservationDate) < 1){
+				errors.put("reservationLimitError","選択した日程は予約上限に達しました。他の日付でお探しください。");			
+			}			
+		}catch(NullPointerException e) {
+			
 		}
 		
 		if(numOfPeople < 1){
@@ -216,19 +336,24 @@ public class UserReservationController {
 		return errors;
 	}
 	
-	@PostMapping("/user-mypage")
-	public String toUserMyPage(@ModelAttribute UserInfo userInfo,Model model) {
-			PageForm pageForm = new PageForm(userInfo.getUserId(),0);
-			
-			if(userSession.getUserInfo() == null) {
-				userSession.setUserInfo(userInfo);
+	
+//	一覧に表示する予約情報を取得するメソッド
+	
+	public List<UserReservationInfomation> getDisplayReservationList(Page page){
+	
+		List<UserReservationInfomation> reservationList = userSession.getReservationList();
+		
+		List<UserReservationInfomation> displayReservationList = new ArrayList<>();
+		
+		try {
+			for(int i = page.offset();i < page.offset() + Page.OUTPUT_NUM ;i++) {
+				displayReservationList.add(reservationList.get(i));
 			}
-			
-			List<UserReservationInfomation> reservationList =
-					userReservationService.getUserReservationListByIdAndOffset(pageForm);
-			
-		model.addAttribute("userInfo",userSession.getUserInfo());
-		model.addAttribute("reservationList",reservationList);
-		return "view/user-mypage";
+		}catch(IndexOutOfBoundsException e){
+			e.printStackTrace();
+		}
+		
+		return displayReservationList;
+		
 	}
 }

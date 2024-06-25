@@ -91,7 +91,7 @@ public class RegisterStoreInfoController {
 		
 			StoreInfo storeInfo = new StoreInfo(
 					storeInfoForm.getStoreName(),
-					storeInfoForm.getPostCode(),
+					storeInfoForm.getZipCode(),
 					storeInfoForm.getCity(),
 					storeInfoForm.getMunicipalities(),
 					storeInfoForm.getStreetAddress(),

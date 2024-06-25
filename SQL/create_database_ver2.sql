@@ -21,7 +21,13 @@ CREATE TABLE IF NOT EXISTS store_info_tb (
     created_at DATETIME NOT NULL,
     updated_at DATETIME,
     is_deleted BOOLEAN DEFAULT 0,
-    PRIMARY KEY (store_id)
+    PRIMARY KEY (store_id),
+    FULLTEXT (store_name,
+                city,
+                municipalities,
+                street_address,
+                building)
+    WITH PARSER ngram
 );
 
 CREATE TABLE IF NOT EXISTS user_info_tb (

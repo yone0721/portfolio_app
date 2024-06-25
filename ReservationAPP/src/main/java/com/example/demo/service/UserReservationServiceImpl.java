@@ -4,12 +4,12 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.PageForm;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
@@ -63,32 +63,73 @@ public class UserReservationServiceImpl implements UserReservationService {
 	 */
 	
 	@Override
-	public List<UserReservationInfomation> getUserReservationListByIdAndOffset(PageForm pageForm) {
+	public List<UserReservationInfomation> getUserReservationListById(UserInfo userInfo) {
 		
 		try {
 			List<UserReservationInfomation> reservationsList = new ArrayList<>();
 			
-			List<Map<String,Object>> getReservationList = dao.findAllReservationsByIdAndOffset(pageForm.getUserId(),pageForm.getOffset());
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(userInfo.getUserId());
 			
 			for(Map getReservation: getReservationList) {
 				
-				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("at_reservation_date"));
+				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("reserved_at"));
 
 				UserReservationInfomation reservation = new UserReservationInfomation(
 						(int)getReservation.get("reservation_id"),
 						(int)getReservation.get("user_id"),
 						(int)getReservation.get("store_id"),
 						(String)getReservation.get("store_name"),
-						(String)getReservation.get("post_code"),
+						(String)getReservation.get("zip_code"),
 						(String)getReservation.get("city"),
 						(String)getReservation.get("municipalities"),
-						(String)getReservation.get("streetAddress"),
-						(String)getReservation.get("building"),
+						(String)getReservation.get("street_address"),
+						(String)getReservation.get("building") != null?
+								(String)getReservation.get("building") :"",
 						(String)getReservation.get("mail"),
 						(String)getReservation.get("phone"),
 						LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
 						(int)getReservation.get("num_of_people"),
-						((LocalDateTime)getReservation.get("at_created"))
+						((LocalDateTime)getReservation.get("created_at"))
+						);
+				
+				reservationsList.add(reservation);
+			}
+			
+			return reservationsList;
+			
+		}catch(FailedToGetReservationException e) {
+			System.out.println("UserReservationServiceImplでエラー：" + e.getCause());
+			throw new FailedToGetReservationException("データの取得に失敗しました。");
+		}
+	}
+	@Override
+	public List<UserReservationInfomation> getUserReservationListById(UserInfo userInfo,int reservationId) {
+		
+		try {
+			List<UserReservationInfomation> reservationsList = new ArrayList<>();
+			
+			List<Map<String,Object>> getReservationList = dao.findAllReservationsById(userInfo.getUserId(),reservationId);
+			
+			for(Map getReservation: getReservationList) {
+				
+				LocalDateTime reservationLocalDateTime = ((LocalDateTime)getReservation.get("reserved_at"));
+				
+				UserReservationInfomation reservation = new UserReservationInfomation(
+						(int)getReservation.get("reservation_id"),
+						(int)getReservation.get("user_id"),
+						(int)getReservation.get("store_id"),
+						(String)getReservation.get("store_name"),
+						(String)getReservation.get("zip_code"),
+						(String)getReservation.get("city"),
+						(String)getReservation.get("municipalities"),
+						(String)getReservation.get("street_address"),
+						(String)getReservation.get("building") != null?
+								(String)getReservation.get("building") :"",
+								(String)getReservation.get("mail"),
+								(String)getReservation.get("phone"),
+								LocalDate.of(reservationLocalDateTime.getYear(), reservationLocalDateTime.getMonthValue(),reservationLocalDateTime.getDayOfMonth()),
+								(int)getReservation.get("num_of_people"),
+								((LocalDateTime)getReservation.get("created_at"))
 						);
 				
 				reservationsList.add(reservation);
@@ -139,9 +180,9 @@ public class UserReservationServiceImpl implements UserReservationService {
 						(int)getReservation.get("user_id"),
 						(int)getReservation.get("store_id"),
 						(String)getReservation.get("store_name"),
-						((Timestamp)getReservation.get("at_reservation_date")).toLocalDateTime().toLocalDate(),
+						((Timestamp)getReservation.get("reserved_at")).toLocalDateTime().toLocalDate(),
 						(int)getReservation.get("num_of_people"),
-						((Timestamp)getReservation.get("at_created")).toLocalDateTime(),
+						((Timestamp)getReservation.get("created_at")).toLocalDateTime(),
 						(boolean)getReservation.get("is_deleted")					
 					);
 		}catch(FailedToGetReservationException e) {
@@ -173,9 +214,27 @@ public class UserReservationServiceImpl implements UserReservationService {
 			throw new FailedInsertSQLException("予約の登録に失敗しました。");
 		}
 	}
-	
 	@Override
-	public int getReservationLimitAtDate(StoreView storeView, LocalDate tgtDate) {
+	public Map<String,Integer> hasNextPage(UserInfo userInfo,int offset) {
+		Map<String,Integer> pagesMap = new HashMap<>();
+		
+		try {
+			List<Map<String,Object>> getPages = dao.getRemainingReservations(userInfo.getUserId(),offset);
+			pagesMap.put("nextToPage",
+					(int)getPages.get(0).get("next_to_reservation"));
+			pagesMap.put("backToPage",
+					(int)getPages.get(0).get("back_to_reservation"));		
+			
+			return pagesMap;
+		}catch(FailedToGetReservationException e) {
+			throw new FailedToGetReservationException("他の予約情報が見当たりません。");
+		}
+	
+	
+	}
+
+	@Override
+	public Integer getReservationLimitAtDate(StoreView storeView, LocalDate tgtDate) {
 		try {
 			return dao.calcNumOfEmpty(storeView.getStoreId(),tgtDate);
 		}catch(FailedToGetReservationException e) {

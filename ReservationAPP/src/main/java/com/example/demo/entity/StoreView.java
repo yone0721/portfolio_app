@@ -4,6 +4,8 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.factory.StringFormatUtil;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,7 +19,7 @@ public class StoreView {
 	private String storeName;
 	
 	@NotNull
-	private String postCode;
+	private String zipCode;
 	
 	@NotNull
 	private String city;
@@ -62,8 +64,8 @@ public class StoreView {
 		return storeName;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 
 	public String getCity() {
@@ -114,8 +116,8 @@ public void setStoreId(int storeId) {
 		this.storeName = storeName;
 	}
 
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setZipCode(String zipCode) {
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public void setCity(String city) {
@@ -139,7 +141,7 @@ public void setStoreId(int storeId) {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 	}
 
 	public void setStoreReservationLimit(Integer storeReservationLimit) {
@@ -168,7 +170,7 @@ public void setStoreId(int storeId) {
 	//	DB取得用コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
 			@NotNull String streetAddress,
@@ -182,13 +184,13 @@ public void setStoreId(int storeId) {
 
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = phone;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 		this.storeReservationLimit = storeReservationLimit;
 		this.isOpened = isOpened;
 		this.isClosed = isClosed;
@@ -218,7 +220,7 @@ public void setStoreId(int storeId) {
 	//	選択した店舗の詳細格納用コンストラクタ
 	public StoreView(@NotNull int storeId, 
 			@NotNull String storeName, 
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city,
 			@NotNull String municipalities, 
 			@NotNull String streetAddress,
@@ -232,7 +234,7 @@ public void setStoreId(int storeId) {
 		
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = zipCode;
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
@@ -268,9 +270,7 @@ public void setStoreId(int storeId) {
 			default -> null;
 		};
 	}
-	
 
-	
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド
 	 */

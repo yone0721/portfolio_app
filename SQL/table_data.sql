@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 　　店舗情報テーブル
     テストデータ
@@ -119,6 +120,8 @@ INSERT INTO store_info_tb (
 );
 --pass5678
 
+=======
+>>>>>>> Develop
 SELECT
     reservation.reservation_id,
     user.user_id,
@@ -181,7 +184,7 @@ SELECT
 FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id
-GROUP BY holidays.store_id\G
+GROUP BY holidays.store_id
 
 
 /*
@@ -380,3 +383,81 @@ WHERE
 ORDER BY res.reserved_at DESC
 LIMIT 10
 OFFSET 0
+
+SELECT
+    res.reservation_id,
+    res.user_id,
+    res.store_id,
+    store.store_name,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+    res.at_reservation_date,
+    res.num_of_people
+FROM reservation_table AS res
+LEFT JOIN store_info_tb AS store
+ON store.store_id = res.store_id
+WHERE res.user_id = 1
+AND res.is_deleted = 0
+AND res.reservation_id < 18
+ORDER BY res.at_reservation_date DESC
+LIMIT 10
+
+
+SELECT
+    store.store_id,
+    store.store_name,
+    store.zip_code,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+
+    store.store_reservation_limit - (
+        SELECT
+            COUNT(reservation_id)
+        FROM reservation_table AS res
+        WHERE res.store_id = store.store_id
+    ) AS store_reservation_limit,
+
+    store.is_opened,
+    store.is_closed,
+    GROUP_CONCAT(holidays.day_of_week) AS holidays
+
+FROM store_info_tb AS store
+INNER JOIN store_regular_holidays AS holidays
+ON holidays.store_id = store.store_id
+
+WHERE store.store_name LIKE '%米森%'
+OR store.store_name LIKE '%サロン%'
+GROUP BY holidays.store_id
+
+SELECT
+    store.store_id,
+    store.store_name,
+    store.zip_code,
+    store.city,
+    store.municipalities,
+    store.street_address,
+    store.building,
+    store.mail,
+    store.phone,
+
+    store.store_reservation_limit - (
+	    SELECT
+	        COUNT(reservation_id)
+	    FROM reservation_table AS res
+	    WHERE res.store_id = store.store_id
+    ) AS store_reservation_limit,
+
+    store.is_opened,
+    store.is_closed,
+    GROUP_CONCAT(holidays.day_of_week) AS holidays
+FROM store_info_tb AS store
+INNER JOIN store_regular_holidays AS holidays
+ON holidays.store_id = store.store_id WHERE store.store_name LIKE '%米森%' OR store.city LIKE '%米森%' OR store.municipalities LIKE '%米森%' OR store.street_address LIKE '%米森%' OR store.building LIKE '%米森%' GROUP BY holidays.store_id;

@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.demo.factory.StringFormatUtil;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,7 +30,7 @@ public class UserReservationInfomation {
 	private String storeName;
 	
 	@NotNull
-	private String postCode;
+	private String zipCode;
 	
 	@NotNull
 	private String city;
@@ -49,45 +51,45 @@ public class UserReservationInfomation {
 	private String phone;
 	
 	@NotEmpty
-	private LocalDate atReservationDate;
+	private LocalDate reservedAt;
 	
 	@NotEmpty
 	@Min(1)
 	private int numOfPeople;
 	
 	@NotEmpty
-	private LocalDateTime atCreated;
+	private LocalDateTime createdAt;
 
-//	DBデータ取得・更新用のコンストラクタ
+//	DBデータ取得コンストラクタ
 	public UserReservationInfomation(
 			int reservationId,
 			@NotEmpty int userId,
 			@NotEmpty int storeId,
 			@NotEmpty String storeName,
-			@NotNull String postCode, 
+			@NotNull String zipCode, 
 			@NotNull String city, 
 			@NotNull String municipalities,
 			@NotNull String streetAddress, 
 			@Nullable String building, 
 			@NotNull String mail, 
 			@NotNull String phone,
-			@NotEmpty LocalDate atReservationDate,
+			@NotEmpty LocalDate reservedAt,
 			@NotEmpty @Min(1) int numOfPeople, 
-			@NotEmpty LocalDateTime atCreated) {
+			@NotEmpty LocalDateTime createdAt) {
 		this.reservationId = reservationId;
 		this.userId = userId;
 		this.storeId = storeId;
 		this.storeName = storeName;
-		this.postCode = postCode;
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 		this.city = city;
 		this.municipalities = municipalities;
 		this.streetAddress = streetAddress;
 		this.building = building;
 		this.mail = mail;
-		this.phone = phone;
-		this.atReservationDate = atReservationDate;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
+		this.reservedAt = reservedAt;
 		this.numOfPeople = numOfPeople;
-		this.atCreated = atCreated;
+		this.createdAt = createdAt;
 	}
 
 	public int getReservationId() {
@@ -122,12 +124,12 @@ public class UserReservationInfomation {
 		this.storeName = storeName;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setZipCode(String zipCode) {
+		this.zipCode = StringFormatUtil.formatZipCodeWithHyphens(zipCode);
 	}
 
 	public String getCity() {
@@ -175,15 +177,15 @@ public class UserReservationInfomation {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = StringFormatUtil.formatPhoneNumberWithHyphens(phone);
 	}
 
-	public LocalDate getAtReservationDate() {
-		return atReservationDate;
+	public LocalDate getReservedAt() {
+		return reservedAt;
 	}
 
-	public void setAtReservationDate(LocalDate atReservationDate) {
-		this.atReservationDate = atReservationDate;
+	public void setReservedAt(LocalDate reservedAt) {
+		this.reservedAt = reservedAt;
 	}
 
 	public int getNumOfPeople() {
@@ -194,11 +196,11 @@ public class UserReservationInfomation {
 		this.numOfPeople = numOfPeople;
 	}
 
-	public LocalDateTime getAtCreated() {
-		return atCreated;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setAtCreated(LocalDateTime atCreated) {
-		this.atCreated = atCreated;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 }	

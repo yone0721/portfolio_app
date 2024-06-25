@@ -13,7 +13,7 @@ public class StoreInfoForm {
 	private String storeName;
 	
 	@NotEmpty(message="郵便番号が未入力です。")
-	private String postCode;
+	private String zipCode;
 
 	@NotEmpty(message="都道府県が未入力です。")
 	private String city;
@@ -62,8 +62,8 @@ public class StoreInfoForm {
 		this.storeName = storeName;
 	}
 	
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 	
 	public void setCity(String city) {
@@ -106,8 +106,8 @@ public class StoreInfoForm {
 		return storeName;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getZipCode() {
+		return zipCode;
 	}
 
 	public String getCity() {

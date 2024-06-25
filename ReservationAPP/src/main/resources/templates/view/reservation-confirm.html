@@ -61,7 +61,7 @@
 				</tr>
 				<tr>
 					<td>予約日</td>
-					<td th:text="${atReservationDate}"></td>
+					<td th:text="${reservedAt}"></td>
 				</tr>				
 				<tr>
 					<td>予約人数</td>
@@ -72,13 +72,13 @@
 		<div class="form-container">			
 			<form method="post" th:action="@{store-available-days}">
 				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
-				<input type="hidden" th:name="atReservationDate" th:value="${atReservationDate}">
+				<input type="hidden" th:name="reservedAt" th:value="${reservedAt}">
 				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
 				<input class="btn btn-primary" type="submit" value="予約を修正する">
 			</form>
 			<form method="post" th:action="@{/reservation/reserve/make-a-reservation}">
 				<input type="hidden" th:name="storeId" th:value="${storeView.storeId}">
-				<input type="hidden" th:name="atReservationDate" th:value="${atReservationDate}">
+				<input type="hidden" th:name="reservedAt" th:value="${reservedAt}">
 				<input type="hidden" th:name="numOfPeople" th:value="${numOfPeople}">
 				<input class="btn btn-primary" type="submit" value="予約を送信する">
 			</form>

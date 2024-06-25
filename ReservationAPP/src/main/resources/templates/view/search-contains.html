@@ -3,13 +3,19 @@
 	<div class="search-form-container" th:fragment="search-form"> 
 		
 		<form method="get" th:action="@{search-store-list}">
-			<input type="text" name="keyword" th:value="${keyword}">
+			<label for="keywords">お店の検索はこちらから：</label>
+			<input type="search" id="keywords" name="keywords" th:value="${keywords}" placeholder="キーワード　例：サロン">
+			<label for="howToSearch">検索方法</label>
+			<select name="howToSearch" id="howToSearch">
+				<option value="0">条件のどれかに当てはまるものを検索</option>				
+				<option value="1">条件すべてに当てはまるものを検索</option>				
+			</select>
 			<input type="submit" value="検索する">
 			<details>
-				<summary>詳細条件を設定する</summary>
+				<summary>検索条件を更に設定する</summary>
 				<div class="form select-cities">
 					<h6>都道府県</h6>
-<!--					本来はDBに都道府県のデータを格納して、そこから情報を引っ張る-->
+<!--					本来はDBに都道府県のデータを格納して、そこから情報を引っ張るなどする-->
 <!--					今回はフロントで直書き-->
 					<table>	
 						<tr>
@@ -89,7 +95,7 @@
 								<label for="Chiba">千葉県</label>							
 							</td>
 							<td>
-								<input name="cities" type="checkbox" id="Tokyo" value="埼玉県">
+								<input name="cities" type="checkbox" id="Saitama" value="埼玉県">
 								<label for="Saitama">埼玉県</label>							
 							</td>
 							<td>
@@ -163,46 +169,46 @@
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Ehime" value="愛媛県">
-								<label for="Ehime">愛媛県</label>							
+								<label for="Ehime">愛媛県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Kochi" value="高知県">
-								<label for="Kochi">高知県</label>							
+								<label for="Kochi">高知県</label>
 							</td>
 						</tr>
 						<tr>
 							<td class="area">九州・沖縄</td>
 							<td>
 								<input name="cities" type="checkbox" id="Fukuoka" value="福岡県">
-								<label for="Fukuoka">福岡県</label>							
+								<label for="Fukuoka">福岡県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Saga" value="佐賀県">
-								<label for="Saga">佐賀県</label>							
+								<label for="Saga">佐賀県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Nagasaki" value="長崎県">
-								<label for="Nagasaki">長崎県</label>							
+								<label for="Nagasaki">長崎県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Kumamoto" value="熊本県">
-								<label for="Kumamoto">熊本県</label>							
+								<label for="Kumamoto">熊本県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Oita" value="大分県">
-								<label for="Oita">大分県</label>							
+								<label for="Oita">大分県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Miyazaki" value="宮崎県">
-								<label for="Miyazaki">宮崎県</label>							
+								<label for="Miyazaki">宮崎県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Kagoshima" value="鹿児島県">
-								<label for="Kagoshima">鹿児島県</label>							
+								<label for="Kagoshima">鹿児島県</label>
 							</td>
 							<td>
 								<input name="cities" type="checkbox" id="Okinawa" value="沖縄県">
-								<label for="Okinawa">沖縄県</label>							
+								<label for="Okinawa">沖縄県</label>	
 							</td>
 						</tr>
 					</table>
@@ -210,21 +216,14 @@
 				<div class="form select-times">
 					<table>	
 						<tr>
-							<h6>時間・曜日指定</h6>
-							<td>
-								<label for="open">開店時間：</label>
-								<input type="time" id="open" name="isOpened">								
-							</td>
-							<td>
-								<label for="close">開店時間：</label>
-								<input type="time" id="close" name="isOpened">								
-							</td>
+							<h6>曜日指定</h6>
 							<td>
 								<input name="dayOfWeeks" type="checkbox" id="Monday" value="1">
 								<label for="Monday">月曜日</label>		
 							</td>
 							<td>
-								<input name="dayOfWeeks" type="checkbox" id="Tuseday" value="2">								<label for="Tuseday">火曜日</label>		
+								<input name="dayOfWeeks" type="checkbox" id="Tuseday" value="2">
+								<label for="Tuseday">火曜日</label>		
 							</td>
 							<td>
 								<input name="dayOfWeeks" type="checkbox" id="Wednesday" value="3">
