@@ -13,8 +13,8 @@
 				</select>
 				<input type="submit" value="検索する">
 			</div>
-			<div th:each="error:${keywordError}">
-				<p class="text-danger" th:if="${error.key =='error'}" th:text="${error.value}"></p>
+			<div th:each="error:${errors}">
+				<p class="text-danger" th:if="${error.key =='keywordError'}" th:text="${error.value}"></p>
 			</div>
 			<details>
 				<summary>検索条件を更に設定する</summary>

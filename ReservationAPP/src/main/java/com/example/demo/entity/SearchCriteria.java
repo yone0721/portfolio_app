@@ -95,11 +95,11 @@ public class SearchCriteria{
 	}
 	
 	/*
-	 * OR検索で該当キーワードが店舗名、都道府県以外の住所と合致するか判定するメソッド
+	 * 該当キーワードが店舗名、都道府県以外の住所と合致するか判定するメソッド
 	 * （今回カテゴリは作っていない為、カテゴリ除く）
 	 */
 	
-	public boolean containsOrSearchKeyword(StoreView storeView) {
+	public boolean containsSearchKeyword(StoreView storeView) {
 		boolean isMatched = false;
 	
 		if(this.keywords == null || this.keywords.isEmpty()) { return false; }
@@ -111,29 +111,8 @@ public class SearchCriteria{
 					|| storeView.getStreetAddress().contains(keyword)
 					|| storeView.getBuilding().contains(keyword);
 			
-			if(isMatched == true) { break;}
-		}
-		return isMatched;	
-	}
-	
-	/*
-	 * And検索で該当キーワードが店舗名、都道府県以外の住所と合致するか判定するメソッド
-	 * （今回カテゴリは作っていない為、カテゴリ除く）
-	 */
-	
-	public boolean containsAndSearchKeyword(StoreView storeView) {
-		boolean isMatched = false;
-		
-		if(this.keywords == null) { return false; }
-		
-		for(String keyword:keywords) {
-			isMatched = storeView.getStoreName().contains(keyword)
-					|| storeView.getCity().contains(keyword)
-					|| storeView.getMunicipalities().contains(keyword)
-					|| storeView.getStreetAddress().contains(keyword)
-					|| storeView.getBuilding().contains(keyword);
-			
-			if(isMatched == false) { break;}
+			if(this.howToSearch == 0 && isMatched == true) { return isMatched; }
+			if(this.howToSearch == 1 && isMatched == false) { return isMatched; }
 		}
 		return isMatched;	
 	}
@@ -179,8 +158,8 @@ public class SearchCriteria{
 		boolean isMatchedAll;
 		
 //		検索方法に合わせてメソッドを変える　0 : OR検索	1 : AND検索
-		isMatchedAll = this.howToSearch == 0 ? 
-				containsOrSearchKeyword(storeView) : containsAndSearchKeyword(storeView);
+		isMatchedAll = containsSearchKeyword(storeView);
+		
 		if(isMatchedAll == true) {
 			isMatchedAll = containsSearchCity(storeView);
 			isMatchedAll = containsSearchWorkingDays(storeView);			

@@ -20,6 +20,12 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.service.StoresListViewService;
 import com.example.demo.session.UserSession;
 
+/*
+ * 店舗一覧画面のコントローラー
+ * 予約の空き確認～予約確定までは、以下のコントローラーで行っている。
+ * UserReservationController
+ */
+
 @Controller
 @RequestMapping("/reservation/views")
 public class StoresListViewController {
@@ -53,7 +59,8 @@ public class StoresListViewController {
 	 * 店舗一覧画面への遷移メソッド
 	 * @param("storeViewList")	DBから取得した店舗データ10件分までのリストを格納
 	 * @param("userInfo")		セッションで保持しているユーザー情報
-	 * * @return				店舗一覧画面への遷移
+	 * 
+	 * @return				店舗一覧画面への遷移
 	 */
 	
 	@GetMapping("/store-list")
@@ -70,6 +77,18 @@ public class StoresListViewController {
 		return "view/stores-index";
 	}
 	
+	/*
+	 * 店舗情報を検索する時に使用するメソッド
+	 * @param howToSearch 		検索方法を判定するパラメーター　0 :OR検索、1:AND検索 
+	 * @param keywords 			検索に使用するキーワード
+	 * @param cities			絞り込みで選択した都道府県のリスト
+	 * @param dayOfWeeks 		絞り込みで選択した店舗が稼働している曜日
+	 * 
+	 * @param SearchCriteria 	指定した検索条件と合致する店舗の判定メソッドを格納したクラス
+	 * 
+	 * @return 店舗一覧画面へ遷移する
+	 */
+	
 	
 	@GetMapping("/search-store-list")
 	public String searchesStoresListView(
@@ -84,15 +103,15 @@ public class StoresListViewController {
 		
 		List<StoreView> storeViewList = extractSearchingStores(searchCriteria);
 		
+		Map<String,String> errors = new HashMap<>();
 		if(searchCriteria.getKeywords().isEmpty()) {
-			Map<String,String> keywordError = new HashMap<>();
-			keywordError.put("error", "キーワードを入力してください。");
-			model.addAttribute("keywordError",keywordError);
-			model.addAttribute("storesViewList",storeViewList);
-			model.addAttribute("userInfo",userSession.getUserInfo()); 
-			return "view/stores-index";
+			errors.put("keywordError", "キーワードを入力してください。");
 		}
-
+		if(storeViewList.isEmpty()) {
+			errors.put("NotFoundStoresError","キーワードが未入力か店舗が見つかりませんでした。");
+		}
+		
+		model.addAttribute("errors",errors);
 		model.addAttribute("storesViewList",storeViewList);
 		model.addAttribute("userInfo",userSession.getUserInfo()); 
 		return "view/stores-index";
@@ -100,8 +119,10 @@ public class StoresListViewController {
 
 	/*
 	 * UserReservationControllerへ遷移する時のメソッド
-	 * param storeView 		一覧から選択した店舗の情報が格納されているエンティティクラス
-	 * param userInfo 		利用者の情報のエンティティクラス
+	 * @param storeView 		一覧から選択した店舗の情報が格納されているエンティティクラス
+	 * @param userSession 		利用者情報を保持するセッションクラス
+	 * 
+	 * @return UserReservationControllerへ遷移する
 	 */
 	
 	@PostMapping("/to-reservation-controller")
@@ -118,6 +139,7 @@ public class StoresListViewController {
 	 * UserReservationControllerからUserInfoを受け取り
 	 * 店舗情報一覧画面に戻すメソッド
 	 */
+	
 	@GetMapping("/open-store-list")
 	public String displayStoresListFromUserReservationController(
 			@ModelAttribute("userInfo") UserInfo userInfo,
@@ -150,7 +172,6 @@ public class StoresListViewController {
 				listOfApplicableStores.add(storeView);
 				continue;
 			}
-
 		}
 		return listOfApplicableStores;
 	}
