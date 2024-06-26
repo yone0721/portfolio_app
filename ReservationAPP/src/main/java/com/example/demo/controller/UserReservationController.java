@@ -340,7 +340,7 @@ public class UserReservationController {
 //	一覧に表示する予約情報を取得するメソッド
 	
 	public List<UserReservationInfomation> getDisplayReservationList(Page page){
-	
+//	セッション内に保存してある予約情報リストを取得する
 		List<UserReservationInfomation> reservationList = userSession.getReservationList();
 		
 		List<UserReservationInfomation> displayReservationList = new ArrayList<>();

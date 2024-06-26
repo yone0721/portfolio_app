@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,23 +64,12 @@ public class StoresListViewController {
 		
 		userSession.setStoreViewList(storeViewList);
 		
+
 		model.addAttribute("storesViewList",storeViewList);
 		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
 	}
 	
-	@GetMapping("/serched-store-list")
-	public String serchedStoresListView(
-			Model model) {
-		
-		
-		
-		List<StoreView> storeViewList = storesListViewService.getStoresList();
-		
-		model.addAttribute("storesViewList",storeViewList);
-		model.addAttribute("userInfo",userSession.getUserInfo());
-		return "view/stores-index";
-	}
 	
 	@GetMapping("/search-store-list")
 	public String searchesStoresListView(
@@ -89,17 +80,19 @@ public class StoresListViewController {
 			Model model) {
 		
 		SearchCriteria searchCriteria = new SearchCriteria(
-				keywords,cities,dayOfWeeks);
+				howToSearch,keywords,cities,dayOfWeeks);
 		
-		/*
-		 * howToSearch 		OR検索とAND検索の判定　0：OR検索	1：AND検索
-		 */
+		List<StoreView> storeViewList = extractSearchingStores(searchCriteria);
 		
-		
-		List<StoreView> storeViewList = Integer.parseInt(howToSearch) == 0 ?
-				extractOrSearchingStores(searchCriteria)
-				: extractAndSearchingStores(searchCriteria);
-		
+		if(searchCriteria.getKeywords().isEmpty()) {
+			Map<String,String> keywordError = new HashMap<>();
+			keywordError.put("error", "キーワードを入力してください。");
+			model.addAttribute("keywordError",keywordError);
+			model.addAttribute("storesViewList",storeViewList);
+			model.addAttribute("userInfo",userSession.getUserInfo()); 
+			return "view/stores-index";
+		}
+
 		model.addAttribute("storesViewList",storeViewList);
 		model.addAttribute("userInfo",userSession.getUserInfo()); 
 		return "view/stores-index";
@@ -143,78 +136,23 @@ public class StoresListViewController {
 		return "redirect:/reservation/reserve/user-mypage";
 	}
 	
-	public List<StoreView> extractOrSearchingStores(SearchCriteria searchCriteria){
-		List<StoreView> listOfApplicableStores = new ArrayList<>(); 
-		
-		for(StoreView storeView:userSession.getStoreViewList()) {
-			
-//			選択したキーワードのいずれかが、下記の項目に含まればtrueを返す
-			if(searchCriteria.orMatchingKeywordInStore(storeView)) {
-				listOfApplicableStores.add(storeView);
-				continue;
-			}
-
-//			選択した都道府県のいずれかに該当すればtrueを返す
-
-			if(searchCriteria.matchingCity(storeView)) {
-				listOfApplicableStores.add(storeView);
-				continue;
-			}
-			
-//			選択した曜日すべてが定休日でなければtrueを返す
-			
-			if(searchCriteria.matchingWorkingDays(storeView)) {
-				listOfApplicableStores.add(storeView);
-				continue;
-			}
-		}
-		return listOfApplicableStores;
-	}
-	
-	public List<StoreView> extractAndSearchingStores(SearchCriteria searchCriteria){
-		List<StoreView> listOfApplicableStores = new ArrayList<>(); 
-		
-		for(StoreView storeView:userSession.getStoreViewList()) {
-
-//			選択したキーワードがすべて、下記の項目に含まれていればtrueを返す
-			if(!(searchCriteria.andMatchingKeywordInStore(storeView))) { continue; }
-			
-//			選択した都道府県のいずれかに該当すればtrueを返す
-			
-			if(!(searchCriteria.matchingCity(storeView))) {	continue; }
-			
-//			選択した曜日すべてが定休日でなければtrueを返す
-			
-			if(!(searchCriteria.matchingWorkingDays(storeView))) { continue; }
-			
-			listOfApplicableStores.add(storeView);
-		}
-		return listOfApplicableStores;
-	}
-	
-	
-	
 	/*
-	 * 指定した検索条件のどれか1つに該当する店舗情報を絞り込み、
-	 * リストに格納して戻すメソッド
+	 * 検索条件に合致する店舗情報を店舗情報の中から抽出してリストで戻すメソッド
+	 * 
 	 */
-//	
-//	public List<StoreView> extractOrSearchingStores(OrSearchCriteria orSearchCriteria){
-//		List<StoreView> extractStoresList = new ArrayList<>();
-//		
-//		List<StoreView> storeViewsListInSearchArea =
-//				storesListViewService.getStoresList();
-//		
-//		for(StoreView storeView:storeViewsListInSearchArea) {
-//			if(searchCriteria.matchingKeywordInStoresList(storeView)
-//				|| searchCriteria.matchingCity(storeView)
-//				|| searchCriteria.matchingWorkingDays(storeView)) {
-//				
-//				extractStoresList.add(storeView);
-//				continue;
-//			}			
-//		}
-//		return extractStoresList;
-//				
-//	}
+	
+	public List<StoreView> extractSearchingStores(SearchCriteria searchCriteria){
+		List<StoreView> listOfApplicableStores = new ArrayList<>(); 
+		
+		for(StoreView storeView:userSession.getStoreViewList()) {
+			
+			if(searchCriteria.checkAllSearchCriteria(storeView)) {
+				listOfApplicableStores.add(storeView);
+				continue;
+			}
+
+		}
+		return listOfApplicableStores;
+	}
+	
 }

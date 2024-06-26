@@ -3,14 +3,19 @@
 	<div class="search-form-container" th:fragment="search-form"> 
 		
 		<form method="get" th:action="@{search-store-list}">
-			<label for="keywords">お店の検索はこちらから：</label>
-			<input type="search" id="keywords" name="keywords" th:value="${keywords}" placeholder="キーワード　例：サロン">
-			<label for="howToSearch">検索方法</label>
-			<select name="howToSearch" id="howToSearch">
-				<option value="0">条件のどれかに当てはまるものを検索</option>				
-				<option value="1">条件すべてに当てはまるものを検索</option>				
-			</select>
-			<input type="submit" value="検索する">
+			<div class="search-form-container">
+				<label for="keywords">お店の検索はこちらから：</label>
+				<input type="search" id="keywords" th:name="keywords" th:value="${keywords}" placeholder="キーワード　例：サロン">
+				<label for="howToSearch">検索方法</label>
+				<select name="howToSearch" id="howToSearch">
+					<option th:value="0">条件のどれかに当てはまるものを検索</option>				
+					<option th:value="1">条件すべてに当てはまるものを検索</option>				
+				</select>
+				<input type="submit" value="検索する">
+			</div>
+			<div th:each="error:${keywordError}">
+				<p class="text-danger" th:if="${error.key =='error'}" th:text="${error.value}"></p>
+			</div>
 			<details>
 				<summary>検索条件を更に設定する</summary>
 				<div class="form select-cities">

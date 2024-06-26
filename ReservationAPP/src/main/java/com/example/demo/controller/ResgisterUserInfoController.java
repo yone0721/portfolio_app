@@ -49,16 +49,9 @@ public class ResgisterUserInfoController {
 			BindingResult result,Model model) {
 		
 		if(result.hasErrors()) {
-			System.out.println("Password：" + userInfoForm.getUserPassword());
 			
 			List<FieldError> errors = result.getFieldErrors();
-			
-			for(FieldError error:errors) {
-				System.out.println(error.getField());
-				System.out.println(error.getCode());
-				System.out.println(error.getDefaultMessage());
-			}
-			
+						
 			model.addAttribute("position","user");
 			model.addAttribute("userInfoForm",userInfoForm);
 			return "view/register";
