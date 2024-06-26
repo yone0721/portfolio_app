@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.SearchCriteria;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetStoresViewException;
@@ -106,43 +105,4 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		
 		return null;
 	}
-
-	@Override
-	public List<StoreView> getStoresListOrConditionalSearch(SearchCriteria searchCriteria) {
-		List<StoreView> storeViewList = new ArrayList<>(); 
-		
-		List<Map<String,Object>> getStoreViewList = dao.findAllStoresByOrConditionalSearch(searchCriteria);
-		
-		if(getStoreViewList == null) return storeViewList;
-		for(Map<String,Object> storeMap:getStoreViewList) {
-			StoreView storeView = new StoreView(
-					(int)storeMap.get("store_id"),
-					(String)storeMap.get("store_name"),
-					(String)storeMap.get("zip_code"),
-					(String)storeMap.get("city"),
-					(String)storeMap.get("municipalities"),
-					(String)storeMap.get("street_address"),
-					(String)storeMap.get("building") != null ?
-					(String)storeMap.get("building"):"" ,
-					(String)storeMap.get("mail"),
-					(String)storeMap.get("phone"),
-							storeMap.get("store_reservation_Limit") == null ?
-									null: (int)((long)storeMap.get("store_reservation_Limit")),
-					(String)storeMap.get("is_opened"),
-					(String)storeMap.get("is_closed"),
-					(String)storeMap.get("holidays")	
-					);
-			storeViewList.add(storeView);
-		}
-		
-		return storeViewList;
-	}
-
-	@Override
-	public List<StoreView> getStoresListAndConditionalSearch(SearchCriteria searchCriteria) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
-
-
 }

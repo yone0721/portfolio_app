@@ -42,10 +42,10 @@ public class SearchCriteria{
 
 	public void setKeyword(String keyword) {
 		if(!(keyword.isEmpty())) {
-			String[] keywords = keyword.split(" +");
+			String[] splitKeywords = keyword.split(" +");
 			
-			for(String extractKeyword:keywords) {
-				this.keywords.add(extractKeyword);			
+			for(String extractKeyword:splitKeywords) {
+				this.keywords.add(extractKeyword.trim());			
 			}
 		}
 	}
@@ -96,6 +96,7 @@ public class SearchCriteria{
 					|| storeView.getMunicipalities().contains(keyword)
 					|| storeView.getStreetAddress().contains(keyword)
 					|| storeView.getBuilding().contains(keyword);
+			if(isMatched == true) { break;}
 		}
 		return isMatched;	
 	}
