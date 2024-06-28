@@ -81,6 +81,14 @@ public class SearchCondition{
 	public List<DayOfWeek> getDayOfWeeks() {
 		return dayOfWeeks;
 	}
+	
+	public boolean getDayOfWeeksValue(int dayOfWeekValue) {
+		
+		
+		boolean isMatched = this.dayOfWeeks.stream().anyMatch(value -> value.equals(DayOfWeek.of(dayOfWeekValue)));
+		
+		return isMatched;
+	}
 
 	public void setDayOfWeeks(String[] dayOfWeeks) {
 		this.setDayOfWeeksFromStrings(dayOfWeeks);
