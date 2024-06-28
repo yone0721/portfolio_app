@@ -4,6 +4,8 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.factory.StringFormatUtil;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
  *
  */
 
-public class SearchCriteria{
+public class SearchCondition{
 	@NotNull
 	private int howToSearch;
 	
@@ -31,12 +33,12 @@ public class SearchCriteria{
 //	
 	@Nullable
 	private List<DayOfWeek> dayOfWeeks = new ArrayList<>();
-
-	public SearchCriteria(){
+	
+	public SearchCondition() {
 		
 	}
 	
-	public SearchCriteria(
+	public SearchCondition(
 			@NotEmpty String howToSearch,
 			@Nullable String keywords, 
 			@Nullable List<String> cities,
@@ -50,6 +52,10 @@ public class SearchCriteria{
 
 	public List<String> getKeywords() {
 		return keywords;
+	}
+	public String getCombinedKeywords() {
+		String displayKeywords = StringFormatUtil.listToStrings(keywords);
+		return displayKeywords;
 	}
 
 	public void setKeywords(String keywords) {
@@ -111,6 +117,7 @@ public class SearchCriteria{
 					|| storeView.getStreetAddress().contains(keyword)
 					|| storeView.getBuilding().contains(keyword);
 			
+//			検索方法に合わせて判定を変える　0 : OR検索	1 : AND検索
 			if(this.howToSearch == 0 && isMatched == true) { return isMatched; }
 			if(this.howToSearch == 1 && isMatched == false) { return isMatched; }
 		}
@@ -125,16 +132,11 @@ public class SearchCriteria{
 		boolean isMatched = false;
 		
 //		都道府県を指定していない場合、都道府県は全対象なのでtrueを返す
-		if(this.cities == null) { return true; }
-		
-		for(String city:this.cities) {
+		if(this.cities == null || this.cities.isEmpty()) { return true; }
 			
-			isMatched = storeView.getCity().contains(city);
-			
+			isMatched = this.cities.stream().anyMatch(city -> city.contains(storeView.getCity()));
 //			選択した都道府県が1つでも当てはまればtrueを返す
-			if(isMatched == true) { break; }
-		}
-		
+
 		return isMatched;
 	}	
 	
@@ -143,29 +145,47 @@ public class SearchCriteria{
 	 */
 	
 	public boolean containsSearchWorkingDays(StoreView storeView) {
+		boolean isMatched = false;
 		
 //		曜日を選択していなければ、曜日はいつでも良いということなのでtrueを返す
-		if(this.dayOfWeeks == null) {return true;}
+		if(this.dayOfWeeks == null || this.dayOfWeeks.isEmpty()) {return true;}
 		
-		if(this.dayOfWeeks.containsAll(storeView.getHolidays())) {
-			return false;
-		};
-		
-		return true;
-	}
-
-	public boolean checkAllSearchCriteria(StoreView storeView) {
-		boolean isMatchedAll;
-		
-//		検索方法に合わせてメソッドを変える　0 : OR検索	1 : AND検索
-		isMatchedAll = containsSearchKeyword(storeView);
-		
-		if(isMatchedAll == true) {
-			isMatchedAll = containsSearchCity(storeView);
-			isMatchedAll = containsSearchWorkingDays(storeView);			
+//		指定した曜日が、1つでも定休日と一致しなければtrueを返す
+		for(DayOfWeek holiday:storeView.getHolidays()) {
+			isMatched = !(this.dayOfWeeks.stream().anyMatch(dayOfWeek -> dayOfWeek.equals(holiday)));
+			
+			if(isMatched == true) { break;}
 		}
-		return isMatchedAll;
+		
+		return isMatched;
 	}
 
+	/*
+	 * すべての条件に一致するか判定するメソッド
+	 */
+	
+	public boolean checkAllSearchCriteria(StoreView storeView) {
+		boolean fullfillTheConditions;
+		
+//		キーワードが入力されているか、検索範囲に含まれているかを判定
+		fullfillTheConditions = containsSearchKeyword(storeView);
+		
+//		キーワードが含まれていた場合、絞り込みの検索条件が当てはまっているかどうかを確認
+		if(fullfillTheConditions == true) {
+			fullfillTheConditions = containsSearchCity(storeView) && containsSearchWorkingDays(storeView);			
+		}
+		
+		return fullfillTheConditions;
+	}
+	
+	/*
+	 * 各検索条件をMapへ格納後、リストに集約して戻すメソッド
+	 */
+//	
+//	public List<Map<String,Object>> getSearchConditions(){
+//		List<Map<String,Object>> searchConditionsList = new ArrayList<>();
+//				
+//		
+//	}
 }
 

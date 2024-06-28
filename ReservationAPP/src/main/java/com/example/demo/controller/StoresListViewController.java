@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.SearchCriteria;
+import com.example.demo.entity.SearchCondition;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.StoresListViewService;
@@ -71,7 +71,7 @@ public class StoresListViewController {
 		
 		userSession.setStoreViewList(storeViewList);
 		
-
+		model.addAttribute("searchCondition",new SearchCondition());
 		model.addAttribute("storesViewList",storeViewList);
 		model.addAttribute("userInfo",userSession.getUserInfo());
 		return "view/stores-index";
@@ -84,7 +84,7 @@ public class StoresListViewController {
 	 * @param cities			絞り込みで選択した都道府県のリスト
 	 * @param dayOfWeeks 		絞り込みで選択した店舗が稼働している曜日
 	 * 
-	 * @param SearchCriteria 	指定した検索条件と合致する店舗の判定メソッドを格納したクラス
+	 * @param SearchCondition 	指定した検索条件と合致する店舗の判定メソッドを格納したクラス
 	 * 
 	 * @return 店舗一覧画面へ遷移する
 	 */
@@ -98,19 +98,20 @@ public class StoresListViewController {
 			@RequestParam(name="dayOfWeeks",required=false) String[] dayOfWeeks,
 			Model model) {
 		
-		SearchCriteria searchCriteria = new SearchCriteria(
+		SearchCondition searchCondition = new SearchCondition(
 				howToSearch,keywords,cities,dayOfWeeks);
 		
-		List<StoreView> storeViewList = extractSearchingStores(searchCriteria);
+		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
 		
 		Map<String,String> errors = new HashMap<>();
-		if(searchCriteria.getKeywords().isEmpty()) {
+		if(searchCondition.getKeywords().isEmpty()) {
 			errors.put("keywordError", "キーワードを入力してください。");
 		}
 		if(storeViewList.isEmpty()) {
 			errors.put("NotFoundStoresError","キーワードが未入力か店舗が見つかりませんでした。");
 		}
 		
+		model.addAttribute("searchCondition",searchCondition);
 		model.addAttribute("errors",errors);
 		model.addAttribute("storesViewList",storeViewList);
 		model.addAttribute("userInfo",userSession.getUserInfo()); 
@@ -163,12 +164,12 @@ public class StoresListViewController {
 	 * 
 	 */
 	
-	public List<StoreView> extractSearchingStores(SearchCriteria searchCriteria){
+	public List<StoreView> extractSearchingStores(SearchCondition searchCondition){
 		List<StoreView> listOfApplicableStores = new ArrayList<>(); 
 		
 		for(StoreView storeView:userSession.getStoreViewList()) {
 			
-			if(searchCriteria.checkAllSearchCriteria(storeView)) {
+			if(searchCondition.checkAllSearchCriteria(storeView)) {
 				listOfApplicableStores.add(storeView);
 				continue;
 			}

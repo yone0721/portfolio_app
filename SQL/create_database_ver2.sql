@@ -69,3 +69,35 @@ CREATE TABLE IF NOT EXISTS store_regular_holidays(
     PRIMARY KEY (regular_holiday_id),
     FOREIGN KEY (store_id) REFERENCES store_info_tb(store_id)
 );
+
+CREATE TABLE IF NOT EXISTS search_conditions (
+    conditions_id INTEGER AUTO_INCREMENT,
+    search_conditions VARCHAR(20) NOT NULL UNIQUE,
+    PRIMARY KEY (conditions_id)
+);
+
+INSERT INTO search_conditions (search_conditions) VALUES ('検索方法');
+INSERT INTO search_conditions (search_conditions) VALUES ('キーワード');
+INSERT INTO search_conditions (search_conditions) VALUES ('都道府県');
+INSERT INTO search_conditions (search_conditions) VALUES ('稼働曜日');
+
+
+CREATE TABLE IF NOT EXISTS history_of_search (
+    history_id INTEGER AUTO_INCREMENT,
+    user_id INTEGER NOT NULL,
+    condition_value VARCHAR(50),
+    group_id INTEGER NOT NULL,
+    created_at DATETIME NOT NULL,
+    deleted_at DATETIME NOT NULL,
+    PRIMARY KEY (history_id),
+    FOREIGN KEY (user_id) REFERENCES user_info_tb(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS history_with_search_conditions (
+    id INTEGER AUTO_INCREMENT,
+    conditions_id INTEGER NOT NULL,
+    history_id INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (conditions_id) REFERENCES search_conditions (conditions_id),
+    FOREIGN KEY (history_id) REFERENCES history_of_search (history_id)
+);

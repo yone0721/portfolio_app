@@ -54,8 +54,7 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			FROM store_info_tb AS store
 			INNER JOIN store_regular_holidays AS holidays
 			ON holidays.store_id = store.store_id
-			GROUP BY holidays.store_id
-			LIMIT 10""";
+			GROUP BY holidays.store_id""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql); 
@@ -105,8 +104,7 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 					 store.street_address,
 					 store.building)
 				AGAINST (? IN NATURAL LANGUAGE MODE)
-				GROUP BY holidays.store_id
-				LIMIT 10;""";
+				GROUP BY holidays.store_id""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql,keyWord);
