@@ -461,3 +461,17 @@ SELECT
 FROM store_info_tb AS store
 INNER JOIN store_regular_holidays AS holidays
 ON holidays.store_id = store.store_id WHERE store.store_name LIKE '%米森%' OR store.city LIKE '%米森%' OR store.municipalities LIKE '%米森%' OR store.street_address LIKE '%米森%' OR store.building LIKE '%米森%' GROUP BY holidays.store_id;
+
+SELECT
+        his.user_id,
+        con.conditions_id,
+        his.condition_value,
+        his.created_at,
+        his.deleted_at
+FROM search_conditions AS con
+LEFT JOIN history_with_search_conditions AS his_with_con
+ON con.conditions_id = his_with_con.conditions_id
+LEFT JOIN history_of_search AS his
+ON his.history_id = his_with_con.history_id
+WHERE his_with_con.user_id = 1
+ORDER BY group_id DESC;

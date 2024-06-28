@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -159,5 +160,86 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 		}catch(DataAccessException e){
 			throw new UserInfoNotFoundException("ユーザー情報が見つかりませんでした。");
 		}
+	}
+
+	@Override
+	public List<Map<String, Object>> findSearchHistoriesById(int userId) {
+		String sql = 
+				"SELECT"
+						+ "his.user_id,"
+						+ "con.conditions_id,"
+						+ "his.condition_value,"
+						+ "his.created_at,"
+						+ "his.deleted_at, "
+						+ "his.group_id "
+				+ "FROM search_conditions AS con"
+				+ "LEFT JOIN history_with_search_conditions AS his_with_con "
+				+ "ON con.conditions_id = his_with_con.conditions_id "
+				+ "LEFT JOIN history_of_search AS his "
+				+ "ON his.history_id = his_with_con.history_id "
+				+ "WHERE his.user_id = ? "
+				+ "ORDER BY his.group_id DESC";
+		
+		try{
+			return jdbcTemplate.queryForList(sql,userId);
+			
+		}catch(DataAccessException e) {
+			throw new FailedToGetStoresViewException("");
+		}
+	}
+
+	@Override
+	public int[] insertSearchConditionToHistory(final int userId,final int groupId,List<Map<String,Object>> searchConditions) {
+		String sql = "INSERT INTO "
+				+ "history_of_search (user_id,condition_value,group_id,created_at,deleted_at)"
+				+ "VALUES(?,?,?,?,?)";
+		
+		List<Object[]> params = new ArrayList<>();
+		
+		for(Map<String,Object> condition:searchConditions) {
+			
+			
+			Object[] param = {
+					
+			};
+		}
+					
+		return ;
+	}
+	
+	/*
+	 * 中間テーブルの紐づけメソッド
+	 */
+	
+	@Override
+	public int[] combinedConditionsAndHistories(Map<String, Object> conditions,final int group_id) {
+		String getHistoryIdSql = "SELECT history_id FROM history_of_search WHERE group_id = ?";
+		
+		List<Map<String,Object>> historyIdList = jdbcTemplate.queryForList(getHistoryIdSql,group_id);
+		
+		
+		String sql = "INSERT INTO history_with_search_conditions (conditions_id,history_id) VALUES (?,?)";
+		
+		List<Object[]> params = new ArrayList<>();
+		
+		for(String key:conditions.keySet()) {
+			int history_id;
+			
+			switch(key) {
+				case "howToSearch" -> history_id = 1;
+				case "keywords" -> history_id = 2;
+				case "cities" -> history_id = 3;
+				case "dayOfWeeks" -> history_id = 4;
+				default -> history_id = 0;
+			}
+			
+			if(history_id == 0) {continue;}
+			
+			Object[] param = {Integer.parseInt(key),history_id};
+			params.add(param);
+		}
+		
+		return jdbcTemplate.batchUpdate(sql,params);
 	}	
+	
 }
