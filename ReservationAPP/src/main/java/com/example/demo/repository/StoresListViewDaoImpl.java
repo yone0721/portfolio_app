@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetStoresViewException;
 import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.exception.UserInfoNotFoundException;
+import com.example.demo.factory.StringByIntTypeCategorizeUtil;
 
 @Repository
 public class StoresListViewDaoImpl implements StoresListViewDao {
@@ -163,83 +166,98 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> findSearchHistoriesById(int userId) {
+	public List<Map<String, Object>> findSearchHistoriesById(final int userId) {
 		String sql = 
-				"SELECT"
-						+ "his.user_id,"
-						+ "con.conditions_id,"
-						+ "his.condition_value,"
-						+ "his.created_at,"
-						+ "his.deleted_at, "
-						+ "his.group_id "
-				+ "FROM search_conditions AS con"
-				+ "LEFT JOIN history_with_search_conditions AS his_with_con "
-				+ "ON con.conditions_id = his_with_con.conditions_id "
-				+ "LEFT JOIN history_of_search AS his "
-				+ "ON his.history_id = his_with_con.history_id "
+				"SELECT "
+				+ "his.user_id,"
+				+ "hwsc.history_id,"
+				+ "hwsc.conditions_id,"
+				+ "hwsc.condition_value,"
+				+ "his.created_at,"
+				+ "his.updated_at "
+				+ "FROM history_with_search_conditions AS hwsc "
+				+ "RIGHT JOIN history_of_search AS his "
+				+ "ON hwsc.history_id = his.history_id "
 				+ "WHERE his.user_id = ? "
-				+ "ORDER BY his.group_id DESC";
-		
+				+ "ORDER BY updated_at DESC";
 		try{
 			return jdbcTemplate.queryForList(sql,userId);
 			
 		}catch(DataAccessException e) {
+			e.printStackTrace();
 			throw new FailedToGetStoresViewException("");
 		}
 	}
-
+	
 	@Override
-	public int[] insertSearchConditionToHistory(final int userId,final int groupId,List<Map<String,Object>> searchConditions) {
+	public int insertSearchConditionToHistory(final int userId,LocalDateTime now) {
 		String sql = "INSERT INTO "
-				+ "history_of_search (user_id,condition_value,group_id,created_at,deleted_at)"
-				+ "VALUES(?,?,?,?,?)";
+				+ "history_of_search ("
+				+ "user_id,created_at,updated_at"
+				+ ") VALUES (?,?,?)";
 		
-		List<Object[]> params = new ArrayList<>();
+		String dateTimeFormatNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		
-		for(Map<String,Object> condition:searchConditions) {
-			
-			
-			Object[] param = {
-					
-			};
-		}
-					
-		return ;
+		return jdbcTemplate.update(sql,userId,dateTimeFormatNow,dateTimeFormatNow);
 	}
 	
 	/*
 	 * 中間テーブルの紐づけメソッド
+	 *  Map<String,List<Object>> 	検索条件のカテゴリ毎に値を保存したリストを格納
+	 * 	String			検索条件のカテゴリ（現状では検索方法、キーワード、都道府県、稼働曜日のいずれか）
+	 * 	List<Object>	検索の値を格納したリスト
 	 */
 	
 	@Override
-	public int[] combinedConditionsAndHistories(Map<String, Object> conditions,final int group_id) {
-		String getHistoryIdSql = "SELECT history_id FROM history_of_search WHERE group_id = ?";
-		
-		List<Map<String,Object>> historyIdList = jdbcTemplate.queryForList(getHistoryIdSql,group_id);
-		
-		
-		String sql = "INSERT INTO history_with_search_conditions (conditions_id,history_id) VALUES (?,?)";
+	public int[] combinedConditionsAndHistories(final int userId,Map<String,List<? extends Object>> searchConditions,final LocalDateTime now) {
+		String insertSql = "INSERT INTO history_with_search_conditions "
+				+ "(conditions_id,history_id,condition_value) VALUES "
+				+ "(?,(SELECT history_id FROM history_of_search WHERE user_id = ? AND created_at = ?),?)";
 		
 		List<Object[]> params = new ArrayList<>();
 		
-		for(String key:conditions.keySet()) {
-			int history_id;
+		/*
+		 * カテゴリ毎に値を取り出す
+		 * condition = 		Mapのキー
+		 * conditionsId = 	キーに該当するID
+		 * 
+		 * Object[] param 	挿入する値（検索条件カテゴリのID、ユーザーID、検索内容、登録する日時）
+		 */
+		
+		for(Object condition:searchConditions.keySet()) {
 			
-			switch(key) {
-				case "howToSearch" -> history_id = 1;
-				case "keywords" -> history_id = 2;
-				case "cities" -> history_id = 3;
-				case "dayOfWeeks" -> history_id = 4;
-				default -> history_id = 0;
+			if(searchConditions.get(condition) == null || searchConditions.get(condition).isEmpty()) { continue;}
+			
+			int conditionsId = StringByIntTypeCategorizeUtil.changeKeyToInt((String)condition);
+			
+			if(conditionsId == 0) continue;
+			
+			for(Object value:searchConditions.get(condition)) {
+				
+				Object[] param = {
+						conditionsId,
+						userId,
+						now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+						value
+				};		
+				params.add(param);
 			}
-			
-			if(history_id == 0) {continue;}
-			
-			Object[] param = {Integer.parseInt(key),history_id};
-			params.add(param);
 		}
 		
-		return jdbcTemplate.batchUpdate(sql,params);
+		return jdbcTemplate.batchUpdate(insertSql,params);
+	}
+
+	@Override
+	public int deleteOldestSearchCondition(final int userId) {
+		String sql = "DELETE FROM history_of_search "
+				+ "WHERE user_id = ? AND updated_at = "
+				+ "(SELECT min_date FROM "
+				+	"(SELECT MIN(updated_at) AS min_date "
+			    +   "FROM history_of_search "
+			    +   "WHERE user_id = ? "
+				+ ") AS sub"
+			+ ")";
+
+		return jdbcTemplate.update(sql,userId,userId);
 	}	
-	
 }

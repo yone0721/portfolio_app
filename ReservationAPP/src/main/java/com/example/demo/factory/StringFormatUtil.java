@@ -120,4 +120,10 @@ public class StringFormatUtil {
 		
 		return sb.toString();
 	}
+	
+	public static String[] StringToArrays(String str){
+		String[] strings = str.substring(1,str.length()-1).split("\\,\s");
+		
+		return strings;
+	}
 }

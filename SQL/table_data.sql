@@ -475,3 +475,19 @@ LEFT JOIN history_of_search AS his
 ON his.history_id = his_with_con.history_id
 WHERE his_with_con.user_id = 1
 ORDER BY group_id DESC;
+
+INSERT INTO history_with_search_conditions (conditions_id,history_id,condition_value) VALUES (2,(SELECT history_id FROM history_of_search WHERE user_id = 1 AND created_at = '2024-07-03 16:16:38'),'米森');
+
+
+SELECT
+his.user_id,
+hwsc.history_id,
+hwsc.conditions_id,
+hwsc.condition_value,
+his.created_at,
+his.updated_at
+FROM history_with_search_conditions AS hwsc
+RIGHT JOIN history_of_search AS his
+ON hwsc.history_id = his.history_id
+WHERE his.user_id = 1
+ORDER BY updated_at DESC;

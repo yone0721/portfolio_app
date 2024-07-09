@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.entity.SearchCondition;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.exception.FailedToGetSearchConditionsHistoryException;
+import com.example.demo.factory.StringFormatUtil;
 import com.example.demo.service.StoresListViewService;
 import com.example.demo.session.UserSession;
 
@@ -67,6 +71,16 @@ public class StoresListViewController {
 	public String displayStoresList(
 			Model model) {
 		
+		UserInfo userInfo = userSession.getUserInfo();
+		
+		List<SearchCondition> searchConditionsHistory = new ArrayList<>();
+		try {
+			searchConditionsHistory = storesListViewService.getSearchConditionsById(userInfo.getUserId());
+			model.addAttribute("searchConditionsHistory",searchConditionsHistory);
+			
+		}catch(FailedToGetSearchConditionsHistoryException e) {
+			e.printStackTrace();
+		}
 		List<StoreView> storeViewList = storesListViewService.getStoresList();
 		
 		userSession.setStoreViewList(storeViewList);
@@ -98,23 +112,107 @@ public class StoresListViewController {
 			@RequestParam(name="dayOfWeeks",required=false) String[] dayOfWeeks,
 			Model model) {
 		
-		SearchCondition searchCondition = new SearchCondition(
-				howToSearch,keywords,cities,dayOfWeeks);
+		UserInfo userInfo = userSession.getUserInfo();
+		
+		/*
+		 * searchConditionsHistory		DBに保存してあった検索履歴をリストで格納する
+		 */
+		
+		List<SearchCondition> searchConditionsHistory = storesListViewService.getSearchConditionsById(userInfo.getUserId());
+		
+		SearchCondition searchCondition = new SearchCondition(howToSearch,keywords,cities,dayOfWeeks);
+		
+		boolean successToSaveSearchCondition = false;
+		
+//		検索条件にキーワードが入力されていて、searchConditionsList内と検索条件が重複しなければ、
+//		DBへ検索条件を保存する。履歴が無ければ、無条件で保存する。
+		if(!(searchCondition.getKeywords() == null) && !(searchConditionsHistory == null)) {
+			
+			for(SearchCondition conditionInHistory:searchConditionsHistory) {
+					if(conditionInHistory.equals(searchCondition)) { continue;}
+				
+				successToSaveSearchCondition = saveSearchConditionsAndVerify(searchCondition);
+			}
+			
+		}else if(!(searchCondition.getKeywords() == null) && searchConditionsHistory == null) {
+			successToSaveSearchCondition = saveSearchConditionsAndVerify(searchCondition);
+			
+			if(successToSaveSearchCondition) {
+				searchConditionsHistory = new ArrayList<>();
+				searchConditionsHistory.add(searchCondition);
+			}
+		}
+		
+		/*
+		 * storeViewList 			店舗一覧画面に表示する店舗のリスト（命名は大分前につけたものなのでおかしいですが、余裕があれば修正します。）
+		 */
 		
 		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
 		
-		Map<String,String> errors = new HashMap<>();
-		if(searchCondition.getKeywords().isEmpty()) {
-			errors.put("keywordError", "キーワードを入力してください。");
-		}
-		if(storeViewList.isEmpty()) {
-			errors.put("NotFoundStoresError","キーワードが未入力か店舗が見つかりませんでした。");
+//		検索条件をDBに保存できていれば、リストに格納する
+		if(successToSaveSearchCondition && !(searchConditionsHistory == null)) { searchConditionsHistory.add(0,searchCondition);}
+			
+//		searchConditionsListの要素が5つを超えた場合、一番古い検索条件を削除する
+//		戻り値は削除した要素の数が入る
+		
+		int deleteResult = 0;
+		if(!(searchConditionsHistory == null)  && searchConditionsHistory.size() > 5) { 
+			deleteResult = storesListViewService.removeOldestHistory(userInfo.getUserId());
 		}
 		
+//		削除した要素が1個以上であれば、リストの最後の要素を削除
+		if(deleteResult > 0) { searchConditionsHistory.remove(searchConditionsHistory.size()-1);}
+				
+		Map<String,String> errors = checkErrorMessages(searchCondition,storeViewList);
+		
+		model.addAttribute("searchConditionsHistory",searchConditionsHistory);
 		model.addAttribute("searchCondition",searchCondition);
 		model.addAttribute("errors",errors);
 		model.addAttribute("storesViewList",storeViewList);
-		model.addAttribute("userInfo",userSession.getUserInfo()); 
+		model.addAttribute("userInfo",userInfo); 
+		return "view/stores-index";
+	}
+	
+	@PostMapping("/stores-list-matches-search-conditions")
+	public String showStoresMatchingSearchConditions(
+			@RequestParam(name="howToSearch",required=false) String howToSearch,
+			@RequestParam(name="keywords",required=false) String keywords,
+			@RequestParam(name="cities",required=false) String cities,
+			@RequestParam(name="dayOfWeeks",required=false) String dayOfWeeks,
+			@RequestParam(name="createdAt",required=false) String createdAt,
+			@RequestParam(name="updatedAt",required=false) String updatedAt,
+			Model model
+			) {
+		
+		if(howToSearch != null)System.out.println("howToSearch:" + howToSearch);
+		if(keywords != null)System.out.println("keywords:" + keywords);
+		if(cities != null)System.out.println("city:"+ cities + " legth:" + cities.length());
+		if(dayOfWeeks != null)System.out.println("dayOfWeeks:" + dayOfWeeks+ " legth:" + dayOfWeeks.length());
+		if(createdAt != null)System.out.println("createdAt:" + createdAt);
+		if(updatedAt != null)System.out.println("updatedAt:" + updatedAt);
+
+		SearchCondition searchCondition = new SearchCondition();
+		
+		searchCondition.setHowToSearch(Integer.parseInt(howToSearch));
+		if(keywords != null) searchCondition.setKeywords(keywords.substring(1,keywords.length()-1));
+		if(cities != null) searchCondition.setCities(Arrays.asList(StringFormatUtil.StringToArrays(cities)));
+		if(dayOfWeeks != null) searchCondition.setDayOfWeeksFromStrings(StringFormatUtil.StringToArrays(dayOfWeeks));
+		if(createdAt != null) searchCondition.setCreatedAt(LocalDateTime.parse(createdAt));
+		if(updatedAt != null) searchCondition.setCreatedAt(LocalDateTime.parse(updatedAt));
+		
+		System.out.println(searchCondition);
+		
+		UserInfo userInfo = userSession.getUserInfo();
+		
+		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
+
+		Map<String,String> errors = checkErrorMessages(searchCondition,storeViewList);
+		
+//		model.addAttribute("searchConditionsHistory",searchConditionsHistory);
+		model.addAttribute("searchCondition",searchCondition);
+		model.addAttribute("errors",errors);
+		model.addAttribute("storesViewList",storeViewList);
+		model.addAttribute("userInfo",userInfo); 
 		return "view/stores-index";
 	}
 
@@ -164,7 +262,20 @@ public class StoresListViewController {
 	 * 
 	 */
 	
-	public List<StoreView> extractSearchingStores(SearchCondition searchCondition){
+	Map<String,String> checkErrorMessages(SearchCondition searchCondition,List<StoreView> storeViewList){
+	
+		Map<String,String> errors = new HashMap<>();
+		if(searchCondition.getKeywords().isEmpty()) {
+			errors.put("keywordError", "キーワードを入力してください。");
+		}
+		if(storeViewList.isEmpty()) {
+			errors.put("NotFoundStoresError","キーワードが未入力か店舗が見つかりませんでした。");
+		}
+		
+		return errors;
+	}
+	
+	List<StoreView> extractSearchingStores(SearchCondition searchCondition){
 		List<StoreView> listOfApplicableStores = new ArrayList<>(); 
 		
 		for(StoreView storeView:userSession.getStoreViewList()) {
@@ -177,4 +288,17 @@ public class StoresListViewController {
 		return listOfApplicableStores;
 	}
 	
+	boolean saveSearchConditionsAndVerify(SearchCondition searchCondition) {
+		if(searchCondition.getKeywords() == null) return false;
+		
+		UserInfo userInfo = userSession.getUserInfo();
+		try {
+			return storesListViewService.saveSearchConditions(userInfo.getUserId(), searchCondition);
+			
+		}catch(FailedToGetSearchConditionsHistoryException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
 }

@@ -85,19 +85,19 @@ INSERT INTO search_conditions (search_conditions) VALUES ('稼働曜日');
 CREATE TABLE IF NOT EXISTS history_of_search (
     history_id INTEGER AUTO_INCREMENT,
     user_id INTEGER NOT NULL,
-    condition_value VARCHAR(50),
-    group_id INTEGER NOT NULL,
     created_at DATETIME NOT NULL,
-    deleted_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
     PRIMARY KEY (history_id),
     FOREIGN KEY (user_id) REFERENCES user_info_tb(user_id)
 );
 
+-- 空のカラム回避用の中間テーブル
 CREATE TABLE IF NOT EXISTS history_with_search_conditions (
     id INTEGER AUTO_INCREMENT,
     conditions_id INTEGER NOT NULL,
     history_id INTEGER NOT NULL,
+    condition_value VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (conditions_id) REFERENCES search_conditions (conditions_id),
-    FOREIGN KEY (history_id) REFERENCES history_of_search (history_id)
+    FOREIGN KEY (history_id) REFERENCES history_of_search (history_id) ON DELETE CASCADE
 );

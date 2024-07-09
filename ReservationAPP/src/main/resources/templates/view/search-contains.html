@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html  xmlns="http://www.thymeleaf.org">
 	<div class="search-form-container" th:fragment="search-form" th:Object="${searchCondition}"> 
-		
 		<form method="get" th:action="@{search-store-list}">
 			<div class="search-form-container">
 				<div>
@@ -14,7 +13,6 @@
 					</select>
 					<input type="submit" value="検索する">
 				</div>
-	
 			</div>
 			<div th:each="error:${errors}">
 				<p class="text-danger" th:if="${error.key =='keywordError'}" th:text="${error.value}"></p>
@@ -258,13 +256,29 @@
 						</table>
 					</div>	
 				</details>
-				<div>
-					<details class="histories">
-						<summary>検索履歴</summary>
-						<p>---------検索履歴---------</p>
-					</details>
-				</div>
+
 			</div>
 		</form>
+		<div>
+			<details class="histories" th:if="${searchConditionsHistory != null}">
+				<summary>検索履歴</summary>
+				<form method="post" th:action="@{stores-list-matches-search-conditions}" th:each="searchCondition:${searchConditionsHistory}" >
+					<p class="search-condition-history">
+						<input type="hidden" th:name="howToSearch" th:value="${searchCondition.howToSearch}">
+						<input type="hidden" th:name="keywords" th:value="${searchCondition.keywords}">
+						<input type="hidden" th:name="cities" th:value="${searchCondition.cities}">
+						<input type="hidden" th:name="dayOfWeeks" th:value="${searchCondition.dayOfWeeks}">
+						<input type="hidden" th:name="createdAt" th:value="${searchCondition.createdAt}">
+						<input type="hidden" th:name="updatedAt" th:value="${searchCondition.updatedAt}">
+						<input type="submit" class="search-condition-history" th:value="${searchCondition.getCombinedKeywords()}">
+						<div class="condition-info">
+							<span th:text="'都道府県：' + ${searchCondition.cities}"></span>
+							<span th:text="'指定曜日：' + ${searchCondition.getJPDayOfWeeks(searchCondition.dayOfWeeks)}"></span>
+						</div>
+					</p>
+
+				</form>
+			</details>
+		</div>
 	</div>
 </html>

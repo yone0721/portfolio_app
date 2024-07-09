@@ -31,7 +31,7 @@
 					<td class="holiday">
 <!--						<div th:text="${storeView.holidays}"></div>-->
 						<div th:each="holiday:${storeView.holidays}">
-							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
+							<span th:text="${storeView.getJPDayOfWeek(holiday)} + '　'"></span>
 						</div>
 					</td>
 					<td>

@@ -74,3 +74,10 @@ details div{
 .options-container{
 	display: flex;
 }
+.condition-info {
+	display: none;
+}
+
+.search-condition-history:hover + .condition-info{
+	display: block;
+}
