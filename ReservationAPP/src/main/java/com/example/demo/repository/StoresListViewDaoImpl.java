@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.UserInfo;
+import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.exception.FailedToGetStoresViewException;
 import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.exception.UserInfoNotFoundException;
@@ -169,12 +170,12 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 	public List<Map<String, Object>> findSearchHistoriesById(final int userId) {
 		String sql = 
 				"SELECT "
-				+ "his.user_id,"
-				+ "hwsc.history_id,"
-				+ "hwsc.conditions_id,"
-				+ "hwsc.condition_value,"
-				+ "his.created_at,"
-				+ "his.updated_at "
+					+ "his.user_id,"
+					+ "hwsc.history_id,"
+					+ "hwsc.conditions_id,"
+					+ "hwsc.condition_value,"
+					+ "his.created_at,"
+					+ "his.updated_at "
 				+ "FROM history_with_search_conditions AS hwsc "
 				+ "RIGHT JOIN history_of_search AS his "
 				+ "ON hwsc.history_id = his.history_id "
@@ -197,8 +198,13 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 				+ ") VALUES (?,?,?)";
 		
 		String dateTimeFormatNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		
-		return jdbcTemplate.update(sql,userId,dateTimeFormatNow,dateTimeFormatNow);
+		try {
+			return jdbcTemplate.update(sql,userId,dateTimeFormatNow,dateTimeFormatNow);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	/*
@@ -243,8 +249,13 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 				params.add(param);
 			}
 		}
-		
-		return jdbcTemplate.batchUpdate(insertSql,params);
+		try {
+			return jdbcTemplate.batchUpdate(insertSql,params);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new FailedInsertSQLException("データの挿入に失敗しました。");
+		}
 	}
 
 	@Override

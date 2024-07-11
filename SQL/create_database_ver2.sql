@@ -85,8 +85,8 @@ INSERT INTO search_conditions (search_conditions) VALUES ('稼働曜日');
 CREATE TABLE IF NOT EXISTS history_of_search (
     history_id INTEGER AUTO_INCREMENT,
     user_id INTEGER NOT NULL,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL UNIQUE,
+    updated_at DATETIME NOT NULL UNIQUE,
     PRIMARY KEY (history_id),
     FOREIGN KEY (user_id) REFERENCES user_info_tb(user_id)
 );

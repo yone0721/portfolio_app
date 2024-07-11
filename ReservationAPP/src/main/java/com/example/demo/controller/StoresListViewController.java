@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +18,6 @@ import com.example.demo.entity.SearchCondition;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetSearchConditionsHistoryException;
-import com.example.demo.factory.StringFormatUtil;
 import com.example.demo.service.StoresListViewService;
 import com.example.demo.session.UserSession;
 
@@ -59,6 +56,7 @@ public class StoresListViewController {
 		return "redirect:/reservation/views/store-list";
 	}
 		
+	
 	/*
 	 * 店舗一覧画面への遷移メソッド
 	 * @param("storeViewList")	DBから取得した店舗データ10件分までのリストを格納
@@ -92,7 +90,7 @@ public class StoresListViewController {
 	}
 	
 	/*
-	 * 店舗情報を検索する時に使用するメソッド
+	 * 店舗情報を検索する時に使用する遷移メソッド
 	 * @param howToSearch 		検索方法を判定するパラメーター　0 :OR検索、1:AND検索 
 	 * @param keywords 			検索に使用するキーワード
 	 * @param cities			絞り込みで選択した都道府県のリスト
@@ -117,7 +115,7 @@ public class StoresListViewController {
 		/*
 		 * searchConditionsHistory		DBに保存してあった検索履歴をリストで格納する
 		 */
-		
+				
 		List<SearchCondition> searchConditionsHistory = storesListViewService.getSearchConditionsById(userInfo.getUserId());
 		
 		SearchCondition searchCondition = new SearchCondition(howToSearch,keywords,cities,dayOfWeeks);
@@ -129,9 +127,12 @@ public class StoresListViewController {
 		if(!(searchCondition.getKeywords() == null) && !(searchConditionsHistory == null)) {
 			
 			for(SearchCondition conditionInHistory:searchConditionsHistory) {
-					if(conditionInHistory.equals(searchCondition)) { continue;}
-				
+				if(conditionInHistory.equals(searchCondition)) break;
+
 				successToSaveSearchCondition = saveSearchConditionsAndVerify(searchCondition);
+				
+				if(successToSaveSearchCondition) break;
+				
 			}
 			
 		}else if(!(searchCondition.getKeywords() == null) && searchConditionsHistory == null) {
@@ -150,7 +151,7 @@ public class StoresListViewController {
 		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
 		
 //		検索条件をDBに保存できていれば、リストに格納する
-		if(successToSaveSearchCondition && !(searchConditionsHistory == null)) { searchConditionsHistory.add(0,searchCondition);}
+		if(successToSaveSearchCondition && searchConditionsHistory.size() > 1) { searchConditionsHistory.add(0,searchCondition);}
 			
 //		searchConditionsListの要素が5つを超えた場合、一番古い検索条件を削除する
 //		戻り値は削除した要素の数が入る
@@ -173,6 +174,21 @@ public class StoresListViewController {
 		return "view/stores-index";
 	}
 	
+	/*
+	 * 検索履歴に表示された検索条件から遷移する時に使うメソッド
+	 * @param howToSearch 		検索方法を判定するパラメーター　0 :OR検索、1:AND検索 
+	 * @param keywords 			検索に使用するキーワード
+	 * @param cities			絞り込みで選択した都道府県のリスト
+	 * @param dayOfWeeks 		絞り込みで選択した店舗が稼働している曜日
+	 * @param createdAt 		指定の検索条件を初めて行った日時
+	 * @param updatedAt 		同じ検索条件を行った日時の最新
+	 * 
+	 * @param SearchCondition 	指定した検索条件と合致する店舗の判定メソッドを格納したクラス
+	 * 
+	 * @return 店舗一覧画面へ遷移する
+	 * 
+	 */
+	
 	@PostMapping("/stores-list-matches-search-conditions")
 	public String showStoresMatchingSearchConditions(
 			@RequestParam(name="howToSearch",required=false) String howToSearch,
@@ -184,21 +200,10 @@ public class StoresListViewController {
 			Model model
 			) {
 		
-		if(howToSearch != null)System.out.println("howToSearch:" + howToSearch);
-		if(keywords != null)System.out.println("keywords:" + keywords);
-		if(cities != null)System.out.println("city:"+ cities + " legth:" + cities.length());
-		if(dayOfWeeks != null)System.out.println("dayOfWeeks:" + dayOfWeeks+ " legth:" + dayOfWeeks.length());
-		if(createdAt != null)System.out.println("createdAt:" + createdAt);
-		if(updatedAt != null)System.out.println("updatedAt:" + updatedAt);
-
-		SearchCondition searchCondition = new SearchCondition();
 		
-		searchCondition.setHowToSearch(Integer.parseInt(howToSearch));
-		if(keywords != null) searchCondition.setKeywords(keywords.substring(1,keywords.length()-1));
-		if(cities != null) searchCondition.setCities(Arrays.asList(StringFormatUtil.StringToArrays(cities)));
-		if(dayOfWeeks != null) searchCondition.setDayOfWeeksFromStrings(StringFormatUtil.StringToArrays(dayOfWeeks));
-		if(createdAt != null) searchCondition.setCreatedAt(LocalDateTime.parse(createdAt));
-		if(updatedAt != null) searchCondition.setCreatedAt(LocalDateTime.parse(updatedAt));
+		List<SearchCondition> searchConditionsHistory = storesListViewService.getSearchConditionsById(userSession.getUserInfo().getUserId());
+		
+		SearchCondition searchCondition = new SearchCondition(howToSearch,keywords,cities,dayOfWeeks,createdAt,updatedAt);
 		
 		System.out.println(searchCondition);
 		
@@ -208,7 +213,7 @@ public class StoresListViewController {
 
 		Map<String,String> errors = checkErrorMessages(searchCondition,storeViewList);
 		
-//		model.addAttribute("searchConditionsHistory",searchConditionsHistory);
+		model.addAttribute("searchConditionsHistory",searchConditionsHistory);
 		model.addAttribute("searchCondition",searchCondition);
 		model.addAttribute("errors",errors);
 		model.addAttribute("storesViewList",storeViewList);
@@ -265,9 +270,15 @@ public class StoresListViewController {
 	Map<String,String> checkErrorMessages(SearchCondition searchCondition,List<StoreView> storeViewList){
 	
 		Map<String,String> errors = new HashMap<>();
-		if(searchCondition.getKeywords().isEmpty()) {
+		if(searchCondition.getKeywords().isEmpty()
+				|| searchCondition.getCombinedKeywords().trim().length() == 0) {
 			errors.put("keywordError", "キーワードを入力してください。");
 		}
+		
+		if(searchCondition.getCombinedKeywords().length() > 50) {
+			errors.put("keywordError","キーワードは50文字以下で入力してください。");
+		}
+		
 		if(storeViewList.isEmpty()) {
 			errors.put("NotFoundStoresError","キーワードが未入力か店舗が見つかりませんでした。");
 		}
@@ -290,6 +301,8 @@ public class StoresListViewController {
 	
 	boolean saveSearchConditionsAndVerify(SearchCondition searchCondition) {
 		if(searchCondition.getKeywords() == null) return false;
+		if(searchCondition.getCombinedKeywords().trim().length() == 0) return false;
+		if(searchCondition.getCombinedKeywords().length() > 50) return false;
 		
 		UserInfo userInfo = userSession.getUserInfo();
 		try {

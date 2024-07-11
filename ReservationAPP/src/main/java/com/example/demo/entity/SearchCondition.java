@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.example.demo.factory.DayOfWeeksStringFormatter;
@@ -27,7 +28,7 @@ public class SearchCondition{
 	@NotNull
 	private int howToSearch;
 	
-	@Nullable
+	@NotEmpty
 	private List<String> keywords  = new ArrayList<>();
 	
 	@Nullable
@@ -50,6 +51,10 @@ public class SearchCondition{
 			@Nullable List<String> cities,
 			@Nullable String... dayOfWeeks) {
 		
+		if(keywords.length() > 50) {
+			new SearchCondition();
+		}
+		
 		this.howToSearch = Integer.parseInt(howToSearch);
 		if(keywords != null) setKeywords(keywords);
 		this.cities = cities;
@@ -64,6 +69,7 @@ public class SearchCondition{
 			@Nullable List<Integer> dayOfWeeks,
 			LocalDateTime createdAt,
 			LocalDateTime updatedAt) {
+		
 		this.howToSearch = howToSearch;
 		this.keywords = keywords;
 		this.cities = cities;
@@ -71,6 +77,24 @@ public class SearchCondition{
 		this.createdAt =  createdAt;
 		this.updatedAt =  updatedAt;
 
+	}
+
+//	表示された検索履歴から選択された検索条件を格納するコンストラクタ
+	public SearchCondition(
+			@NotEmpty String howToSearch,
+			@Nullable String keywords, 
+			@Nullable String cities,
+			@Nullable String dayOfWeeks,
+			String createdAt,
+			String updatedAt) {
+		
+		setHowToSearch(Integer.parseInt(howToSearch));
+		if(keywords != null) setKeywords(keywords.substring(1,keywords.length()-1));
+		if(cities != null) setCities(Arrays.asList(StringFormatUtil.StringToArrays(cities)));
+		if(dayOfWeeks != null) setDayOfWeeksFromStrings(StringFormatUtil.StringToArrays(dayOfWeeks));
+		if(createdAt != null) setCreatedAt(LocalDateTime.parse(createdAt));
+		if(updatedAt != null) setCreatedAt(LocalDateTime.parse(updatedAt));
+		
 	}
 	
 
@@ -290,8 +314,8 @@ public class SearchCondition{
 		if(this.keywords != null || this.keywords.isEmpty()) {
 			total += this.keywords.hashCode();
 			
-			if(this.cities != null || this.keywords.isEmpty()) total += this.cities.hashCode();
-			if(this.dayOfWeeks != null || this.keywords.isEmpty()) total += this.dayOfWeeks.hashCode();
+			if(this.cities != null && !(this.cities.isEmpty())) total += this.cities.hashCode();
+			if(this.dayOfWeeks != null && !(this.keywords.isEmpty())) total += this.dayOfWeeks.hashCode();
 		}
 
 		return total;
@@ -318,6 +342,7 @@ public class SearchCondition{
 			sb.append("\nキーワード：");
 			keywords.stream().forEach(keyword -> sb.append(keyword + " "));
 		}
+		
 		if(cities != null) {
 			sb.append("\n都道府県：");
 			cities.stream().forEach(city -> sb.append(city + " "));
@@ -326,6 +351,11 @@ public class SearchCondition{
 			sb.append("\n指定曜日：");
 			dayOfWeeks.stream().forEach(dayOfWeek -> sb.append(dayOfWeek.getValue() + " "));
 		}
+		
+		if(createdAt != null) sb.append("\n登録日時：" + createdAt);
+		
+		if(updatedAt != null) sb.append("\n更新日時：" + updatedAt);
+
 		sb.append("\nハッシュ値：" + this.hashCode());
 		
 		return sb.toString();

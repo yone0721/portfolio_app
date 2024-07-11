@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.SearchCondition;
 import com.example.demo.entity.StoreView;
@@ -139,35 +139,35 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		List<String> cities = new ArrayList<>();
 		List<Integer> dayOfWeeks = new ArrayList<>();
 		
-		LocalDateTime tgt = null;
 		
 		/*
 		 * Map historyの中身 
 		 */
 		
-//		最後の要素を判定するためのイテレーター
-		Iterator<Map<String,Object>> historyItr = getSearchHistoriesList.iterator();
-		
-		for(Map<String,Object> history:getSearchHistoriesList) {
-	
-			if(historyItr.hasNext()) historyItr.next();
+		int tgt = 0;
+		for(int i=0;i < getSearchHistoriesList.size();i++) {
 			
-			if(history.containsValue(null)) { continue; }
+			Map<String,Object> history = getSearchHistoriesList.get(i);
 			
-//			tgtに何もなければ、取得したupdated_atの日付を参照する
-			tgt = tgt == null ?
-					((LocalDateTime)history.get("updated_at")):tgt;
+//			初回だけtgtにhistory_idを代入
+			if(i == 0) tgt = (int)history.get("history_id");
+			
+			if(history.containsValue(null)) continue;			
+			
 			
 			/*
-			 * updated_atの日付が変わった場合の処理
+			 * リストの要素が最後に到達した、または、history_idが変わった場合の処理
 			 * 1.検索条件クラス（SearchCondition）に抽出した検索条件を格納する
 			 * 2.1をコントローラーに渡すSearchConditionのリストに格納する
 			 * 3.抽出した情報を格納するリストの中身を全削除する
-			 * 4.tgtの日付を変える
+			 * 4.tgtの値を次のhistory_idに変える
 			 */
-			if(!(tgt.equals(((LocalDateTime)history.get("updated_at"))))) {
+			
+			if(!(tgt == (((int)history.get("history_id"))))) {
 				SearchCondition searchConditionHistory = new SearchCondition(
-						howToSearch,keywords,cities,dayOfWeeks,tgt,tgt);
+						howToSearch,keywords,cities,dayOfWeeks,
+						((LocalDateTime)history.get("created_at")),
+						((LocalDateTime)history.get("updated_at")));
 				
 				searchConditionHistories.add(searchConditionHistory);
 				
@@ -175,8 +175,9 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 				cities= new ArrayList<>();
 				dayOfWeeks= new ArrayList<>();
 				
-				tgt = ((LocalDateTime)history.get("updated_at"));
+				tgt = ((int)history.get("history_id"));
 			}
+			
 			/*
 			 * condition_idとswitchを使用してcondition_valueを該当するリストに格納していく
 			 */
@@ -188,16 +189,17 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 				case 4 ->{ dayOfWeeks.add(Integer.parseInt((String)history.get("condition_value")));}
 			}
 			
-			
-			
-			if(!(historyItr.hasNext())) {
+			if(i == (getSearchHistoriesList.size()-1)) {
 				SearchCondition searchConditionHistory = new SearchCondition(
-						howToSearch,keywords,cities,dayOfWeeks,tgt,tgt);
+						howToSearch,keywords,cities,dayOfWeeks,
+						((LocalDateTime)history.get("created_at")),
+						((LocalDateTime)history.get("updated_at")));
 				
 				searchConditionHistories.add(searchConditionHistory);
 			}
 		}
 		return searchConditionHistories;			
+		
 	}
 	
 	
@@ -205,6 +207,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 	 * 検索条件を指定して検索した場合に検索条件を履歴として保存するサービスメソッド
 	 */
 	
+	@Transactional
 	public boolean saveSearchConditions(final int userId,SearchCondition searchCondition) throws FailedToGetSearchConditionsHistoryException {
 		
 		/*
@@ -220,7 +223,7 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		
 		int insertHistoryResult = dao.insertSearchConditionToHistory(userId, now);
 		
-		if(insertHistoryResult < 1) throw new FailedInsertSQLException("ユーザー情報のデータ挿入に失敗しました。");
+		if(insertHistoryResult < 1) return false;
 		
 		Map<String,List<? extends Object>> searchConditionMap = new HashMap<>();
 		
@@ -232,6 +235,8 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		int[] insertConditionResult = dao.combinedConditionsAndHistories(userId, searchConditionMap, now);
 		
 		if(Arrays.stream(insertConditionResult).sum() < 1) throw new FailedInsertSQLException("検索条件のデータ挿入に失敗しました。");
+		
+		now = null;
 		
 		return true;
 	}
