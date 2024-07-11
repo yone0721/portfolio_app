@@ -93,7 +93,7 @@ public class SearchCondition{
 		if(cities != null) setCities(Arrays.asList(StringFormatUtil.StringToArrays(cities)));
 		if(dayOfWeeks != null) setDayOfWeeksFromStrings(StringFormatUtil.StringToArrays(dayOfWeeks));
 		if(createdAt != null) setCreatedAt(LocalDateTime.parse(createdAt));
-		if(updatedAt != null) setCreatedAt(LocalDateTime.parse(updatedAt));
+		if(updatedAt != null) setUpdatedAt(LocalDateTime.parse(updatedAt));
 		
 	}
 	

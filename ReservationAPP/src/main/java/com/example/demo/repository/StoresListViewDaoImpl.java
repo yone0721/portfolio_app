@@ -270,5 +270,21 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			+ ")";
 
 		return jdbcTemplate.update(sql,userId,userId);
+	}
+
+	@Override
+	public int updateDate(final int userId,final LocalDateTime updateDate) {
+		String sql = "UPDATE history_of_search SET updated_at = ? "
+				+ "WHERE user_id = ? AND updated_at = ?";
+		
+		String updateDateStr = updateDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		try {
+			return jdbcTemplate.update(sql,now,userId,updateDateStr);
+			
+		}catch(DataAccessException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}	
 }

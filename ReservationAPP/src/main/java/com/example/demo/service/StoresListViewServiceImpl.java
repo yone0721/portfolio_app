@@ -246,5 +246,11 @@ public class StoresListViewServiceImpl implements StoresListViewService {
 		return dao.deleteOldestSearchCondition(userId);
 	}
 
+	@Override
+	public int updateToLastDateOfSearchCondition(final int userId,final SearchCondition searchCondition) {
+		
+		return dao.updateDate(userId, searchCondition.getUpdatedAt());
+	}
+
 }
 

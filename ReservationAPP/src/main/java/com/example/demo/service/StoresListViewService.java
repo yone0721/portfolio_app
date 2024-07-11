@@ -10,5 +10,6 @@ public interface StoresListViewService {
 	List<StoreView> getStoresListByKeyWord(String keyWord);
 	List<SearchCondition> getSearchConditionsById(final int userId);
 	boolean saveSearchConditions(final int userId,SearchCondition searchCondition);
+	int updateToLastDateOfSearchCondition(final int userId,SearchCondition searchCondition);
 	int removeOldestHistory(final int userId);
 }

@@ -14,4 +14,5 @@ public interface StoresListViewDao {
 	int insertSearchConditionToHistory(final int userId,LocalDateTime now);
 	int[] combinedConditionsAndHistories(final int userId, Map<String, List<? extends Object>> searchConditions, LocalDateTime now);
 	int deleteOldestSearchCondition(final int userId);
+	int updateDate(final int userId,final LocalDateTime updateDate);
 }

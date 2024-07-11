@@ -18,6 +18,7 @@ import com.example.demo.entity.SearchCondition;
 import com.example.demo.entity.StoreView;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.exception.FailedToGetSearchConditionsHistoryException;
+import com.example.demo.exception.FailedUpdateSQLException;
 import com.example.demo.service.StoresListViewService;
 import com.example.demo.session.UserSession;
 
@@ -131,7 +132,10 @@ public class StoresListViewController {
 
 				successToSaveSearchCondition = saveSearchConditionsAndVerify(searchCondition);
 				
-				if(successToSaveSearchCondition) break;
+				if(successToSaveSearchCondition) {
+					searchConditionsHistory.add(0,searchCondition);
+					break;
+				}
 				
 			}
 			
@@ -151,7 +155,7 @@ public class StoresListViewController {
 		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
 		
 //		検索条件をDBに保存できていれば、リストに格納する
-		if(successToSaveSearchCondition && searchConditionsHistory.size() > 1) { searchConditionsHistory.add(0,searchCondition);}
+//		if(successToSaveSearchCondition && searchConditionsHistory.size() > 1) { searchConditionsHistory.add(0,searchCondition);}
 			
 //		searchConditionsListの要素が5つを超えた場合、一番古い検索条件を削除する
 //		戻り値は削除した要素の数が入る
@@ -200,15 +204,17 @@ public class StoresListViewController {
 			Model model
 			) {
 		
-		
-		List<SearchCondition> searchConditionsHistory = storesListViewService.getSearchConditionsById(userSession.getUserInfo().getUserId());
-		
-		SearchCondition searchCondition = new SearchCondition(howToSearch,keywords,cities,dayOfWeeks,createdAt,updatedAt);
-		
-		System.out.println(searchCondition);
-		
 		UserInfo userInfo = userSession.getUserInfo();
 		
+		
+		SearchCondition searchCondition = new SearchCondition(howToSearch,keywords,cities,dayOfWeeks,createdAt,updatedAt);
+		System.out.println(searchCondition);
+
+		int updateResult = storesListViewService.updateToLastDateOfSearchCondition(userInfo.getUserId(), searchCondition);
+
+		if(updateResult < 1) throw new FailedUpdateSQLException("検索履歴の更新に失敗しました。");
+		
+		List<SearchCondition> searchConditionsHistory = storesListViewService.getSearchConditionsById(userSession.getUserInfo().getUserId());
 		List<StoreView> storeViewList = extractSearchingStores(searchCondition);
 
 		Map<String,String> errors = checkErrorMessages(searchCondition,storeViewList);
@@ -306,11 +312,14 @@ public class StoresListViewController {
 		
 		UserInfo userInfo = userSession.getUserInfo();
 		try {
+			
 			return storesListViewService.saveSearchConditions(userInfo.getUserId(), searchCondition);
 			
 		}catch(FailedToGetSearchConditionsHistoryException e) {
+			
 			e.printStackTrace();
 			return false;
+		
 		}
 		
 	}
