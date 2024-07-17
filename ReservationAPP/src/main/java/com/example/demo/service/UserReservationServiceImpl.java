@@ -232,10 +232,9 @@ public class UserReservationServiceImpl implements UserReservationService {
 	
 	
 	}
-	
-	
+
 	@Override
-	public int getReservationLimitAtDate(StoreView storeView, LocalDate tgtDate) {
+	public Integer getReservationLimitAtDate(StoreView storeView, LocalDate tgtDate) {
 		try {
 			return dao.calcNumOfEmpty(storeView.getStoreId(),tgtDate);
 		}catch(FailedToGetReservationException e) {

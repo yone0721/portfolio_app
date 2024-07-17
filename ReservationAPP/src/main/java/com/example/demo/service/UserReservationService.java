@@ -14,7 +14,7 @@ public interface UserReservationService {
 	List<UserReservationInfomation> getUserReservationListById(UserInfo userInfo,int reservationId) ;
 	Map<String, Integer> hasNextPage(UserInfo userInfo,int offset);
 	Reservation getReservationInfoById(UserInfo userInfo,Reservation reservation) ;
-	int getReservationLimitAtDate(StoreView storeView,LocalDate tgtDate);
+	Integer getReservationLimitAtDate(StoreView storeView,LocalDate tgtDate);
 	void submitReservation(Reservation reservation);
 	void updateReservation(Reservation reservation);
 	

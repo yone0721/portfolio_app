@@ -13,7 +13,7 @@
 		<div class="user-name" th:Object="${userInfo}">
 			<p th:text="*{userName}"></p>
 		</div>
-
+		<div th:replace="~{/view/search-contains::search-form}"></div>
 		<table class="store-list">
 			<tr>
 				<th>店舗名</th>
@@ -31,7 +31,7 @@
 					<td class="holiday">
 <!--						<div th:text="${storeView.holidays}"></div>-->
 						<div th:each="holiday:${storeView.holidays}">
-							<span th:text="${storeView.getJPDayOfWeek(holiday)}"></span>
+							<span th:text="${storeView.getJPDayOfWeek(holiday)} + '　'"></span>
 						</div>
 					</td>
 					<td>
@@ -56,6 +56,9 @@
 				</tr>
 			</div>
 		</table>
+		<div th:if="${errors != null}" th:each="error:${errors}">
+			<p class="text-danger" th:if="${error.key =='NotFoundStoresError'}" th:text="${error.value}"></p>
+		</div>
 	</div>
 </body>
 </html>

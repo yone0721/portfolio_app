@@ -81,14 +81,13 @@
 				</tr>	
 			</table>
 			<div class="form-container" th:Object="${page}">
-				<form th:if="${page.prevPageDisplay()}" th:method="get" th:action="@{prev-user-mypage}">
+				<form th:if="${page.shouldDisplayPreviousPageButton()}" th:method="get" th:action="@{prev-user-mypage}">
 					<input type="submit" value="前へ">
 				</form>
 				<div th:text="*{currentPage} + ' / ' + *{maxPage}"></div>
-				<form th:if="${page.nextPageDisplay()}" th:method="get" th:action="@{next-user-mypage}">
+				<form th:if="${page.shouldDisplayNextPageButton()}" th:method="get" th:action="@{next-user-mypage}">
 					<input type="submit" value="次へ">
 				</form>
-				
 			</div>	
 		</div>
 	</div>	

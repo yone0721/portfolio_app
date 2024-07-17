@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.factory.DayOfWeeksStringFormatter;
 import com.example.demo.factory.StringFormatUtil;
 
 import jakarta.annotation.Nullable;
@@ -257,19 +258,8 @@ public void setStoreId(int storeId) {
 	 */
 	
 	public String getJPDayOfWeek(DayOfWeek dayOfWeek) {
-		int dayOfWeekId = dayOfWeek.getValue();
-		
-		return switch(dayOfWeekId){
-			case 1 -> "月";		// DayOfWeek.valueOf()：MONDAY
-			case 2 -> "火";		// DayOfWeek.valueOf()：TUSEDAY
-			case 3 -> "水"; 	// DayOfWeek.valueOf()：WEDNESDAY
-			case 4 -> "木"; 	// DayOfWeek.valueOf()：THURSEDAY
-			case 5 -> "金"; 	// DayOfWeek.valueOf()：FRIDAY
-			case 6 -> "土"; 	// DayOfWeek.valueOf()：SATURDAY
-			case 7 -> "日"; 	// DayOfWeek.valueOf()：SUNDAY
-			default -> null;
-		};
-	}
+		return DayOfWeeksStringFormatter.formatStringTodayOfWeek(dayOfWeek);
+	}	
 
 	/*
 	 * valueOfIntegerReservationLimit	予約上限数に数値がある場合、String型からint型に変換するメソッド

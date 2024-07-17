@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.UserInfo;
+import com.example.demo.exception.FailedInsertSQLException;
 import com.example.demo.exception.FailedToGetStoresViewException;
 import com.example.demo.exception.StoreInfoNotFoundException;
 import com.example.demo.exception.UserInfoNotFoundException;
+import com.example.demo.factory.StringByIntTypeCategorizeUtil;
 
 @Repository
 public class StoresListViewDaoImpl implements StoresListViewDao {
@@ -54,8 +59,7 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			FROM store_info_tb AS store
 			INNER JOIN store_regular_holidays AS holidays
 			ON holidays.store_id = store.store_id
-			GROUP BY holidays.store_id
-			LIMIT 10""";
+			GROUP BY holidays.store_id""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql); 
@@ -105,8 +109,7 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 					 store.street_address,
 					 store.building)
 				AGAINST (? IN NATURAL LANGUAGE MODE)
-				GROUP BY holidays.store_id
-				LIMIT 10;""";
+				GROUP BY holidays.store_id""";
 		
 		try {
 			return jdbcTemplate.queryForList(sql,keyWord);
@@ -162,4 +165,126 @@ public class StoresListViewDaoImpl implements StoresListViewDao {
 			throw new UserInfoNotFoundException("ユーザー情報が見つかりませんでした。");
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> findSearchHistoriesById(final int userId) {
+		String sql = 
+				"SELECT "
+					+ "his.user_id,"
+					+ "hwsc.history_id,"
+					+ "hwsc.conditions_id,"
+					+ "hwsc.condition_value,"
+					+ "his.created_at,"
+					+ "his.updated_at "
+				+ "FROM history_with_search_conditions AS hwsc "
+				+ "RIGHT JOIN history_of_search AS his "
+				+ "ON hwsc.history_id = his.history_id "
+				+ "WHERE his.user_id = ? "
+				+ "ORDER BY updated_at DESC";
+		try{
+			return jdbcTemplate.queryForList(sql,userId);
+			
+		}catch(DataAccessException e) {
+			e.printStackTrace();
+			throw new FailedToGetStoresViewException("");
+		}
+	}
+	
+	@Override
+	public int insertSearchConditionToHistory(final int userId,LocalDateTime now) {
+		String sql = "INSERT INTO "
+				+ "history_of_search ("
+				+ "user_id,created_at,updated_at"
+				+ ") VALUES (?,?,?)";
+		
+		String dateTimeFormatNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		try {
+			return jdbcTemplate.update(sql,userId,dateTimeFormatNow,dateTimeFormatNow);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	/*
+	 * 中間テーブルの紐づけメソッド
+	 *  Map<String,List<Object>> 	検索条件のカテゴリ毎に値を保存したリストを格納
+	 * 	String			検索条件のカテゴリ（現状では検索方法、キーワード、都道府県、稼働曜日のいずれか）
+	 * 	List<Object>	検索の値を格納したリスト
+	 */
+	
+	@Override
+	public int[] combinedConditionsAndHistories(final int userId,Map<String,List<? extends Object>> searchConditions,final LocalDateTime now) {
+		String insertSql = "INSERT INTO history_with_search_conditions "
+				+ "(conditions_id,history_id,condition_value) VALUES "
+				+ "(?,(SELECT history_id FROM history_of_search WHERE user_id = ? AND created_at = ?),?)";
+		
+		List<Object[]> params = new ArrayList<>();
+		
+		/*
+		 * カテゴリ毎に値を取り出す
+		 * condition = 		Mapのキー
+		 * conditionsId = 	キーに該当するID
+		 * 
+		 * Object[] param 	挿入する値（検索条件カテゴリのID、ユーザーID、検索内容、登録する日時）
+		 */
+		
+		for(Object condition:searchConditions.keySet()) {
+			
+			if(searchConditions.get(condition) == null || searchConditions.get(condition).isEmpty()) { continue;}
+			
+			int conditionsId = StringByIntTypeCategorizeUtil.changeKeyToInt((String)condition);
+			
+			if(conditionsId == 0) continue;
+			
+			for(Object value:searchConditions.get(condition)) {
+				
+				Object[] param = {
+						conditionsId,
+						userId,
+						now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+						value
+				};		
+				params.add(param);
+			}
+		}
+		try {
+			return jdbcTemplate.batchUpdate(insertSql,params);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new FailedInsertSQLException("データの挿入に失敗しました。");
+		}
+	}
+
+	@Override
+	public int deleteOldestSearchCondition(final int userId) {
+		String sql = "DELETE FROM history_of_search "
+				+ "WHERE user_id = ? AND updated_at = "
+				+ "(SELECT min_date FROM "
+				+	"(SELECT MIN(updated_at) AS min_date "
+			    +   "FROM history_of_search "
+			    +   "WHERE user_id = ? "
+				+ ") AS sub"
+			+ ")";
+
+		return jdbcTemplate.update(sql,userId,userId);
+	}
+
+	@Override
+	public int updateDate(final int userId,final LocalDateTime updateDate) {
+		String sql = "UPDATE history_of_search SET updated_at = ? "
+				+ "WHERE user_id = ? AND updated_at = ?";
+		
+		String updateDateStr = updateDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		try {
+			return jdbcTemplate.update(sql,now,userId,updateDateStr);
+			
+		}catch(DataAccessException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}	
 }

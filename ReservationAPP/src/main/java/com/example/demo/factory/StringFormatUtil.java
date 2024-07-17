@@ -1,10 +1,11 @@
 package com.example.demo.factory;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*
- * 整数のみの電話番号や郵便番号にハイフンを加えるクラス
+ * 画面表示用のStringに形式を変換するクラス
  */
 
 public class StringFormatUtil {
@@ -103,4 +104,26 @@ public class StringFormatUtil {
 		return phoneNumber;
 	}
 	
+	/*
+	 * String型リストの内容を1つの文字列に変換
+	 * 文字列と文字列の間に半角スペース（\s）を挿入
+	 */
+	
+	public static String listToStrings(List<String> wordList) {
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i=0; i < wordList.size();i++) {
+			if(i > 0) { sb.append("\s"); } 
+			
+			sb.append(wordList.get(i));
+		}
+		
+		return sb.toString();
+	}
+	
+	public static String[] StringToArrays(String str){
+		String[] strings = str.substring(1,str.length()-1).split("\\,\s");
+		
+		return strings;
+	}
 }

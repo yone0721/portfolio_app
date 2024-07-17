@@ -23,6 +23,7 @@ public class UserSession implements Serializable {
 	private UserInfo userInfo;
 	private Reservation reservation;
 	private StoreView storeView;
+	private List<StoreView> storeViewList;
 	private List<UserReservationInfomation> reservationList;
 	private Page page;
 	
@@ -49,6 +50,10 @@ public class UserSession implements Serializable {
 	public List<UserReservationInfomation> getReservationList(){
 		return this.reservationList;
 	}
+
+	public List<StoreView> getStoreViewList(){
+		return this.storeViewList;
+	}
 	public Page getPage() {
 		return page;
 	}
@@ -68,6 +73,9 @@ public class UserSession implements Serializable {
 	public void setReservationList(List<UserReservationInfomation> reservationList) {
 		this.reservationList = reservationList;
 	}
+	public void setStoreViewList(List<StoreView> storeViewList) {
+		this.storeViewList = storeViewList;
+	}
 	
 	public void setPage(Page page) {
 		this.page = page;
@@ -85,6 +93,10 @@ public class UserSession implements Serializable {
 	}
 	public void clearReservationListData() {
 		this.reservationList = null;
+	}
+	
+	public void clearStoreViewListData() {
+		this.storeViewList = null;
 	}
 	
 	public void clearPageData() {

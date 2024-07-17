@@ -500,14 +500,133 @@ INSERT INTO store_info_tb (
 );
 --pass5678
 
+INSERT INTO store_info_tb (
+    store_name,
+    zip_code,
+    city,
+    municipalities,
+    street_address,
+    mail,
+    phone,
+    store_password,
+    is_opened,
+    is_closed,
+    created_at
+) VALUES (
+    '飯ざんまい',
+    '8911420',
+    '鹿児島県',
+    '鹿児島市',
+    '桜島赤水町',
+    'meshizanmai@example.com',
+    '0341534132',
+    '6PqCOnbzqvcGj9IGi6gdH8s7aAvYVCdt3ELWE5dUJAs=',
+    '10:00',
+    '00:00',
+    now()
+);
+--pass5678
+
+INSERT INTO store_info_tb (
+    store_name,
+    zip_code,
+    city,
+    municipalities,
+    street_address,
+    building,
+    mail,
+    phone,
+    store_password,
+    store_reservation_limit,
+    is_opened,
+    is_closed,
+    created_at
+) VALUES (
+    'レッグズヘアー',
+    '0300801',
+    '青森県',
+    '青森市',
+    '新町',
+    'ミレニアムタワー100階',
+    'legshear@example.com',
+    '5555555555',
+    '6PqCOnbzqvcGj9IGi6gdH8s7aAvYVCdt3ELWE5dUJAs=',
+    3,
+    '9:30',
+    '18:30',
+    now()
+);
+--pass5678
+
+INSERT INTO store_info_tb (
+    store_name,
+    zip_code,
+    city,
+    municipalities,
+    street_address,
+    building,
+    mail,
+    phone,
+    store_password,
+    store_reservation_limit,
+    is_opened,
+    is_closed,
+    created_at
+) VALUES (
+    'ダル飯庵',
+    '3300843',
+    '埼玉県',
+    'さいたま市大宮区',
+    '吉敷町',
+    '犬神ビル 1階',
+    'dalmetian@example.com',
+    '1111111111',
+    '6PqCOnbzqvcGj9IGi6gdH8s7aAvYVCdt3ELWE5dUJAs=',
+    10,
+    '10:00',
+    '22:00',
+    now()
+);
+--pass5678
+
+INSERT INTO store_info_tb (
+    store_name,
+    zip_code,
+    city,
+    municipalities,
+    street_address,
+    mail,
+    phone,
+    store_password,
+    store_reservation_limit,
+    is_opened,
+    is_closed,
+    created_at
+) VALUES (
+    'ビューティー池田',
+    '2520303',
+    '神奈川県',
+    '相模原市南区',
+    '相模大野8-1',
+    'beautyikeda@example.com',
+    '0344451533',
+    '6PqCOnbzqvcGj9IGi6gdH8s7aAvYVCdt3ELWE5dUJAs=',
+    4,
+    '10:00',
+    '20:00',
+    now()
+);
+--pass5678
+
+
 
 /*定休日の曜日を挿入するメソッド
     1.月曜日、2.火曜日 ... 7.日曜日*/
 
-INSERT INTO store_regular_holidays(
-    store_id,
-    day_of_week
-)VALUES(
-    20,
-    5
-);
+    INSERT INTO store_regular_holidays(
+        store_id,
+        day_of_week
+    )VALUES(
+        25,
+        4
+    );

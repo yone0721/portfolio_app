@@ -13,6 +13,7 @@ ul{
 
 li{
 	padding:10px 20px;
+	list-style: none;
 }
 
 li:hover{
